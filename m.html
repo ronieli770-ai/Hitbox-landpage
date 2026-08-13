@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+<title>HITBOX — תכנית 90 הימים לפריקת מתחים, חיטוב והגנה עצמית</title>
+<style>
+@font-face{font-family:'Fb';src:url('פונט/FbReissfeder-Regular.otf') format('opentype');font-weight:400;font-display:swap;}
+@font-face{font-family:'Fb';src:url('פונט/FbReissfeder-Bold.otf') format('opentype');font-weight:700;font-display:swap;}
+
+:root{
+  --ink:#101c1d; --teal:#3e6e72; --sand:#fff3b7; --line:#23393a;
+  --pad:20px; --r:16px;
+  --h1:clamp(30px,8.4vw,40px);
+  --h2:clamp(24px,6.8vw,32px);
+  --h3:19px; --body:15.5px; --small:13px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{background:var(--ink);color:#fff;font-family:'Fb',sans-serif;direction:rtl;
+  overflow-x:hidden;line-height:1.5;}
+img,video{display:block;max-width:100%;}
+section{padding:52px var(--pad);}
+h1,h2{font-weight:700;line-height:1.05;}
+h1{font-size:var(--h1);} h2{font-size:var(--h2);}
+.y{color:var(--sand);} .muted{color:#9fb3b4;}
+p{font-size:var(--body);}
+.lead{margin-top:14px;}
+
+/* כפתורים */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  min-height:56px;padding:12px 16px;border:0;border-radius:8px;cursor:pointer;
+  font-family:inherit;font-size:16px;font-weight:700;text-decoration:none;
+  background:var(--sand);color:var(--ink);}
+.btn.ghost{background:transparent;border:2px solid var(--sand);color:var(--sand);}
+
+/* ---------- הירו ---------- */
+#hero{position:relative;min-height:100vh;min-height:100svh;overflow:hidden;
+  display:flex;flex-direction:column;padding:16px var(--pad) calc(20px + env(safe-area-inset-bottom));}
+#hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+#hero .veil{position:absolute;inset:0;z-index:1;
+  background:linear-gradient(to bottom,rgba(16,28,29,.4) 0%,rgba(16,28,29,.55) 40%,
+    rgba(16,28,29,.93) 82%,var(--ink) 100%);}
+#hero>*{position:relative;z-index:2;}
+#hero .logo{width:58px;}
+#hero h1{margin-top:auto;text-align:center;}
+#hero .lead{text-align:center;}
+#hero .btn{margin-top:auto;}
+#hero .branches{margin-top:12px;text-align:center;font-size:var(--small);opacity:.85;}
+
+/* ---------- כרטיסים ---------- */
+.cards{display:flex;flex-direction:column;gap:12px;margin-top:22px;}
+.card{border:1px solid var(--teal);border-radius:var(--r);padding:18px;
+  background:rgba(255,255,255,.05);}
+.card h3{font-size:var(--h3);font-weight:700;line-height:1.25;}
+.card p{margin-top:8px;color:#cfe0e1;}
+
+/* ---------- ציר ---------- */
+.step{border-inline-start:2px solid var(--teal);padding:0 0 26px 0;
+  padding-inline-start:18px;position:relative;}
+.step:last-child{border-color:transparent;padding-bottom:0;}
+.step::before{content:'';position:absolute;inset-inline-start:-9px;top:2px;
+  width:16px;height:16px;border-radius:50%;background:var(--sand);}
+.step b{display:block;color:var(--sand);font-size:var(--small);}
+.step h3{font-size:var(--h3);font-weight:700;margin-top:2px;}
+.step p{margin-top:6px;color:#cfe0e1;}
+
+/* ---------- ציטוט ---------- */
+.quote{text-align:center;padding:44px var(--pad);background:var(--teal);}
+.quote p{font-size:var(--h2);font-weight:700;line-height:1.15;}
+.quote span{display:block;margin-top:12px;font-size:var(--small);opacity:.85;}
+
+/* ---------- גריד המלצות ---------- */
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px;}
+.vcell{position:relative;border:0;padding:0;border-radius:14px;overflow:hidden;
+  background:#1a2a2b;aspect-ratio:3/4;cursor:pointer;}
+.vcell:first-child{grid-column:1/-1;aspect-ratio:16/11;}
+.vcell video,.vcell img{width:100%;height:100%;object-fit:cover;}
+.vcell .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(16,28,29,.2);}
+.vcell .play svg{width:46px;height:46px;}
+
+/* ---------- לפני־אחרי ---------- */
+.rail{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;
+  margin-top:22px;padding-bottom:6px;scrollbar-width:none;}
+.rail::-webkit-scrollbar{display:none;}
+.ba{flex:none;width:78vw;scroll-snap-align:center;background:#fff;color:var(--ink);
+  border-radius:var(--r);overflow:hidden;}
+.ba .pic{position:relative;aspect-ratio:11/10;background:#d9d9d9;}
+.ba .pic img{width:100%;height:100%;object-fit:cover;}
+.ba .pic i{position:absolute;left:50%;top:0;bottom:0;width:2px;background:#fff;transform:translateX(-50%);}
+.ba .txt{padding:14px 16px 18px;}
+.ba .delta{font-size:22px;font-weight:700;color:var(--teal);}
+.ba .kg{margin-top:6px;font-size:13px;opacity:.6;}
+
+/* ---------- שאלון ---------- */
+#quiz .opts{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
+.qopt{width:100%;min-height:66px;padding:16px;border:2px solid var(--sand);
+  border-radius:var(--r);background:var(--ink);color:#fff;
+  font-family:inherit;font-size:17px;font-weight:700;line-height:1.25;cursor:pointer;}
+.qback{margin-top:14px;width:auto;padding:10px 26px;min-height:0;font-size:14px;}
+.field{width:100%;min-height:54px;padding:12px 14px;border:0;border-radius:8px;
+  background:#f0f0f0;color:var(--ink);font-family:inherit;font-size:16px;
+  text-align:center;direction:rtl;}
+.field::placeholder{color:var(--ink);opacity:.75;}
+.consent{display:flex;gap:10px;align-items:flex-start;margin-top:16px;font-size:var(--small);}
+.consent input{width:22px;height:22px;flex:none;accent-color:var(--sand);}
+
+/* ---------- אקורדיון ---------- */
+.acc{border:1px solid var(--sand);border-radius:var(--r);overflow:hidden;background:transparent;}
+.acc+.acc{margin-top:10px;}
+.acc summary{list-style:none;display:flex;align-items:center;gap:12px;padding:16px;
+  cursor:pointer;font-size:var(--h3);font-weight:700;color:#fff;}
+.acc summary::-webkit-details-marker{display:none;}
+.acc summary img{width:30px;height:30px;flex:none;object-fit:contain;}
+.acc summary::after{content:'+';margin-inline-start:auto;font-size:24px;color:var(--sand);}
+.acc[open] summary::after{content:'−';}
+.acc[open]{background:var(--sand);}
+.acc[open] summary{color:var(--ink);}
+.acc[open] summary img{filter:brightness(0);}
+.acc .body{padding:0 16px 16px;color:var(--ink);font-size:var(--body);}
+
+/* ---------- סניפים ---------- */
+.branch{border:1px solid var(--line);border-radius:var(--r);padding:16px;background:#182a2b;}
+.branch+.branch{margin-top:10px;}
+.branch h3{font-size:var(--h3);font-weight:700;}
+.branch p{margin-top:4px;font-size:var(--small);color:#cfe0e1;}
+
+/* ---------- פוטר ---------- */
+footer{background:var(--sand);color:var(--ink);padding:34px var(--pad) calc(28px + env(safe-area-inset-bottom));}
+footer h2{margin-bottom:6px;}
+footer .row{display:flex;gap:10px;margin-top:18px;}
+footer .row a{flex:1;min-height:50px;display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--ink);border-radius:8px;color:var(--ink);text-decoration:none;
+  font-weight:700;font-size:14px;}
+footer .fine{margin-top:22px;font-size:12px;line-height:1.6;opacity:.75;}
+footer .fine b{display:block;margin-top:10px;}
+
+/* ---------- ווצאפ צף ---------- */
+#wa{position:fixed;left:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:60;
+  width:56px;height:56px;border-radius:50%;background:var(--sand);
+  display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.4);}
+#wa svg{width:30px;height:30px;fill:var(--ink);}
+
+/* ---------- פופ־אפ וידאו ---------- */
+#vm{position:fixed;inset:0;z-index:90;background:rgba(16,28,29,.94);display:none;
+  align-items:center;justify-content:center;padding:16px;}
+#vm.on{display:flex;}
+#vm .frame{width:100%;max-width:460px;aspect-ratio:9/16;border-radius:var(--r);
+  overflow:hidden;background:#000;}
+#vm iframe{width:100%;height:100%;border:0;}
+#vmx{position:absolute;top:calc(14px + env(safe-area-inset-top));left:14px;
+  width:44px;height:44px;border:0;border-radius:50%;background:var(--sand);
+  color:var(--ink);font-size:24px;cursor:pointer;}
+</style>
+</head>
+<body>
+
+<!-- ===== הירו ===== -->
+<section id="hero">
+  <video autoplay muted loop playsinline poster="assets/hero-poster.jpg" src="hero-bg.mp4"></video>
+  <span class="veil"></span>
+  <img class="logo" src="assets/logo-hitbox.png" alt="HITBOX">
+  <h1><span class="y">תכנית 90 הימים</span> לפריקת מתחים, חיטוב והגנה עצמית</h1>
+  <p class="lead">אימוני אגרוף בקבוצות קטנות לגברים בשנות ה-30+. בלי ניסיון קודם, בלי ברזלים.</p>
+  <a class="btn" href="#quiz">אני רוצה לבדוק התאמה ←</a>
+  <p class="branches">3 סניפים: רמת גן · פתח תקווה · תל אביב - גבעתיים</p>
+</section>
+
+<!-- ===== איך החיים שלך ===== -->
+<section>
+  <h2>איך החיים שלך <span class="y">הולכים להיראות בעוד 90 יום מהיום?</span></h2>
+  <p class="lead muted">תביט במראה ותראה את הגרסה החזקה שלך, או שוב תדחה את זה ל"אחרי החגים"?</p>
+  <div class="cards">
+    <div class="card"><h3>מתאמן כבר תקופה אבל התוצאות פשוט לא מגיעות?</h3></div>
+    <div class="card"><h3>נמאס לך להשתעמם באימונים ולחכות בתור למכשירים?</h3></div>
+    <div class="card"><h3>מסיים את יום העבודה מוצף בלחצים ועם שרירים תפוסים?</h3></div>
+    <div class="card"><h3>מרגיש שאין לך יכולת אמיתית להגן על עצמך ועל המשפחה?</h3></div>
+  </div>
+  <p class="lead">תוך 90 יום של אימון ממוקד, <b class="y">התחושה והמראה שלך משתנים מקצה לקצה.</b></p>
+</section>
+
+<!-- ===== ציר הזמן ===== -->
+<section>
+  <h2>מה קורה במהלך <span class="y">90 ימים?</span></h2>
+  <div class="cards" style="gap:0">
+    <div class="step"><b>ימים <span dir="ltr">0–30</span></b><h3>הראש מתנקה</h3>
+      <p>שעה מול השק ואתה לא חושב על העבודה אפילו רגע. יוצא עייף אבל רגוע. גם הגב מרגיש את זה — כל מכה יוצאת מהמותניים ומחזקת בדיוק את השרירים שנתפסו לך משעות של ישיבה במשרד.</p></div>
+    <div class="step"><b>ימים <span dir="ltr">30–60</span></b><h3>מתחילים לראות שינוי</h3>
+      <p>נכנסת לכושר. אתה כבר לא מתנשף אחרי הסבב הראשון, הכתפיים והבטן מתהדקות, והחולצות מתחילות לשבת אחרת.</p></div>
+    <div class="step"><b>ימים <span dir="ltr">60–90</span></b><h3>יודע מה אתה עושה</h3>
+      <p>כבר לא צריך לחשוב על התנועה, היד יודעת לבד. ואם צריך, אתה יודע להגן על עצמך. זה עושה משהו לביטחון.</p></div>
+    <div class="step"><b>אחרי 90 יום</b><h3>זה כבר חלק ממך</h3>
+      <p>כבר לא מתווכח עם עצמך אם ללכת. זה פשוט מה שאתה עושה בימי שני וחמישי. גוף חזק, ראש נקי.</p></div>
+  </div>
+</section>
+
+<div class="quote">
+  <p>לוקח 21 יום ליצור הרגל,<br>ו-90 יום ליצור אורח חיים</p>
+  <span>מקסוול מלץ</span>
+</div>
+
+<!-- ===== מתחילים מאפס ===== -->
+<section>
+  <h2><span class="y">מתחילים מאפס.</span> בלי ניסיון קודם, בעוצמה מבוקרת.</h2>
+  <p class="lead muted">רוב מי שנכנס אלינו לא נגע בכפפות בחיים. אחרי רבע שעה באימון הראשון כבר תרגיש בנוח.</p>
+  <div class="cards">
+    <div class="card"><p><b class="y">מקסימום 12 מתאמנים בקבוצה</b>, מאמן שמכיר אותך בשם עובר בין הזוגות ומתקן תוך כדי.</p></div>
+    <div class="card"><p><b class="y">לומדים טכניקה מהיסוד בקצב שלך.</b> גם מי שלא התאמן עשור מסיים את האימון על הרגליים.</p></div>
+    <div class="card"><p><b class="y">עובדים על שקים, לפות ובזוגות.</b> כל שיטה בונה כושר אחר, והשילוב ביניהן הוא מה שמקדם אותך.</p></div>
+  </div>
+</section>
+
+<!-- ===== המלצות וידאו ===== -->
+<section>
+  <h2>לא מאמין לנו? <span class="y">תשמע אותם.</span></h2>
+  <div class="vgrid" id="vgrid"></div>
+</section>
+
+<!-- ===== לפני־אחרי ===== -->
+<section>
+  <h2><span class="y">אף אחד מהם</span> לא הגיע בכושר.</h2>
+  <p class="lead muted">כולם הגיעו עייפים, אחרי יום עבודה, בפעם הראשונה. ההבדל היחיד הוא שהם הגיעו שוב.</p>
+  <div class="rail" id="rail"></div>
+</section>
+
+<!-- ===== שאלון ===== -->
+<section id="quiz">
+  <h2><span class="y">ענה על 4 שאלות</span> וקבל הכוונה אישית מהצוות</h2>
+  <p class="lead" id="q-head"></p>
+  <div class="opts" id="q-opts"></div>
+  <button class="btn ghost qback" type="button" id="q-back" hidden>חזרה</button>
+
+  <form id="q-result" hidden>
+    <h2 style="margin-top:6px">יש לנו בדיוק <span class="y">את הקבוצה בשבילך.</span></h2>
+    <p class="lead" id="q-sub"></p>
+    <div class="cards" style="gap:10px">
+      <input class="field" name="first_name" required placeholder="שם פרטי *">
+      <input class="field" name="phone" type="tel" inputmode="tel" required placeholder="טלפון (ללא מקפים) *">
+      <input class="field" name="email" type="email" placeholder="אימייל (לא חובה)">
+    </div>
+    <label class="consent"><input type="checkbox" name="consent">
+      <span>בהשארת פרטים באתר אתה מאשר תוכן שיווקי מהיטבוקס, מתחייבים לא לחפור לך</span></label>
+    <button class="btn" type="submit" style="margin-top:16px">קבעו לי אימון ניסיון</button>
+  </form>
+</section>
+
+<!-- ===== התנגדויות ===== -->
+<section>
+  <h2>מה שעובר לך בראש עכשיו</h2>
+  <div class="cards" style="gap:10px" id="objs"></div>
+</section>
+
+<!-- ===== סניפים ===== -->
+<section>
+  <h2 style="color:var(--teal)">במרחק 5 דקות מהמשרד.</h2>
+  <p class="lead">בלי לצאת מהעיר ובלי לצאת מהשגרה.</p>
+  <div class="cards">
+    <div class="branch"><h3>ז'בוטינסקי 133, <span class="y">רמת גן</span></h3><p>5 דק' ממתחם הבורסה</p></div>
+    <div class="branch"><h3>ז'בוטינסקי 100, <span class="y">פתח תקווה</span></h3><p>5 דק' ממתחם BSR CITY</p></div>
+    <div class="branch"><h3>חפץ חיים 10, <span class="y">תל אביב - גבעתיים</span></h3><p>ליד מגדלי תל אביב</p></div>
+  </div>
+</section>
+
+<!-- ===== פוטר ===== -->
+<footer>
+  <h2>בוא נקבע לך <span style="color:var(--teal)">אימון ניסיון</span></h2>
+  <p>077-970-6900</p>
+  <div class="row">
+    <a href="tel:+972779706900">התקשרו</a>
+    <a href="https://wa.me/972779706900" target="_blank" rel="noopener">ווצאפ</a>
+    <a href="https://www.instagram.com/oritzhaki_hitbox/" target="_blank" rel="noopener">אינסטגרם</a>
+  </div>
+  <div class="fine">
+    <b>הסניפים</b>
+    רמת גן | ז'בוטינסקי 133<br>פתח תקווה | ז'בוטינסקי 100, BSR CITY<br>תל אביב - גבעתיים | חפץ חיים 10
+    <b>שעות פעילות</b>
+    ימי א-ה: 6-23<br>ימי ו: 6-13<br>ימי ש: חצי שעה לאחר צאת שבת-23
+    <b>כל הזכויות שמורות להיטבוקס ©</b>
+  </div>
+</footer>
+
+<a id="wa" href="https://wa.me/972779706900" target="_blank" rel="noopener" aria-label="ווצאפ">
+  <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-1.7-.9-2.9-1.6-4-3.5-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5 0-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5 1.9.8 2.6.9 3.5.7.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.2-.3-.2-.6-.4z"/><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.4 1.3 4.9L2 22l5.3-1.4c1.4.8 3 1.2 4.7 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3C4.1 15 3.7 13.5 3.7 12c0-4.6 3.7-8.3 8.3-8.3s8.3 3.7 8.3 8.3-3.7 8.2-8.3 8.2z"/></svg>
+</a>
+
+<div id="vm"><button id="vmx" aria-label="סגירה">×</button><div class="frame"></div></div>
+
+<script src="m.js?v=202608131719"></script>
+</body>
+</html>

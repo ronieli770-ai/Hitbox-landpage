@@ -16,7 +16,7 @@ const TOTAL       = ITEM_DELAY + ITEM_DUR + STAGGER;
    כדי להחליף סרטון: מחליפים כאן את המזהה ותו לא. */
 const BUNNY_LIB = '726759';
 const BUNNY = {
-  hero: '1edca519-54d3-48d6-b5dd-a7748afaffdb', // סרטון יוסף
+  hero: 'd265a829-af72-493b-a208-c072adeb34b4', // הכרטיס המרכזי
   t00: '08f5d6ae-5ab6-4fc3-9c4b-31e57c155fb9',  // מייקל
   t01: '7ecd071a-eed7-474e-bc24-bf026b7d4456',  // עידן אגמי
   t02: 'e7fdf958-5d47-4e2a-8b64-20057352c084',  // ספורט בצורה חווייתית
@@ -30,7 +30,8 @@ const BUNNY = {
   t10: '6ec877d2-958e-49f3-9242-d880efe6ea9a',  // לא חדר כושר
   // עדיין לא מקודדים ללופ בגריד:
   t11: '11002eb0-5303-4aab-9d74-f2aba3f01d15',  // הנאה ואנרגיות
-  t12: '1ada0673-6c7a-4451-a29f-02909c658646'   // ביטחון
+  t12: '1ada0673-6c7a-4451-a29f-02909c658646',  // ביטחון
+  t13: 'df8e6229-c6de-46e4-b137-103238a7766c'   // המשבצת האחרונה
 };
 
 const easeInOut = t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
@@ -143,9 +144,11 @@ const clamp01 = t => t < 0 ? 0 : t > 1 ? 1 : t;
   const frame = modal.querySelector('.frame');
   let lastFocus = null;
 
-  function open(id) {
+  function open(id, aspect) {
     const guid = BUNNY[id];
     if (!guid) return;
+    /* רוב הסרטונים לאורך, אבל לא כולם — הפופ־אפ מתאים את עצמו ליחס של כל אחד */
+    frame.style.aspectRatio = aspect || '9/16';
     lastFocus = document.activeElement;
     /* ה-iframe נוצר רק בקליק — כלום לא נטען מ-Bunny לפני כן */
     const f = document.createElement('iframe');
@@ -167,7 +170,7 @@ const clamp01 = t => t < 0 ? 0 : t > 1 ? 1 : t;
     if (lastFocus) lastFocus.focus();
   }
 
-  players.forEach(p => p.cell.addEventListener('click', () => open(p.id)));
+  players.forEach(p => p.cell.addEventListener('click', () => open(p.id, p.cell.dataset.aspect)));
   modal.querySelector('#vclose').addEventListener('click', close);
   modal.addEventListener('click', e => { if (e.target === modal) close(); });
   addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) close(); });

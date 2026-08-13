@@ -26,7 +26,7 @@ html,body{overflow-x:hidden;scroll-behavior:smooth;}
 /* ---------- הירו ----------
    מסך מלא: לוגו למעלה, כותרת ומשפט במרכז, כפתור וסניפים בתחתית. */
 #hero{position:relative !important;width:100% !important;
-  min-height:100svh !important;overflow:hidden;
+  min-height:100vh !important;min-height:100svh !important;overflow:hidden;
   display:grid;grid-template-rows:auto 1fr auto;
   padding:18px 20px calc(20px + env(safe-area-inset-bottom));}
 
@@ -114,11 +114,9 @@ img[src*="photo-16"],img[src*="photo-17"],img[src*="photo-19"],img[src*="texture
 .tli .nd{width:24px !important;height:24px !important;margin-bottom:10px;}
 
 /* ---------- מתחילים מאפס ---------- */
-#rest div:has(>img[src*="photo-16"]),#rest div:has(>img[src*="photo-17"]),
-#rest div:has(>img[src*="photo-19"]){display:none !important;}
-#rest div:has(>img[src*="photo-18"]){height:250px !important;border-radius:16px;}
-#rest div:has(>img[src*="photo-18"]) img{position:static !important;width:100% !important;
-  height:100% !important;object-fit:cover;}
+.pxi{display:none !important;}
+.pxi[data-depth="2"]{display:block !important;height:250px !important;border-radius:16px;overflow:hidden;}
+.pxi[data-depth="2"] img{width:100% !important;height:100% !important;object-fit:cover;}
 .card-dark{display:none !important;}
 
 /* ---------- גריד ההמלצות ---------- */
@@ -194,7 +192,8 @@ input[type="checkbox"].abs{position:static !important;width:22px !important;heig
 /* ---------- פוטר ---------- */
 [style*="width:1520px"]{display:none !important;}
 #rest>img[src*="logo-ajur"]{width:86px !important;height:auto !important;margin:18px auto 0;}
-#rest div:has(>img[src*="roni-logo"]){width:82px !important;height:31px !important;margin:0 auto;}
+.credit{width:82px !important;height:31px !important;margin:0 auto;overflow:hidden;}
+.credit img{position:absolute !important;}
 
 /* ---------- אנימציות הדסקטופ ---------- */
 .rv-line{padding-bottom:0;margin-bottom:0;}

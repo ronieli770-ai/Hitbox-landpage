@@ -6,52 +6,68 @@
 @media (max-width:820px){
 
 html,body{overflow-x:hidden;scroll-behavior:smooth;}
-#stage{overflow:visible;height:auto !important;}
-#canvas{position:static !important;transform:none !important;
-  width:100% !important;height:auto !important;}
+
+/* ---------- איפוס גורף ----------
+   בדסקטופ כל אלמנט תלוי במיקום מוחלט על ההורה שלו, לרוחב וגובה קבועים.
+   כאן מנטרלים את הכל בבת אחת — מיקום, מידות ותזוזות — ורק אחר כך בונים
+   מחדש. איפוס נקודתי השאיר כל פעם אלמנט מקונן שנמתח על כל העמוד. */
+#stage,#stage *{
+  position:static !important;
+  inset:auto !important;
+  top:auto !important;right:auto !important;bottom:auto !important;left:auto !important;
+  transform:none !important;
+  width:auto !important;height:auto !important;
+  min-width:0 !important;min-height:0 !important;
+  max-width:100% !important;max-height:none !important;
+  float:none !important;}
+#stage{overflow:visible !important;}
+#canvas{width:100% !important;background:#101c1d;}
 
 /* ---------- הירו ---------- */
 #hero{position:relative !important;width:100% !important;height:100svh !important;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:22px;padding:90px 22px 46px;text-align:center;overflow:hidden;z-index:1;}
-#hero>div.abs.tc,#hero>a,#hero>div.t24{position:static !important;inset:auto !important;
-  transform:none !important;width:100% !important;height:auto !important;}
+  gap:22px;padding:96px 22px 46px;text-align:center;overflow:hidden;}
+#hero>video{position:absolute !important;inset:0 !important;
+  width:100% !important;height:100% !important;object-fit:cover;z-index:0;}
+#hero>div.abs:first-of-type{position:absolute !important;inset:0 !important;
+  width:100% !important;height:100% !important;z-index:1;}
+#hero>*{position:relative;z-index:2;}
 #hero .abs.tc:not(.t32){font-size:clamp(30px,9vw,42px) !important;line-height:1.04 !important;
   display:block !important;}
 #hero .t32{font-size:16px !important;line-height:1.55 !important;}
-#herocta{max-width:420px;min-height:56px;display:flex !important;padding:10px 14px;}
+#herocta{width:100% !important;max-width:420px;min-height:56px !important;
+  display:flex !important;padding:10px 14px;}
 #herocta span{font-size:17px !important;}
-#hero>img.cover{width:72px !important;height:auto !important;top:10px !important;}
-#hero div.t24{transform:none !important;white-space:normal !important;font-size:13px !important;}
-#hero div.t24 img{display:none;}
-#hero>img.abs{display:none;}
+#hero>img.cover{position:absolute !important;top:8px !important;right:8px !important;
+  width:66px !important;z-index:3;}
+#hero div.t24{white-space:normal !important;font-size:13px !important;}
+#hero div.t24 img{display:none !important;}
 
 /* ---------- הזרימה הראשית ---------- */
-#stage{position:static !important;}
-#rest{position:static !important;width:100% !important;height:auto !important;
-  display:flex;flex-direction:column;gap:16px;padding:44px 18px 40px;}
-#rest>*{position:static !important;inset:auto !important;transform:none !important;
-  width:100% !important;height:auto !important;}
+#rest{width:100% !important;display:flex;flex-direction:column;gap:16px;
+  padding:44px 18px 40px;}
 
-/* כל צאצא מקונן מאבד את העוגן שלו כשההורה הופך לזורם — לכן מאפסים הכל,
-   ומחזירים מיקום רק למי שבאמת צריך אותו. */
-#rest *{position:static !important;}
-#rest .vc,#rest .obj,#rest .sel,#rest .wall .ba,#rest .q-opts,
-#rest #quiz,#rest #wallbar{position:relative !important;}
-#rest .vc .play,#rest .wall .ba .split,#rest .sel-list,
-#rest .arw,#rest #wallthumb{position:absolute !important;}
-#rest .vhead{display:none !important;}
-#rest img{position:static !important;width:100% !important;height:auto !important;
-  max-width:100% !important;inset:auto !important;}
-#rest .vc img,#rest .vc video,#rest .wall .ba img{height:100% !important;object-fit:cover;}
+/* מיקום מוחזר רק למי שבאמת צריך אותו */
+.vc,.obj,.sel,.wall .ba,#wallbar,#quiz{position:relative !important;}
+.vc .play,.wall .ba .split,.sel-list,.arw,#wallthumb{position:absolute !important;inset:auto;}
+.vc .play{inset:0 !important;}
+.wall .ba .split{left:50% !important;top:0 !important;bottom:0 !important;width:2px !important;}
+.sel-list{top:100% !important;left:0 !important;right:0 !important;}
+.vhead{display:none !important;}
 
-/* רקעים ודקורציות של הדסקטופ */
-.band,.torch,
-#rest>img[src*="punching-bag"],#rest>img[src*="card-icon"],
-#rest>img[src*="pin.svg"],#rest>img[src*="rope"],
-[style*="font-size:700px"],
-[style*="left:-753px"],[style*="left:-703px"]{display:none !important;}
-#rest div:has(>img[src*="glove"]){display:none !important;}
+img,video{max-width:100% !important;}
+.vc img,.vc video,.wall .ba img{width:100% !important;height:100% !important;object-fit:cover;}
+
+/* רקעים ודקורציות של הדסקטופ — נסתרים לפי מקור התמונה, לא לפי מיקום */
+.band,.torch,#tlbase,#tlprog,
+img[src*="punching-bag"],img[src*="card-icon"],img[src*="pin.svg"],
+img[src*="pin-top"],img[src*="rope"],img[src*="line1"],img[src*="line2"],
+img[src*="line5"],img[src*="line7"],img[src*="ellipse"],img[src*="glove"],
+img[src*="photo-16"],img[src*="photo-17"],img[src*="photo-19"],img[src*="texture"],
+[style*="font-size:700px"]{display:none !important;}
+/* המסגרות שהחזיקו את הדקורציות האלה */
+#rest>div:not([class]):empty,
+#rest>div[style*="left:-753px"],#rest>div[style*="left:-703px"]{display:none !important;}
 
 /* טיפוגרפיה */
 .h100{font-size:clamp(32px,8.6vw,44px) !important;line-height:1.05 !important;}

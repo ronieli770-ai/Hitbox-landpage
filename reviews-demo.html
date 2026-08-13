@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ווידג'ט ביקורות גוגל — HITBOX</title>
+<style>
+@font-face{font-family:'FbReissfeder';src:url('פונט/FbReissfeder-Regular.otf') format('opentype');font-weight:400;}
+@font-face{font-family:'FbReissfeder';src:url('פונט/FbReissfeder-Bold.otf') format('opentype');font-weight:700;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#101c1d;color:#fff;font-family:'FbReissfeder',sans-serif;direction:rtl;padding:64px 24px;}
+.page{max-width:1200px;margin:0 auto;}
+.page > h1{font-size:52px;font-weight:700;line-height:1;margin-bottom:12px;}
+.page > h1 span{color:#fff3b7;}
+.page > p{color:#8ba3a5;font-size:17px;line-height:1.6;margin-bottom:44px;max-width:640px;}
+
+/* ---------- הווידג'ט ---------- */
+#greviews{--gap:24px;}
+.gr-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:26px;}
+.gr-g svg{width:34px;height:34px;display:block;}
+.gr-score{font-size:40px;font-weight:700;line-height:1;}
+.gr-stars{color:#fff3b7;font-size:26px;letter-spacing:2px;line-height:1;}
+.gr-count{color:#8ba3a5;font-size:17px;text-decoration:none;border-bottom:1px solid transparent;}
+.gr-count:hover{color:#fff3b7;border-color:#fff3b7;}
+
+.gr-track{display:flex;gap:var(--gap);overflow-x:auto;scrollbar-width:none;padding-bottom:4px;cursor:grab;}
+.gr-track::-webkit-scrollbar{display:none;}
+.gr-card{flex:none;width:340px;min-height:220px;padding:26px 24px;border-radius:20px;
+  background:#182a2b;border:1px solid #23393a;display:flex;flex-direction:column;gap:12px;}
+.gr-top{display:flex;align-items:center;gap:12px;}
+.gr-av{width:44px;height:44px;border-radius:50%;background:#3e6e72;color:#fff;flex:none;
+  display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;}
+.gr-who{display:flex;flex-direction:column;line-height:1.3;}
+.gr-who b{font-size:19px;font-weight:700;}
+.gr-who i{font-style:normal;font-size:14px;color:#8ba3a5;}
+.gr-text{font-size:17px;line-height:1.6;color:#dfe9ea;}
+.gr-empty{color:#8ba3a5;}
+
+.gr-bar{margin-top:24px;height:10px;border-radius:5px;background:#504D3B;position:relative;}
+.gr-thumb{position:absolute;right:0;top:0;height:100%;border-radius:5px;background:#fff3b7;cursor:grab;}
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>חלונית ביקורות <span>גוגל</span></h1>
+  <p>החלונית צפה בפינה השמאלית התחתונה ומתחלפת מעצמה. היא לא תופסת מקום בפריסת הדף,
+     ולכן אפשר להוסיף אותה לכל עמוד בלי להזיז שום דבר. הטקסט כרגע ממלא מקום.</p>
+</div>
+<script src="reviews.js"></script>
+</body>
+</html>

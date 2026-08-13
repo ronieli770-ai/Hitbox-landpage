@@ -21,6 +21,11 @@ body{overflow-x:hidden;}
 .w{color:#fff;}
 .y{color:#fff3b7;}
 .b{font-weight:700;}
+/* ---- כניסת כותרות: עלייה מאחורי מסכה ---- */
+.rv-line{display:block;overflow:hidden;padding-bottom:.18em;margin-bottom:-.18em;}
+.rv-line > i{display:block;font-style:normal;transform:translateY(115%);}
+.rv.go .rv-line > i{transform:translateY(0);
+  transition:transform .9s cubic-bezier(.16,1,.3,1);transition-delay:var(--d);}
 .h100{font-size:100px;font-weight:700;line-height:.99;}
 .h35{font-size:35px;font-weight:700;line-height:1.03;}
 .t24{font-size:24px;font-weight:400;line-height:1.57;}
@@ -124,6 +129,67 @@ body{overflow-x:hidden;}
   background:#fff3b7;color:#101c1d;font-family:inherit;font-size:24px;font-weight:700;
   transform-origin:50% 50%;transition:background-color .25s ease,transform .25s ease;}
 .qr-submit:hover{background:#fff;transform:scale(1.06);}
+/* ---- תוסף נגישות ---- */
+#a11y-btn{position:fixed;left:0;top:24%;z-index:3000;width:56px;height:56px;
+  border:0;border-radius:0 5px 5px 0;background:#3e6e72;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background-color .2s ease,width .2s ease;}
+#a11y-btn:hover,#a11y-btn:focus-visible{background:#4d868b;width:62px;outline:none;}
+#a11y-btn svg{width:30px;height:30px;fill:#fff;}
+#a11y-panel{position:fixed;left:0;top:24%;z-index:3001;width:300px;padding:22px 20px;
+  background:#101c1d;border:2px solid #3e6e72;border-radius:0 10px 10px 0;
+  transform:translateX(-105%);opacity:0;visibility:hidden;
+  transition:transform .3s cubic-bezier(.16,1,.3,1),opacity .25s ease,visibility .3s;
+  font-family:'FbReissfeder',sans-serif;direction:rtl;max-height:80vh;overflow-y:auto;}
+#a11y-panel.open{transform:translateX(0);opacity:1;visibility:visible;}
+.a11y-title{font-size:24px;font-weight:700;color:#fff3b7;margin-bottom:14px;}
+.a11y-row{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;
+  padding:11px 12px;margin-bottom:6px;border:0;border-radius:5px;background:#182a2b;
+  color:#fff;font-family:inherit;font-size:17px;text-align:right;cursor:pointer;
+  transition:background-color .2s ease;}
+.a11y-toggle:hover{background:#22393a;}
+.a11y-mark{width:20px;height:20px;border:2px solid #3e6e72;border-radius:4px;flex:none;
+  transition:background-color .2s ease,border-color .2s ease;}
+.a11y-toggle[aria-pressed="true"]{background:#22393a;}
+.a11y-toggle[aria-pressed="true"] .a11y-mark{background:#fff3b7;border-color:#fff3b7;}
+.a11y-steps{display:flex;align-items:center;gap:8px;flex:none;}
+.a11y-steps button{width:30px;height:30px;border:0;border-radius:4px;background:#3e6e72;
+  color:#fff;font-size:20px;line-height:1;cursor:pointer;font-family:inherit;}
+.a11y-steps button:hover{background:#fff3b7;color:#101c1d;}
+.a11y-lvl{min-width:14px;text-align:center;color:#fff3b7;font-size:17px;}
+.a11y-reset{width:100%;margin-top:10px;padding:11px;border:2px solid #fff3b7;border-radius:5px;
+  background:transparent;color:#fff3b7;font-family:inherit;font-size:17px;font-weight:700;cursor:pointer;
+  transition:background-color .2s ease,color .2s ease;}
+.a11y-reset:hover{background:#fff3b7;color:#101c1d;}
+.a11y-statement{display:block;margin-top:12px;text-align:center;font-size:15px;color:#8ba3a5;}
+
+/* ---- מצבי התצוגה ---- */
+html.a11y-contrast body{filter:contrast(1.45) saturate(1.25);}
+html.a11y-grayscale body{filter:grayscale(1);}
+html.a11y-invert body{filter:invert(1) hue-rotate(180deg);}
+html.a11y-contrast.a11y-grayscale body{filter:contrast(1.45) grayscale(1);}
+html.a11y-links a{text-decoration:underline !important;text-underline-offset:4px;
+  outline:2px solid #fff3b7;outline-offset:2px;}
+html.a11y-still *,html.a11y-still *::before,html.a11y-still *::after{
+  animation:none !important;transition:none !important;}
+html.a11y-cursor,html.a11y-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath d='M6 2l24 15-11 2 6 12-5 3-6-12-8 8z' fill='%23fff3b7' stroke='%23101c1d' stroke-width='2'/%3E%3C/svg%3E") 4 2,auto;}
+html.a11y-readable body,html.a11y-readable #canvas,html.a11y-readable .field,
+html.a11y-readable button,html.a11y-readable input{font-family:Arial,'Helvetica Neue',sans-serif !important;}
+/* התוסף עצמו לא מושפע מהמסננים, אחרת הוא הופך לבלתי קריא */
+html.a11y-invert #a11y-btn,html.a11y-invert #a11y-panel,
+html.a11y-grayscale #a11y-btn,html.a11y-grayscale #a11y-panel{filter:none;}
+/* ---- פנס שעוקב אחרי העכבר על הפסים הטורקיזיים ---- */
+.band.teal{overflow:hidden;}
+.torch{position:absolute;inset:0;pointer-events:none;opacity:0;
+  transition:opacity .4s ease;mix-blend-mode:normal;
+  background:radial-gradient(circle 340px at var(--mx,50%) var(--my,50%),
+    #4E8E93 0%, rgba(78,142,147,.75) 38%, rgba(78,142,147,0) 72%);}
+.band.teal.lit .torch{opacity:1;}
+/* ---- כרטיסי סקשן 2: עולים אחד אחרי השני ויוצאים מטשטוש ---- */
+.rise{opacity:0;transform:translateY(52px);filter:blur(16px);}
+.rise.go{opacity:1;transform:translateY(0);filter:blur(0);
+  transition:opacity .7s ease,transform .95s cubic-bezier(.16,1,.3,1),filter .85s ease;
+  transition-delay:var(--rd,0ms);}
 .loc-row{position:absolute;left:199px;width:617px;height:125px;border-radius:10px;background:#101c1d;}
 .field{position:absolute;left:176px;width:668px;height:67px;border-radius:5px;background:#f0f0f0;border:none;font-family:'FbReissfeder',sans-serif;font-size:24px;color:#101c1d;text-align:center;direction:rtl;}
 .field::placeholder{color:#101c1d;opacity:1;}
@@ -196,10 +262,10 @@ img.cover{width:100%;height:100%;object-fit:cover;}
 <!-- ===== רקעים ===== -->
 <div class="abs band yellow" style="top:5879px;left:117px;width:1494px;height:616px;border-radius:20px;background:#fff3b7;overflow:hidden;"><img src="assets/texture.png" alt=""></div>
 <img class="abs" src="assets/punching-bag.svg" alt="" style="left:530px;top:5894px;width:687px;height:587px;">
-<div class="band" style="top:3530px;background:#3e6e72;"><img src="assets/texture.png" alt=""></div>
+<div class="band teal" style="top:3530px;background:#3e6e72;"><img src="assets/texture.png" alt=""><span class="torch"></span></div>
 <div class="band" style="top:4628px;background:#101c1d;"><img src="assets/texture.png" alt=""></div>
 <div class="band" style="top:4681px;background:#101c1d;"><img src="assets/texture.png" alt=""></div>
-<div class="band" style="top:6632px;background:#3e6e72;"><img src="assets/texture.png" alt=""></div>
+<div class="band teal" style="top:6632px;background:#3e6e72;"><img src="assets/texture.png" alt=""><span class="torch"></span></div>
 <div class="band yellow" style="top:9367px;background:#fff3b7;"><img src="assets/texture.png" alt=""></div>
 
 <!-- ===== איך החיים שלך הולכים להיראות ===== -->
@@ -208,18 +274,18 @@ img.cover{width:100%;height:100%;object-fit:cover;}
 <div class="abs t24 w tr" style="right:1029px;top:1269px;width:582px;height:268px;display:flex;flex-direction:column;justify-content:flex-end;">
   <p>תביט במראה ותראה את הגרסה החזקה שלך, או שוב תדחה את זה ל"אחרי החגים"?</p>
 </div>
-<div class="pcard" style="left:1253.4px;"></div>
-<div class="pcard" style="left:875.2px;"></div>
-<div class="pcard" style="left:497px;"></div>
-<div class="pcard" style="left:118.9px;"></div>
-<img class="abs cover" src="assets/card-icon.png" alt="" style="left:1486.6px;top:1631.4px;width:99.2px;height:99.2px;">
-<img class="abs cover" src="assets/card-icon.png" alt="" style="left:1108.5px;top:1631.4px;width:99.2px;height:99.2px;">
-<img class="abs cover" src="assets/card-icon.png" alt="" style="left:730.4px;top:1631.4px;width:99.2px;height:99.2px;">
-<img class="abs cover" src="assets/card-icon.png" alt="" style="left:342px;top:1631.4px;width:99.2px;height:99.2px;">
-<div class="abs h35 w tr" style="right:145.7px;top:1745px;width:280.8px;">מתאמן כבר תקופה אבל התוצאות פשוט לא מגיעות?</div>
-<div class="abs h35 w tr" style="right:523.8px;top:1745px;width:280.8px;">נמאס לך להשתעמם באימונים ולחכות בתור למכשירים?</div>
-<div class="abs h35 w tr" style="right:901.9px;top:1745px;width:280.8px;">מסיים את יום העבודה מוצף בלחצים ועם שרירים תפוסים?</div>
-<div class="abs h35 w tr" style="right:1280.2px;top:1745px;width:280.8px;">מרגיש שאין לך יכולת אמיתית להגן על עצמך ועל המשפחה?</div>
+<div class="rise pcard" style="--rd:0ms;left:1253.4px;"></div>
+<div class="rise pcard" style="--rd:130ms;left:875.2px;"></div>
+<div class="rise pcard" style="--rd:260ms;left:497px;"></div>
+<div class="rise pcard" style="--rd:390ms;left:118.9px;"></div>
+<img class="rise abs cover" src="assets/card-icon.png" alt="" style="--rd:0ms;left:1486.6px;top:1631.4px;width:99.2px;height:99.2px;">
+<img class="rise abs cover" src="assets/card-icon.png" alt="" style="--rd:130ms;left:1108.5px;top:1631.4px;width:99.2px;height:99.2px;">
+<img class="rise abs cover" src="assets/card-icon.png" alt="" style="--rd:260ms;left:730.4px;top:1631.4px;width:99.2px;height:99.2px;">
+<img class="rise abs cover" src="assets/card-icon.png" alt="" style="--rd:390ms;left:342px;top:1631.4px;width:99.2px;height:99.2px;">
+<div class="rise abs h35 w tr" style="--rd:0ms;right:145.7px;top:1745px;width:280.8px;">מתאמן כבר תקופה אבל התוצאות פשוט לא מגיעות?</div>
+<div class="rise abs h35 w tr" style="--rd:130ms;right:523.8px;top:1745px;width:280.8px;">נמאס לך להשתעמם באימונים ולחכות בתור למכשירים?</div>
+<div class="rise abs h35 w tr" style="--rd:260ms;right:901.9px;top:1745px;width:280.8px;">מסיים את יום העבודה מוצף בלחצים ועם שרירים תפוסים?</div>
+<div class="rise abs h35 w tr" style="--rd:390ms;right:1280.2px;top:1745px;width:280.8px;">מרגיש שאין לך יכולת אמיתית להגן על עצמך ועל המשפחה?</div>
 <div class="abs tc" style="left:291px;top:1961px;width:1146px;font-size:32px;line-height:1.57;">
   <span class="w">תוך 90 יום של אימון ממוקד, </span><span class="y b">התחושה והמראה שלך משתנים מקצה לקצה.</span>
 </div>
@@ -351,35 +417,11 @@ img.cover{width:100%;height:100%;object-fit:cover;}
 <div id="wallrow">
   <article class="wall">
     <div class="q">
-      <p class="delta"><span dir="ltr">-36</span> קילו</p>
-      <p class="quote">ציטוט זמני — יוחלף בדברי המתאמן.</p>
-      <p class="kg"><span dir="ltr">124</span> ← <span dir="ltr">88</span> ק״ג</p>
-    </div>
-    <div class="ba"><img src="assets/ba/gnt.jpg" alt=""><span class="split"></span></div>
-  </article>
-  <article class="wall">
-    <div class="q">
       <p class="delta"><span dir="ltr">-15</span> קילו</p>
       <p class="quote">ציטוט זמני — יוחלף בדברי המתאמן.</p>
       <p class="kg"><span dir="ltr">93</span> ← <span dir="ltr">78</span> ק״ג</p>
     </div>
     <div class="ba"><img src="assets/ba/noa.jpg" alt=""><span class="split"></span></div>
-  </article>
-  <article class="wall">
-    <div class="q">
-      <p class="delta"><span dir="ltr">-20</span> קילו</p>
-      <p class="quote">ציטוט זמני — יוחלף בדברי המתאמן.</p>
-      <p class="kg"><span dir="ltr">110</span> ← <span dir="ltr">90</span> ק״ג</p>
-    </div>
-    <div class="ba"><img src="assets/ba/eli.jpg" alt=""><span class="split"></span></div>
-  </article>
-  <article class="wall">
-    <div class="q">
-      <p class="delta"><span dir="ltr">-18</span> קילו</p>
-      <p class="quote">ציטוט זמני — יוחלף בדברי המתאמן.</p>
-      <p class="kg"><span dir="ltr">95</span> ← <span dir="ltr">77</span> ק״ג</p>
-    </div>
-    <div class="ba"><img src="assets/ba/tal.jpg" alt=""><span class="split"></span></div>
   </article>
   <article class="wall">
     <div class="q">
@@ -399,11 +441,35 @@ img.cover{width:100%;height:100%;object-fit:cover;}
   </article>
   <article class="wall">
     <div class="q">
+      <p class="delta"><span dir="ltr">-20</span> קילו</p>
+      <p class="quote">ציטוט זמני — יוחלף בדברי המתאמן.</p>
+      <p class="kg"><span dir="ltr">110</span> ← <span dir="ltr">90</span> ק״ג</p>
+    </div>
+    <div class="ba"><img src="assets/ba/eli.jpg" alt=""><span class="split"></span></div>
+  </article>
+  <article class="wall">
+    <div class="q">
       <p class="delta"><span dir="ltr">-34</span> קילו</p>
       <p class="quote">ציטוט זמני — יוחלף בדברי המתאמן.</p>
       <p class="kg"><span dir="ltr">118</span> ← <span dir="ltr">84</span> ק״ג</p>
     </div>
     <div class="ba"><img src="assets/ba/lon.jpg" alt=""><span class="split"></span></div>
+  </article>
+  <article class="wall">
+    <div class="q">
+      <p class="delta"><span dir="ltr">-36</span> קילו</p>
+      <p class="quote">ציטוט זמני — יוחלף בדברי המתאמן.</p>
+      <p class="kg"><span dir="ltr">124</span> ← <span dir="ltr">88</span> ק״ג</p>
+    </div>
+    <div class="ba"><img src="assets/ba/gnt.jpg" alt=""><span class="split"></span></div>
+  </article>
+  <article class="wall">
+    <div class="q">
+      <p class="delta"><span dir="ltr">-18</span> קילו</p>
+      <p class="quote">ציטוט זמני — יוחלף בדברי המתאמן.</p>
+      <p class="kg"><span dir="ltr">95</span> ← <span dir="ltr">77</span> ק״ג</p>
+    </div>
+    <div class="ba"><img src="assets/ba/tal.jpg" alt=""><span class="split"></span></div>
   </article></div>
 </div>
 <div id="wallbar"><span id="wallthumb"></span></div>
@@ -446,7 +512,7 @@ img.cover{width:100%;height:100%;object-fit:cover;}
 <!-- ===== בוא נקבע לך אימון ניסיון ===== -->
 <div class="abs" id="form" style="left:117px;top:9514px;width:785px;height:584px;border-radius:20px;background:#fff;"></div>
 <div class="abs h100 tr" style="right:117px;top:9618px;width:562px;"><span style="color:#101c1d;">בוא נקבע לך </span><span style="color:#3e6e72;">אימון ניסיון</span></div>
-<a class="abs h35 tr lnk" href="tel:+972779706900" style="right:180px;top:9891px;width:214px;color:#101c1d;">077-9706-900</a>
+<a class="abs h35 tr lnk" href="tel:+972779706900" style="right:180px;top:9891px;width:214px;color:#101c1d;">077-970-6900</a>
 <a class="abs lnk" href="tel:+972779706900" aria-label="חיוג לסטודיו" style="left:1569px;top:9881px;width:42px;height:43px;"><img src="assets/phone.svg" alt="" style="width:100%;height:100%;"></a>
 <a class="abs h35 tr lnk" href="https://www.instagram.com/oritzhaki_hitbox/" target="_blank" rel="noopener" style="right:180px;top:9955px;width:438px;color:#101c1d;">עקוב אחרינו באינסטגרם</a>
 <a class="abs lnk" href="https://www.instagram.com/oritzhaki_hitbox/" target="_blank" rel="noopener" aria-label="היטבוקס באינסטגרם" style="left:1567px;top:9951px;width:44px;height:44px;"><img src="assets/instagram.svg" alt="" style="width:100%;height:100%;"></a>
@@ -467,10 +533,9 @@ img.cover{width:100%;height:100%;object-fit:cover;}
 <div class="field sel" style="top:9834px;" data-name="goal" tabindex="0" role="listbox">
   <span class="sel-val ph">מה הכי מדבר אליך?</span><span class="arw"></span>
   <ul class="sel-list">
+    <li>לנסות ספורט חדש שלא ישעמם אותי</li>
     <li>להיכנס לכושר ולרדת במשקל</li>
-    <li>ללמוד להגן על עצמי</li>
-    <li>לנסות ספורט שהוא לא חדר כושר</li>
-    <li>לפרוק אנרגיות ולשחרר מתחים</li>
+    <li>לרכוש יכולות לחימה והגנה עצמית</li>
   </ul>
 </div>
 <input type="checkbox" class="abs" style="left:816px;top:9920px;width:28px;height:28px;accent-color:#3e6e72;">
@@ -528,7 +593,8 @@ const c=document.getElementById('canvas'),s=document.getElementById('stage'),
       items=[...document.querySelectorAll('.tli')];
 // עוצר כשקצה הטקסט של התחנה האחרונה מגיע לשוליים השמאליים של הגריד (117px)
 const TRAVEL=918, NODE_SPAN=1904;
-let k=1,d=0,cy=0,tx=0,txTarget=0,active=-1;
+let k=1,d=0,cy=0,tx=0,txTarget=0,active=-1,zoom=1;
+window.a11ySetZoom=z=>{zoom=z||1;fit();};
 
 /* שני סקשנים נעולים: הציר, וגריד ההמלצות.
    center = מרכז הסקשן בקואורדינטות הקנבס, span = אורך הנעילה בפיקסלי קנבס */
@@ -538,7 +604,8 @@ const pins=[
 ];
 
 function fit(){
-  k=window.innerWidth/1728;
+  k=window.innerWidth/1728*zoom;
+  document.body.style.overflowX=zoom>1?'auto':'hidden';
   const H=window.innerHeight/k;
   d=H-1116;
   hero.style.height=H+'px';
@@ -584,6 +651,7 @@ function loop(){
   if(Math.abs(txTarget-tx)<0.05)tx=txTarget;
   draw();
   if(window.vgridDraw)window.vgridDraw();
+  if(window.revealTick)window.revealTick();
   requestAnimationFrame(loop);
 }
 
@@ -605,6 +673,10 @@ fit();loop();
 <script src="wall.js"></script>
 <script src="form.js"></script>
 <script src="quiz.js"></script>
+<script src="reveal.js"></script>
+<script src="a11y.js"></script>
+<script src="torch.js"></script>
+<script src="reviews.js"></script>
 <script src="parallax.js"></script>
 </body>
 </html>

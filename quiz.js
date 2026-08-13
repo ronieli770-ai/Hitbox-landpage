@@ -7,7 +7,7 @@ const QUESTIONS = [
   {
     key: 'goal',
     q: 'מה הכי מדבר אליך עכשיו?',
-    a: ['לפרוק את הלחץ מהעבודה',
+    a: ['לנסות ספורט חדש שלא ישעמם אותי',
         'להיכנס לכושר ולרדת במשקל',
         'לרכוש יכולות לחימה והגנה עצמית']
   },
@@ -121,9 +121,7 @@ const QUESTIONS = [
     if (!form.reportValidity()) return;
     const data = Object.fromEntries(new FormData(form).entries());
     console.log('פרטי הליד:', data);   // כאן יתחבר היעד בפועל
-    form.innerHTML = '<p class="qr-head">קיבלנו! <span class="y">נחזור אליך היום.</span></p>' +
-      '<p class="qr-sub">תודה שמילאת. הצוות של היטבוקס יצור איתך קשר לתיאום אימון הניסיון.</p>';
-    back.hidden = true;
+    location.href = 'thanks.html?goal=' + encodeURIComponent(answers.goal || '');
   });
 
   paint();

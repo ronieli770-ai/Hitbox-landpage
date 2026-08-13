@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>אנימציות כניסה לכותרות — HITBOX</title>
+<style>
+@font-face{font-family:'FbReissfeder';src:url('פונט/FbReissfeder-Regular.otf') format('opentype');font-weight:400;}
+@font-face{font-family:'FbReissfeder';src:url('פונט/FbReissfeder-Bold.otf') format('opentype');font-weight:700;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#101c1d;color:#fff;font-family:'FbReissfeder',sans-serif;direction:rtl;padding:56px 24px 90px;}
+.wrap{max-width:1080px;margin:0 auto;}
+.top{margin-bottom:56px;}
+.top h1{font-size:52px;font-weight:700;line-height:1;}
+.top h1 span{color:#fff3b7;}
+.top p{margin-top:14px;font-size:18px;line-height:1.6;color:#8ba3a5;max-width:640px;}
+
+.demo{border:1px solid #23393a;border-radius:20px;padding:44px 40px 36px;margin-bottom:26px;
+  background:#131f20;overflow:hidden;}
+.bar{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:30px;}
+.num{font-size:15px;color:#3e6e72;font-weight:700;}
+.name{font-size:24px;font-weight:700;}
+.why{font-size:15px;line-height:1.5;color:#8ba3a5;flex:1 1 260px;}
+.replay{margin-inline-start:auto;height:40px;padding:0 20px;border-radius:5px;cursor:pointer;
+  border:2px solid #fff3b7;background:transparent;color:#fff3b7;font-family:inherit;font-size:15px;font-weight:700;
+  transition:background-color .2s ease,color .2s ease;}
+.replay:hover{background:#fff3b7;color:#101c1d;}
+
+.stage{font-size:clamp(30px,5.4vw,64px);font-weight:700;line-height:1.02;}
+.stage .y{color:#fff3b7;}
+.line{display:block;overflow:hidden;}          /* המסכה שממנה הטקסט עולה */
+.line > i{display:block;font-style:normal;}
+.w,.ch{display:inline-block;}
+
+/* 1 — עלייה מאחורי מסכה, שורה אחרי שורה */
+.a1 .line > i{transform:translateY(115%);}
+.a1.go .line > i{transform:translateY(0);
+  transition:transform .9s cubic-bezier(.16,1,.3,1);transition-delay:var(--d);}
+
+/* 2 — מילה אחרי מילה */
+.a2 .w{opacity:0;transform:translateY(70%);}
+.a2.go .w{opacity:1;transform:translateY(0);
+  transition:transform .7s cubic-bezier(.16,1,.3,1),opacity .5s ease;transition-delay:var(--d);}
+
+/* 3 — אות אחרי אות, עם חבטה קטנה בסוף */
+.a3 .ch{opacity:0;transform:translateY(-38%) scale(.86);}
+.a3.go .ch{opacity:1;transform:translateY(0) scale(1);
+  transition:transform .5s cubic-bezier(.34,1.7,.5,1),opacity .3s ease;transition-delay:var(--d);}
+
+/* 4 — יוצא מטשטוש ומתמקד */
+.a4{opacity:0;filter:blur(18px);transform:scale(1.06);}
+.a4.go{opacity:1;filter:blur(0);transform:scale(1);
+  transition:opacity .8s ease,filter .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);}
+
+/* 5 — פס צהוב חוצה וחושף מאחוריו */
+.a5 .line{position:relative;}
+.a5 .line > i{opacity:0;}
+.a5 .line::after{content:'';position:absolute;inset:0;background:#fff3b7;transform:scaleX(0);
+  transform-origin:right center;}
+.a5.go .line > i{opacity:1;transition:opacity 0s linear;transition-delay:calc(var(--d) + .34s);}
+.a5.go .line::after{animation:wipe .78s cubic-bezier(.7,0,.3,1) forwards;animation-delay:var(--d);}
+@keyframes wipe{
+  0%{transform:scaleX(0);transform-origin:right center;}
+  45%{transform:scaleX(1);transform-origin:right center;}
+  55%{transform:scaleX(1);transform-origin:left center;}
+  100%{transform:scaleX(0);transform-origin:left center;}
+}
+
+/* 6 — הלבן עולה, והצהוב נוחת אחריו במכה */
+.a6 .line > i{transform:translateY(115%);}
+.a6.go .line > i{transform:translateY(0);
+  transition:transform .8s cubic-bezier(.16,1,.3,1);transition-delay:var(--d);}
+.a6 .y{display:inline-block;opacity:0;transform:scale(1.5);}
+.a6.go .y{opacity:1;transform:scale(1);
+  transition:transform .42s cubic-bezier(.3,1.8,.5,1),opacity .2s ease;transition-delay:.72s;}
+
+/* 7 — התקרבות עדינה מאחורי מסכה, בלי דרמה */
+.a7 .line > i{transform:translateY(40%) scale(1.14);opacity:0;}
+.a7.go .line > i{transform:translateY(0) scale(1);opacity:1;
+  transition:transform 1.15s cubic-bezier(.16,1,.3,1),opacity .7s ease;transition-delay:var(--d);}
+
+@media (prefers-reduced-motion:reduce){
+  .stage *,.stage{transition:none!important;animation:none!important;
+    opacity:1!important;transform:none!important;filter:none!important;}
+  .a5 .line::after{display:none;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <h1>אנימציות כניסה <span>לכותרות</span></h1>
+    <p>שבע אפשרויות באותה שפה עיצובית. כל אחת נדלקת כשהיא נכנסת למסך, ואפשר להריץ מחדש בכפתור.
+       הכותרת לדוגמה זהה בכולן כדי שההשוואה תהיה הוגנת.</p>
+  </div>
+
+  <section class="demo"><div class="bar"><span class="num">01</span><span class="name">עלייה מאחורי מסכה</span>
+    <span class="why">הכי בטוח והכי נקי. הטקסט נחשף שורה אחרי שורה מתוך קו בלתי נראה. עובד יפה בכל אורך.</span>
+    <button class="replay">הרצה</button></div>
+    <div class="stage a1" data-split="lines"></div></section>
+
+  <section class="demo"><div class="bar"><span class="num">02</span><span class="name">מילה אחרי מילה</span>
+    <span class="why">קצב מדוד שמוביל את העין לאורך המשפט. מתאים לכותרות של שתיים־שלוש שורות.</span>
+    <button class="replay">הרצה</button></div>
+    <div class="stage a2" data-split="words"></div></section>
+
+  <section class="demo"><div class="bar"><span class="num">03</span><span class="name">חבטה, אות אחרי אות</span>
+    <span class="why">האותיות נוחתות עם קפיצה קלה. אנרגטי ומתאים לאגרוף — אבל רק לכותרת קצרה.</span>
+    <button class="replay">הרצה</button></div>
+    <div class="stage a3" data-split="chars"></div></section>
+
+  <section class="demo"><div class="bar"><span class="num">04</span><span class="name">מטשטוש למיקוד</span>
+    <span class="why">הכותרת מתחדדת לתוך המסך. שקטה ויקרה, ומשתלבת טוב מעל וידאו.</span>
+    <button class="replay">הרצה</button></div>
+    <div class="stage a4" data-split="none"></div></section>
+
+  <section class="demo"><div class="bar"><span class="num">05</span><span class="name">פס צהוב חושף</span>
+    <span class="why">פס בצבע המותג חוצה את השורה ומשאיר אחריו את הטקסט. הכי בעל אופי, והכי בולט.</span>
+    <button class="replay">הרצה</button></div>
+    <div class="stage a5" data-split="lines"></div></section>
+
+  <section class="demo"><div class="bar"><span class="num">06</span><span class="name">הדגשה שנוחתת אחרונה</span>
+    <span class="why">הלבן עולה ראשון, והמילים הצהובות נוחתות אחריו. מפנה את תשומת הלב בדיוק למסר.</span>
+    <button class="replay">הרצה</button></div>
+    <div class="stage a6" data-split="lines"></div></section>
+
+  <section class="demo"><div class="bar"><span class="num">07</span><span class="name">התקרבות עדינה</span>
+    <span class="why">כמעט לא מורגשת, ובדיוק בגלל זה מרגישה יקרה. בחירה טובה אם יש הרבה אנימציות בדף.</span>
+    <button class="replay">הרצה</button></div>
+    <div class="stage a7" data-split="lines"></div></section>
+</div>
+
+<script>
+const LINES = [
+  ['תכנית 90 הימים', true],
+  ['לפריקת מתחים,', false],
+  ['חיטוב והגנה עצמית', false]
+];
+const STEP = { lines: 110, words: 55, chars: 22 };   // מילישניות בין פריטים
+
+function build(stage) {
+  const mode = stage.dataset.split;
+  stage.innerHTML = '';
+  let n = 0;
+  LINES.forEach(([text, yellow]) => {
+    const line = document.createElement('span');
+    line.className = 'line';
+    const inner = document.createElement('i');
+    if (mode === 'words' || mode === 'chars') {
+      const parts = mode === 'words' ? text.split(' ') : [...text];
+      parts.forEach((part, i) => {
+        const el = document.createElement('span');
+        el.className = mode === 'words' ? 'w' : 'ch';
+        el.textContent = part === ' ' ? ' ' : part;
+        if (yellow) el.classList.add('y');
+        el.style.setProperty('--d', (n++ * STEP[mode]) + 'ms');
+        inner.appendChild(el);
+        if (mode === 'words' && i < parts.length - 1) inner.appendChild(document.createTextNode(' '));
+      });
+    } else {
+      inner.innerHTML = yellow ? `<span class="y">${text}</span>` : text;
+      inner.style.setProperty('--d', (n++ * STEP.lines) + 'ms');
+    }
+    line.appendChild(inner);
+    stage.appendChild(line);
+  });
+}
+
+const stages = [...document.querySelectorAll('.stage')];
+stages.forEach(build);
+
+function play(stage) {
+  stage.classList.remove('go');
+  void stage.offsetWidth;          // מאלץ ריסטארט של האנימציה
+  stage.classList.add('go');
+}
+
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { play(e.target); io.unobserve(e.target); } });
+}, { threshold: .5 });
+stages.forEach(s => io.observe(s));
+
+document.querySelectorAll('.replay').forEach(btn => {
+  btn.addEventListener('click', () => play(btn.closest('.demo').querySelector('.stage')));
+});
+</script>
+</body>
+</html>

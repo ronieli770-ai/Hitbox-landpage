@@ -45,3 +45,23 @@
     if (!e.target.closest('.sel')) sels.forEach(s => s.classList.remove('open'));
   });
 })();
+
+/* ---- הטופס התחתון: שליחה מפנה לעמוד התודה עם הסיבה שנבחרה ---- */
+(function () {
+  const btn = [...document.querySelectorAll('.field')]
+    .find(el => el.tagName === 'BUTTON' && el.textContent.includes('אימון ניסיון'));
+  if (!btn) return;
+
+  btn.addEventListener('click', () => {
+    const val = n => (document.querySelector(`[name="${n}"]`) || {}).value || '';
+    if (!val('name').trim() || !val('phone').trim()) {
+      alert('צריך שם וטלפון כדי שנוכל לחזור אליך.');
+      return;
+    }
+    console.log('פרטי הליד:', {
+      name: val('name'), phone: val('phone'),
+      branch: val('branch'), goal: val('goal')
+    });   // כאן יתחבר היעד בפועל
+    location.href = 'thanks.html?goal=' + encodeURIComponent(val('goal'));
+  });
+})();

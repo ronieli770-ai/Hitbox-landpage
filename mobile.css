@@ -27,10 +27,23 @@ html,body{overflow-x:hidden;scroll-behavior:smooth;}
 #hero>img.abs{display:none;}
 
 /* ---------- הזרימה הראשית ---------- */
+#stage{position:static !important;}
 #rest{position:static !important;width:100% !important;height:auto !important;
   display:flex;flex-direction:column;gap:16px;padding:44px 18px 40px;}
 #rest>*{position:static !important;inset:auto !important;transform:none !important;
   width:100% !important;height:auto !important;}
+
+/* כל צאצא מקונן מאבד את העוגן שלו כשההורה הופך לזורם — לכן מאפסים הכל,
+   ומחזירים מיקום רק למי שבאמת צריך אותו. */
+#rest *{position:static !important;}
+#rest .vc,#rest .obj,#rest .sel,#rest .wall .ba,#rest .q-opts,
+#rest #quiz,#rest #wallbar{position:relative !important;}
+#rest .vc .play,#rest .wall .ba .split,#rest .sel-list,
+#rest .arw,#rest #wallthumb{position:absolute !important;}
+#rest .vhead{display:none !important;}
+#rest img{position:static !important;width:100% !important;height:auto !important;
+  max-width:100% !important;inset:auto !important;}
+#rest .vc img,#rest .vc video,#rest .wall .ba img{height:100% !important;object-fit:cover;}
 
 /* רקעים ודקורציות של הדסקטופ */
 .band,.torch,

@@ -62,7 +62,7 @@ const clamp01 = t => t < 0 ? 0 : t > 1 ? 1 : t;
     cell.setAttribute('aria-label', 'צפייה בהמלצה');
     if (cell.classList.contains('hero'))
       cell.insertAdjacentHTML('beforeend',
-        '<div class="vhead h100"><p class="w">לא מאמינים לנו?</p><p class="y">תשמעו אותם.</p></div>');
+        '<div class="vhead h100"><p class="w">לא מאמין לנו?</p><p class="y">תשמע אותם.</p></div>');
   });
 
   const head = grid.querySelector('.vhead');

@@ -48,21 +48,103 @@ body{overflow-x:hidden;}
 /* ---- אקורדיון ההתנגדויות: ריחוף פותח את הכרטיס ---- */
 #objrow{position:absolute;left:117px;top:8820px;width:1494px;height:397px;display:flex;gap:27px;}
 .obj{flex:1 1 0;min-width:0;border-radius:20px;border:1px solid #fff3b7;overflow:hidden;cursor:default;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 26px;
-  transition:flex-grow .45s cubic-bezier(.4,0,.2,1),background-color .45s ease,border-color .45s ease;}
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:34px 26px;
+  transition:flex-grow .45s cubic-bezier(.4,0,.2,1),background-color .45s ease,border-color .45s ease,padding .45s ease;}
+/* משבצת בגובה קבוע לאייקון — כך כל האייקונים על אותו קו, והכותרות מתחילות באותו גובה */
+.obj .icw{flex:none;height:114px;display:flex;align-items:center;justify-content:center;
+  transition:height .45s cubic-bezier(.4,0,.2,1);}
 .obj .ic{flex:none;transition:transform .45s cubic-bezier(.4,0,.2,1),filter .45s ease;}
 .obj .ttl{font-size:35px;font-weight:700;line-height:1.03;text-align:center;color:#fff;margin-top:34px;
   transition:color .45s ease,margin .45s ease;}
 .obj .bd{font-size:24px;font-weight:400;line-height:1.5;text-align:right;color:#101c1d;width:100%;
   max-height:0;opacity:0;overflow:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1),opacity .3s ease,margin .45s ease;}
-.obj:hover{flex-grow:2.8;background:#fff3b7;border-color:#fff3b7;}
+/* במצב פתוח הפדינג מתאזן — פחות מלמעלה, יותר מלמטה */
+.obj:hover{flex-grow:2.8;background:#fff3b7;border-color:#fff3b7;padding:34px 26px 38px;}
 /* האייקונים צהובים, אז על הרקע הצהוב הם מוכהים כדי להישאר קריאים */
-.obj:hover .ic{transform:scale(.62);filter:brightness(0);}
-.obj:hover .ttl{color:#101c1d;text-align:right;width:100%;margin-top:12px;}
-.obj:hover .bd{max-height:260px;opacity:1;margin-top:18px;}
+.obj:hover .ic{transform:scale(.56);filter:brightness(0);}
+/* flex-start ב-RTL מצמיד לימין — האייקון מתיישר לקו של הטקסט */
+.obj:hover .icw{height:64px;align-self:stretch;justify-content:flex-start;}
+.obj:hover .ttl{color:#101c1d;text-align:right;width:100%;margin-top:26px;}
+.obj:hover .bd{max-height:260px;opacity:1;margin-top:16px;}
+/* ---- קרוסלת לפני־אחרי ---- */
+#wallwrap{position:absolute;left:134px;top:7867px;width:909px;height:536px;overflow:hidden;}
+#wallrow{direction:rtl;display:flex;gap:30px;height:100%;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;
+  cursor:grab;}
+#wallrow::-webkit-scrollbar{display:none;}
+#wallrow.drag{cursor:grabbing;}
+.wall{flex:none;width:857px;height:536px;border-radius:20px;background:#fff;
+  display:flex;align-items:center;gap:38px;padding:55px 46px 55px 50px;}
+.wall .q{width:266px;flex:none;color:#101c1d;}
+.wall .delta{font-size:35px;font-weight:700;line-height:1.03;color:#3e6e72;}
+.wall .quote{font-size:24px;line-height:1.5;margin-top:14px;}
+.wall .kg{font-size:24px;line-height:1.5;margin-top:14px;opacity:.6;}
+.wall .ba{position:relative;width:457px;height:414px;flex:none;background:#d9d9d9;overflow:hidden;border-radius:20px;}
+.wall .ba img{width:100%;height:100%;object-fit:cover;display:block;}
+.wall .ba .split{position:absolute;left:50%;top:0;bottom:0;width:2px;transform:translateX(-50%);background:#fff;}
+/* הפס נמתח לרוחב הקרוסלה בלבד, והידית מתחילה מימין */
+#wallbar{position:absolute;left:134px;top:8443px;width:909px;height:10px;border-radius:5px;background:#504D3B;}
+#wallthumb{position:absolute;right:0;top:0;height:100%;border-radius:5px;background:#fff3b7;cursor:grab;}
+#wallbar.drag #wallthumb{cursor:grabbing;}
+/* ---- שאלון "ענה על 4 שאלות" ---- */
+#quiz{position:absolute;left:249px;top:7183px;width:1362px;}
+.q-head{position:absolute;right:0;top:0;white-space:nowrap;transition:opacity .25s ease;}
+/* כפתור החזרה יושב מתחת לקונטיינרים, בקופסה בשפה של שאר הדף */
+.q-back{position:absolute;right:0;top:450px;z-index:5;cursor:pointer;height:67px;
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:0 40px;border-radius:5px;border:2px solid #fff3b7;background:transparent;
+  font-family:inherit;font-size:24px;font-weight:700;color:#fff3b7;
+  transition:background-color .25s ease,color .25s ease,transform .25s ease;}
+/* display מפורש דורס את [hidden], ולכן צריך להחזיר אותו */
+.q-back[hidden]{display:none;}
+.q-back:hover{background:#fff3b7;color:#101c1d;transform:translateY(-2px);}
+.q-opts{position:absolute;top:87px;left:0;display:flex;gap:36px;transition:opacity .25s ease;}
+#quiz.swap .q-opts,#quiz.swap .q-head{opacity:0;}
+.qopt{flex:none;width:430px;height:239px;border-radius:20px;background:#101c1d;cursor:pointer;
+  border:3px solid #fff3b7;
+  display:flex;align-items:center;justify-content:center;padding:32px 37px;
+  font-family:inherit;font-size:35px;font-weight:700;line-height:1.03;text-align:center;color:#fff;
+  transition:box-shadow .25s ease,transform .25s ease,background-color .25s ease;}
+.qopt:hover,.qopt:focus-visible{outline:none;background:#16292a;box-shadow:0 8px 4px #fff3b7;transform:translateY(-3px);}
+/* ---- מסך התוצאה ---- */
+.q-result{position:absolute;top:0;left:0;width:100%;display:none;flex-direction:column;
+  align-items:flex-start;text-align:right;}
+#quiz.done .q-head,#quiz.done .q-opts{display:none;}
+#quiz.done .q-result{display:flex;}
+.qr-head{font-size:60px;font-weight:700;line-height:1.05;color:#fff;}
+.qr-sub{font-size:24px;line-height:1.57;color:#fff;margin-top:16px;max-width:900px;height:76px;}
+.qr-fields{display:flex;gap:36px;margin-top:34px;}
+.qf{width:430px;height:67px;border-radius:5px;background:#f0f0f0;border:0;
+  font-family:inherit;font-size:24px;color:#101c1d;text-align:center;direction:rtl;}
+.qf::placeholder{color:#101c1d;opacity:1;}
+.qf:invalid:not(:placeholder-shown){box-shadow:0 0 0 2px #d93025;}
+.qr-consent{display:flex;align-items:center;gap:12px;margin-top:26px;cursor:pointer;
+  font-size:16px;line-height:1.57;color:#fff;}
+.qr-consent input{width:24px;height:24px;accent-color:#fff3b7;cursor:pointer;flex:none;}
+.qr-submit{width:430px;height:67px;margin-top:26px;border-radius:5px;border:0;cursor:pointer;
+  background:#fff3b7;color:#101c1d;font-family:inherit;font-size:24px;font-weight:700;
+  transform-origin:50% 50%;transition:background-color .25s ease,transform .25s ease;}
+.qr-submit:hover{background:#fff;transform:scale(1.06);}
 .loc-row{position:absolute;left:199px;width:617px;height:125px;border-radius:10px;background:#101c1d;}
 .field{position:absolute;left:176px;width:668px;height:67px;border-radius:5px;background:#f0f0f0;border:none;font-family:'FbReissfeder',sans-serif;font-size:24px;color:#101c1d;text-align:center;direction:rtl;}
 .field::placeholder{color:#101c1d;opacity:1;}
+/* תפריט בחירה מעוצב — לא ברירת המחדל של הדפדפן */
+.sel{display:flex;align-items:center;justify-content:center;cursor:pointer;outline:none;}
+.sel .ph{opacity:.75;}
+.arw{position:absolute;left:30px;top:30px;width:0;height:0;pointer-events:none;
+  border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid #101c1d;
+  transition:transform .2s ease;}
+.sel.open .arw{transform:rotate(180deg);}
+.sel-list{position:absolute;top:73px;left:0;right:0;list-style:none;background:#f0f0f0;
+  border-radius:5px;overflow:hidden;display:none;z-index:60;box-shadow:0 10px 30px rgba(16,28,29,.3);}
+.sel.open .sel-list{display:block;}
+.sel-list li{padding:15px 24px;font-size:22px;line-height:1.3;text-align:right;color:#101c1d;
+  transition:background-color .15s ease,color .15s ease;}
+.sel-list li:hover,.sel-list li.on{background:#3e6e72;color:#fff;}
+/* תווית מעל השדה, כדי שהכוכבית תהיה אדומה וצמודה לטקסט */
+.lbl{position:absolute;left:176px;width:668px;height:67px;display:flex;align-items:center;
+  justify-content:center;font-size:24px;color:#101c1d;pointer-events:none;transition:opacity .15s ease;}
+.lbl b{color:#d93025;margin-inline-start:5px;font-weight:700;}
+.field:focus + .lbl,.field:not(:placeholder-shown) + .lbl{opacity:0;}
 img.cover{width:100%;height:100%;object-fit:cover;}
 .lnk{text-decoration:none;display:block;transition:opacity .2s ease;}
 .lnk:hover{opacity:.7;}
@@ -75,11 +157,12 @@ img.cover{width:100%;height:100%;object-fit:cover;}
 #herocta:hover{background:#fff3b7;transform:scale(1.06);}
 #tl{position:absolute;left:0;top:2431px;width:1728px;height:545px;overflow:hidden;}
 #tltrack{position:absolute;right:0;top:0;width:2529px;height:545px;will-change:transform;}
-#tlbase{position:absolute;right:0;top:20px;width:6200px;height:1px;background:rgba(255,255,255,.3);}
-#tlprog{position:absolute;right:0;top:20px;width:137px;height:1px;background:#fff3b7;}
-.tli{position:absolute;top:0;width:486px;opacity:.28;transition:opacity .45s ease;}
+/* הקווים מתחת, והעיגולים מעליהם */
+#tlbase{position:absolute;right:0;top:20px;width:6200px;height:1px;background:rgba(255,255,255,.3);z-index:1;}
+#tlprog{position:absolute;right:0;top:20px;width:137px;height:1px;background:#fff3b7;z-index:2;}
+.tli{position:absolute;top:0;width:486px;opacity:.28;transition:opacity .45s ease;z-index:3;}
 .tli.on{opacity:1;}
-.tli .nd{position:absolute;right:-2px;top:0;width:40px;height:40px;}
+.tli .nd{position:absolute;right:-2px;top:0;width:40px;height:40px;z-index:3;}
 .tli .hd{position:absolute;right:0;top:79px;width:486px;}
 .tli .bd{position:absolute;right:1.9px;top:178px;width:486px;}
 </style>
@@ -121,7 +204,7 @@ img.cover{width:100%;height:100%;object-fit:cover;}
 <div class="abs h100 w tr" style="right:117px;top:1240px;width:838px;">איך החיים שלך</div>
 <div class="abs h100 tr" style="left:773px;top:1339px;width:838px;"><span class="w"> הולכים להיראות </span><span class="y">בעוד 90 יום מהיום?</span></div>
 <div class="abs t24 w tr" style="right:1029px;top:1269px;width:582px;height:268px;display:flex;flex-direction:column;justify-content:flex-end;">
-  <p>האם תביט במראה ותראה את הגרסה החזקה והחטובה שלך, או שוב תדחה את השינוי ל"אחרי החגים"? אתם אתה עובד קשה, משקיע שעות בעבודה ומנהל משפחה וקריירה – אבל מה איתך? הגיע הזמן לשחרר את המתח המצטבר בגב ובצוואר משעות של ישיבה מול המחשב.</p>
+  <p>תביט במראה ותראה את הגרסה החזקה שלך, או שוב תדחה את זה ל"אחרי החגים"?</p>
 </div>
 <div class="pcard" style="left:1253.4px;"></div>
 <div class="pcard" style="left:875.2px;"></div>
@@ -240,23 +323,89 @@ img.cover{width:100%;height:100%;object-fit:cover;}
 <div class="abs h100 y tr" style="right:117px;top:6760px;width:757px;">ענה על 4 שאלות</div>
 <div class="abs h100 w tr" style="right:218px;top:6856px;width:757px;">וקבלו הכוונה</div>
 <div class="abs h100 w tr" style="right:117px;top:6955px;width:757px;">אישית מהצוות</div>
-<div class="abs h35 w tr" style="right:117px;top:7183px;width:442px;">מה הכי מדבר אליך עכשיו?</div>
-<div class="card-dark" style="left:1181px;top:7270px;"></div>
-<div class="card-dark" style="left:715px;top:7270px;"></div>
-<div class="card-dark" style="left:249px;top:7270px;"></div>
-<div class="abs h35 w tc" style="left:1218px;top:7358px;width:355px;">לפרוק את הלחץ מהעבודה</div>
-<div class="abs h35 w tc" style="left:753px;top:7358px;width:355px;">להיכנס לכושר ולחטב את הגוף</div>
-<div class="abs h35 w tc" style="left:287px;top:7358px;width:355px;">להפסיק לכאוב מהישיבה מול המחשב</div>
+<div id="quiz">
+  <p class="q-head h35 w tr"></p>
+  <button class="q-back" type="button" hidden>חזרה</button>
+  <div class="q-opts"></div>
+
+  <form class="q-result" novalidate>
+    <p class="qr-head">יש לנו בדיוק <span class="y">את הקבוצה בשבילך.</span></p>
+    <p class="qr-sub"></p>
+    <div class="qr-fields">
+      <input class="qf" type="text" name="first_name" required placeholder="שם פרטי *">
+      <input class="qf" type="tel" name="phone" required inputmode="tel" placeholder="טלפון (ללא מקפים) *">
+      <input class="qf" type="email" name="email" placeholder="אימייל (לא חובה)">
+    </div>
+    <label class="qr-consent">
+      <input type="checkbox" name="consent">
+      <span>בהשארת פרטים באתר אתם מאשרים תוכן שיווקי מהיטבוקס, מתחייבים לא לחפור לכם</span>
+    </label>
+    <button class="qr-submit" type="submit">קבעו לי אימון ניסיון</button>
+  </form>
+</div>
 
 <!-- ===== אף אחד מהם לא הגיע בכושר ===== -->
-<div class="abs" style="left:134px;top:7867px;width:857px;height:536px;border-radius:20px;background:#fff;"></div>
-<div class="abs" style="left:184px;top:7922px;width:457px;height:414px;background:#d9d9d9;"></div>
-<div class="abs" style="left:413px;top:7922px;width:1px;height:406px;background:#000;"></div>
-<div class="abs t24 tr" style="right:783px;top:7985px;width:266px;height:304px;display:flex;flex-direction:column;justify-content:center;color:#000;">
-  <p>״לורם איפסום דולור סיט אמט חשלו בלובק. שלושע לפמעט לת קלאצי סולגק. מורגם דולור, לרעח. שערש תצטריק ומרגשח. איף,</p>
+<div id="wallwrap">
+<div id="wallrow">
+  <article class="wall">
+    <div class="q">
+      <p class="delta"><span dir="ltr">-36</span> קילו</p>
+      <p class="quote">ציטוט זמני — יוחלף בדברי המתאמן.</p>
+      <p class="kg"><span dir="ltr">124</span> ← <span dir="ltr">88</span> ק״ג</p>
+    </div>
+    <div class="ba"><img src="assets/ba/gnt.jpg" alt=""><span class="split"></span></div>
+  </article>
+  <article class="wall">
+    <div class="q">
+      <p class="delta"><span dir="ltr">-15</span> קילו</p>
+      <p class="quote">ציטוט זמני — יוחלף בדברי המתאמן.</p>
+      <p class="kg"><span dir="ltr">93</span> ← <span dir="ltr">78</span> ק״ג</p>
+    </div>
+    <div class="ba"><img src="assets/ba/noa.jpg" alt=""><span class="split"></span></div>
+  </article>
+  <article class="wall">
+    <div class="q">
+      <p class="delta"><span dir="ltr">-20</span> קילו</p>
+      <p class="quote">ציטוט זמני — יוחלף בדברי המתאמן.</p>
+      <p class="kg"><span dir="ltr">110</span> ← <span dir="ltr">90</span> ק״ג</p>
+    </div>
+    <div class="ba"><img src="assets/ba/eli.jpg" alt=""><span class="split"></span></div>
+  </article>
+  <article class="wall">
+    <div class="q">
+      <p class="delta"><span dir="ltr">-18</span> קילו</p>
+      <p class="quote">ציטוט זמני — יוחלף בדברי המתאמן.</p>
+      <p class="kg"><span dir="ltr">95</span> ← <span dir="ltr">77</span> ק״ג</p>
+    </div>
+    <div class="ba"><img src="assets/ba/tal.jpg" alt=""><span class="split"></span></div>
+  </article>
+  <article class="wall">
+    <div class="q">
+      <p class="delta"><span dir="ltr">-18</span> קילו</p>
+      <p class="quote">ציטוט זמני — יוחלף בדברי המתאמן.</p>
+      <p class="kg"><span dir="ltr">106</span> ← <span dir="ltr">88</span> ק״ג</p>
+    </div>
+    <div class="ba"><img src="assets/ba/mic.jpg" alt=""><span class="split"></span></div>
+  </article>
+  <article class="wall">
+    <div class="q">
+      <p class="delta"><span dir="ltr">-7</span> קילו</p>
+      <p class="quote">ציטוט זמני — יוחלף בדברי המתאמן.</p>
+      <p class="kg"><span dir="ltr">86</span> ← <span dir="ltr">79</span> ק״ג</p>
+    </div>
+    <div class="ba"><img src="assets/ba/mao.jpg" alt=""><span class="split"></span></div>
+  </article>
+  <article class="wall">
+    <div class="q">
+      <p class="delta"><span dir="ltr">-34</span> קילו</p>
+      <p class="quote">ציטוט זמני — יוחלף בדברי המתאמן.</p>
+      <p class="kg"><span dir="ltr">118</span> ← <span dir="ltr">84</span> ק״ג</p>
+    </div>
+    <div class="ba"><img src="assets/ba/lon.jpg" alt=""><span class="split"></span></div>
+  </article></div>
 </div>
-<div class="abs" style="left:-753px;top:7867px;width:857px;height:536px;border-radius:20px;background:#fff;"></div>
-<div class="abs" style="left:-703px;top:7922px;width:457px;height:414px;background:#d9d9d9;"></div>
+<div id="wallbar"><span id="wallthumb"></span></div>
+
 <!-- הכותרת עוגנת לתחתית כמו בפיגמה, כך שהיא גדלה כלפי מעלה ולא נכנסת לטקסט -->
 <div class="abs h100 tr" style="right:117px;bottom:2230.6px;width:538px;"><span class="w">אף אחד מהם </span><span class="y">לא הגיע בכושר.</span></div>
 <p class="abs t24 w tr" style="right:117px;top:8261px;width:536px;">כולם הגיעו עייפים, אחרי יום עבודה, בפעם הראשונה. ההבדל היחיד הוא שהם הגיעו שוב.</p>
@@ -266,27 +415,27 @@ img.cover{width:100%;height:100%;object-fit:cover;}
 <div class="abs h100 w tc" style="left:414px;bottom:1722px;width:964px;">מה שעובר לך בראש עכשיו</div>
 <div id="objrow">
   <div class="obj">
-    <img class="ic" src="assets/icon-30.svg" alt="" style="width:114px;height:114px;">
+    <span class="icw"><img class="ic" src="assets/icon-30.svg" alt="" style="width:114px;height:114px;"></span>
     <p class="ttl">אין לי זמן</p>
     <p class="bd">שעה, פעם-פעמיים בשבוע — פחות ממה שאתה מבזבז על הטלפון בערב אחד. והסניפים חמש דקות מהמשרד, בדרך הביתה.</p>
   </div>
   <div class="obj">
-    <img class="ic" src="assets/icon-29.svg" alt="" style="width:167px;height:113px;">
+    <span class="icw"><img class="ic" src="assets/icon-29.svg" alt="" style="width:167px;height:113px;"></span>
     <p class="ttl">אני לא בכושר מספיק בשביל אגרוף</p>
     <p class="bd">רוב מי שמגיע אלינו לא. לכל תרגיל יש גרסה קלה יותר — אתה קובע את הקצב, המאמן דואג לטכניקה. אחרי שלושה אימונים תבין למה זה לא היה צריך להיות שיקול.</p>
   </div>
   <div class="obj">
-    <img class="ic" src="assets/icon-28.svg" alt="" style="width:70px;height:107px;">
+    <span class="icw"><img class="ic" src="assets/icon-28.svg" alt="" style="width:70px;height:107px;"></span>
     <p class="ttl">אני אחטוף מכות</p>
     <p class="bd">לא. עובדים על שקים וכפות בלבד, בלי ספארינג ובלי זירה. אתה מכה, לא חוטף. אם חיפשת קרבות, זה לא המקום.</p>
   </div>
   <div class="obj">
-    <img class="ic" src="assets/icon-27.svg" alt="" style="width:106px;height:101px;">
+    <span class="icw"><img class="ic" src="assets/icon-27.svg" alt="" style="width:106px;height:101px;"></span>
     <p class="ttl">נרשמתי כבר פעם לחדר כושר ולא הלכתי</p>
     <p class="bd">כי אף אחד לא שם לב שנעלמת. פה יש עד 12 מתאמנים בקבוצה ומאמן שיודע איך קוראים לך. כשאתה מפספס שבוע — מישהו שואל למה. זה ההבדל בין מנוי למסגרת.</p>
   </div>
   <div class="obj">
-    <img class="ic" src="assets/icon-26.svg" alt="" style="width:62px;height:94px;">
+    <span class="icw"><img class="ic" src="assets/icon-26.svg" alt="" style="width:62px;height:94px;"></span>
     <p class="ttl">אני לא בטוח שזה בשבילי</p>
     <p class="bd">בשביל זה יש אימון ניסיון על חשבוננו. אתה בא, מתאמן, מרגיש איך זה בגוף ואיך זה בראש - ואז מחליט. בלי טפסים, בלי התחייבות, בלי מישהו שירדוף אחריך.</p>
   </div>
@@ -299,12 +448,32 @@ img.cover{width:100%;height:100%;object-fit:cover;}
 <a class="abs lnk" href="tel:+972779706900" aria-label="חיוג לסטודיו" style="left:1569px;top:9881px;width:42px;height:43px;"><img src="assets/phone.svg" alt="" style="width:100%;height:100%;"></a>
 <a class="abs h35 tr lnk" href="https://www.instagram.com/oritzhaki_hitbox/" target="_blank" rel="noopener" style="right:180px;top:9955px;width:438px;color:#101c1d;">עקבו אחרינו באינסטגרם</a>
 <a class="abs lnk" href="https://www.instagram.com/oritzhaki_hitbox/" target="_blank" rel="noopener" aria-label="היטבוקס באינסטגרם" style="left:1567px;top:9951px;width:44px;height:44px;"><img src="assets/instagram.svg" alt="" style="width:100%;height:100%;"></a>
-<input class="field" style="top:9606px;" type="text" placeholder="מה השם שלך?">
-<input class="field" style="top:9688px;" type="tel" placeholder="מה הטלפון שלך?">
-<input class="field" style="top:9770px;" type="text" placeholder="סניף מועדף">
-<button class="field" style="top:9931px;background:#3e6e72;color:#fff;font-weight:700;cursor:pointer;">אני רוצה אימון ניסיון</button>
-<input type="checkbox" class="abs" style="left:816px;top:9855px;width:28px;height:28px;accent-color:#3e6e72;">
-<div class="abs tr" style="right:930px;top:9858px;width:618px;font-size:16px;line-height:1.57;color:#000;">בהשארת פרטים באתר אתם מאשרים תוכן שיווקי מהיטבוקס, מתחייבים לא לחפור לכם.</div>
+<input class="field" style="top:9600px;" type="text" name="name" required placeholder=" ">
+<span class="lbl" style="top:9600px;">מה השם שלך?<b>*</b></span>
+<input class="field" style="top:9678px;" type="tel" name="phone" required inputmode="tel" placeholder=" ">
+<span class="lbl" style="top:9678px;">מה הטלפון שלך? (ללא מקפים)<b>*</b></span>
+
+<div class="field sel" style="top:9756px;" data-name="branch" tabindex="0" role="listbox">
+  <span class="sel-val ph">סניף מועדף</span><span class="arw"></span>
+  <ul class="sel-list">
+    <li>רמת גן</li>
+    <li>פתח תקווה</li>
+    <li>תל אביב-גבעתיים</li>
+  </ul>
+</div>
+
+<div class="field sel" style="top:9834px;" data-name="goal" tabindex="0" role="listbox">
+  <span class="sel-val ph">מה הכי מדבר אליך?</span><span class="arw"></span>
+  <ul class="sel-list">
+    <li>להיכנס לכושר ולרדת במשקל</li>
+    <li>ללמוד להגן על עצמי</li>
+    <li>לנסות ספורט שהוא לא חדר כושר</li>
+    <li>לפרוק אנרגיות ולשחרר מתחים</li>
+  </ul>
+</div>
+<input type="checkbox" class="abs" style="left:816px;top:9920px;width:28px;height:28px;accent-color:#3e6e72;">
+<div class="abs tr" style="right:930px;top:9923px;width:618px;font-size:16px;line-height:1.57;color:#000;">בהשארת פרטים באתר אתם מאשרים תוכן שיווקי מהיטבוקס, מתחייבים לא לחפור לכם.</div>
+<button class="field" style="top:9988px;background:#3e6e72;color:#fff;font-weight:700;cursor:pointer;">אני רוצה אימון ניסיון</button>
 
 <!-- ===== פוטר ===== -->
 <div class="abs" style="left:104px;top:10358px;width:1520px;height:1px;background:#000;"></div>
@@ -426,6 +595,9 @@ window.addEventListener('resize',fit);
 fit();loop();
 </script>
 <script src="vgrid.js"></script>
+<script src="wall.js"></script>
+<script src="form.js"></script>
+<script src="quiz.js"></script>
 <script src="parallax.js"></script>
 </body>
 </html>

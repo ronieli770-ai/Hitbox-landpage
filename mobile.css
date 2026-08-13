@@ -24,44 +24,41 @@ html,body{overflow-x:hidden;scroll-behavior:smooth;}
 #canvas{width:100% !important;background:#101c1d;}
 
 /* ---------- הירו ----------
-   מסך מלא: לוגו למעלה, כותרת ומשפט במרכז, כפתור וסניפים בתחתית. */
+   טור עם סדר מפורש לכל אלמנט. שיבוץ אוטומטי של רשת פיזר אותם לשורות
+   שגויות, ולכן כאן כל פריט מקבל את מקומו במפורש. */
 #hero{position:relative !important;width:100% !important;
   min-height:100vh !important;min-height:100svh !important;overflow:hidden;
-  display:grid;grid-template-rows:auto 1fr auto;
-  padding:18px 20px calc(20px + env(safe-area-inset-bottom));}
+  display:flex !important;flex-direction:column;align-items:center;
+  padding:16px 20px calc(18px + env(safe-area-inset-bottom));}
 
 #hero>video{position:absolute !important;inset:0 !important;
   width:100% !important;height:100% !important;object-fit:cover;z-index:0;}
 #hero .hero-veil{position:absolute !important;inset:0 !important;
   width:100% !important;height:100% !important;z-index:1;
   background:linear-gradient(to bottom,
-    rgba(16,28,29,.35) 0%, rgba(16,28,29,.55) 45%,
-    rgba(16,28,29,.9) 82%, #101c1d 100%) !important;}
-#hero>*{position:relative;z-index:2;}
+    rgba(16,28,29,.45) 0%, rgba(16,28,29,.6) 40%,
+    rgba(16,28,29,.92) 80%, #101c1d 100%) !important;}
+#hero>*{position:relative;z-index:2;width:100%;}
 
-/* לוגו */
-#hero>img.cover{width:60px !important;justify-self:start;}
+#hero>img.cover{order:1;width:58px !important;align-self:flex-start;}
 
-/* כותרת ומשפט — במרכז המסך */
-#hero .hero-title{align-self:center;
-  font-size:clamp(34px,10.5vw,52px) !important;line-height:1.02 !important;
-  display:block !important;padding:0 4px;}
-#hero .hero-sub{align-self:start;margin-top:18px;
-  font-size:15.5px !important;line-height:1.5 !important;}
-#hero .hero-sub p+p{margin-top:6px;}
+#hero .hero-title{order:2;margin-top:auto;
+  font-size:clamp(27px,7.6vw,36px) !important;line-height:1.06 !important;
+  display:block !important;text-align:center;}
+#hero .hero-sub{order:3;margin-top:14px;
+  font-size:14.5px !important;line-height:1.5 !important;text-align:center;}
+#hero .hero-sub p+p{margin-top:5px;}
 
-/* כפתור וסניפים — בתחתית */
-#hero #herocta{width:100% !important;min-height:58px !important;
-  display:flex !important;padding:10px 12px;border-radius:8px;}
-#hero #herocta span{font-size:16px !important;line-height:1.2;}
-#hero .hero-branches{margin-top:14px;justify-content:center;
-  white-space:normal !important;font-size:12.5px !important;opacity:.85;}
+#hero #herocta{order:4;margin-top:auto;
+  min-height:54px !important;display:flex !important;
+  padding:9px 12px;border-radius:8px;}
+#hero #herocta span{font-size:15px !important;line-height:1.2;}
+#hero .hero-branches{order:5;margin-top:12px;justify-content:center;
+  white-space:normal !important;font-size:12px !important;opacity:.8;text-align:center;}
 #hero .hero-branches img{display:none !important;}
 
-/* הכותרת והמשפט יחד ביחידה אחת ממורכזת */
-#hero .hero-title,#hero .hero-sub{grid-row:2;}
-#hero .hero-title{align-self:end;}
-#hero .hero-sub{align-self:start;}
+/* חלונית הביקורות לא מסתירה את הכפתור בטלפון */
+@media (max-height:900px){#grev-toast{display:none !important;}}
 
 /* ---------- הזרימה הראשית ---------- */
 #rest{width:100% !important;display:flex;flex-direction:column;gap:16px;

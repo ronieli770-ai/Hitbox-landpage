@@ -6,6 +6,7 @@
 <title>HITBOX — תכנית 90 הימים לפריקת מתחים, חיטוב והגנה עצמית</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mobile.css" media="(max-width:820px)">
 <style>
 @font-face{font-family:'FbReissfeder';src:url('פונט/FbReissfeder-Regular.otf') format('opentype');font-weight:400;}
 @font-face{font-family:'FbReissfeder';src:url('פונט/FbReissfeder-Bold.otf') format('opentype');font-weight:700;}
@@ -592,6 +593,8 @@ const c=document.getElementById('canvas'),s=document.getElementById('stage'),
       track=document.getElementById('tltrack'),prog=document.getElementById('tlprog'),
       items=[...document.querySelectorAll('.tli')];
 // עוצר כשקצה הטקסט של התחנה האחרונה מגיע לשוליים השמאליים של הגריד (117px)
+const MOB=window.matchMedia('(max-width:820px)');
+MOB.addEventListener('change',()=>location.reload());
 const TRAVEL=918, NODE_SPAN=1904;
 let k=1,d=0,cy=0,tx=0,txTarget=0,active=-1,zoom=1;
 window.a11ySetZoom=z=>{zoom=z||1;fit();};
@@ -604,6 +607,7 @@ const pins=[
 ];
 
 function fit(){
+  if(MOB.matches){c.style.transform='';hero.style.height='';rest.style.top='';s.style.height='';wa.style.right='';return;}
   k=window.innerWidth/1728*zoom;
   document.body.style.overflowX=zoom>1?'auto':'hidden';
   const H=window.innerHeight/k;
@@ -623,6 +627,7 @@ function fit(){
 }
 
 function onScroll(){
+  if(MOB.matches)return;
   const y=window.scrollY;
   let off=0;
   for(const p of pins){
@@ -641,6 +646,7 @@ function onScroll(){
 }
 
 function draw(){
+  if(MOB.matches)return;
   c.style.transform='translateY('+cy+'px) scale('+k+')';
   track.style.transform='translateX('+tx+'px)';
   prog.style.width=(137+tx/TRAVEL*NODE_SPAN)+'px';
@@ -659,12 +665,19 @@ function loop(){
    המיקום נקרא מהאלמנט עצמו, ואורכי הסקשנים הנעולים מתווספים אליו. */
 document.querySelector('a[href="#form"]').addEventListener('click',e=>{
   e.preventDefault();
+  if(MOB.matches){const t=document.getElementById('form');t&&t.scrollIntoView({behavior:'smooth'});return;}
   const el=document.getElementById('form');
   if(!el)return;
   const pinned=pins.reduce((a,p)=>a+p.len,0);
   const target=pinned+(el.offsetTop+d)*k-window.innerHeight*0.08;
   window.scrollTo({top:Math.max(0,target),behavior:'smooth'});
 });
+if(MOB.matches){
+  document.querySelectorAll('.obj').forEach(o=>o.addEventListener('click',()=>{
+    document.querySelectorAll('.obj.open').forEach(x=>{if(x!==o)x.classList.remove('open');});
+    o.classList.toggle('open');
+  }));
+}
 window.addEventListener('scroll',onScroll,{passive:true});
 window.addEventListener('resize',fit);
 fit();loop();

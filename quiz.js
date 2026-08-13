@@ -78,6 +78,7 @@ const QUESTIONS = [
   /* מודדים פעם אחת את כפתור השליחה, ומקבעים שם את כפתור החזרה לכל אורך השאלון —
      כך הוא לא זז בין שאלה לשאלה ולא במעבר לטופס */
   function lockBack() {
+    if (matchMedia('(max-width:820px)').matches) return;
     const wasDone = quiz.classList.contains('done');
     const wasHidden = back.hidden;
     quiz.style.visibility = 'hidden';

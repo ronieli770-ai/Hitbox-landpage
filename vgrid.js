@@ -138,6 +138,7 @@ const clamp01 = t => t < 0 ? 0 : t > 1 ? 1 : t;
     apply(cur);
   };
   apply(0);
+  if (matchMedia('(max-width:820px)').matches) { target = cur = 1; apply(1); }
 
   /* ---- פופ־אפ: הסרטון המלא מ-Bunny, עם סאונד ---- */
   const modal = document.getElementById('vmodal');

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HITBOX — תכנית 90 הימים לפריקת מתחים, חיטוב והגנה עצמית</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'FbReissfeder';src:url('פונט/FbReissfeder-Regular.otf') format('opentype');font-weight:400;}
+@font-face{font-family:'FbReissfeder';src:url('פונט/FbReissfeder-Bold.otf') format('opentype');font-weight:700;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:#101c1d;}
+body{overflow-x:hidden;}
+#stage{position:relative;overflow:hidden;}
+#canvas{position:fixed;top:0;left:0;width:1728px;height:10469px;transform-origin:0 0;font-family:'FbReissfeder',sans-serif;direction:rtl;background:#101c1d;}
+.abs{position:absolute;}
+.band{position:absolute;left:0;width:1728px;height:1102px;}
+.band img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;mix-blend-mode:multiply;opacity:.4;}
+.band.yellow img{opacity:.2;}
+.w{color:#fff;}
+.y{color:#fff3b7;}
+.b{font-weight:700;}
+.h100{font-size:100px;font-weight:700;line-height:.99;}
+.h35{font-size:35px;font-weight:700;line-height:1.03;}
+.t24{font-size:24px;font-weight:400;line-height:1.57;}
+.t32{font-size:32px;font-weight:400;line-height:1.43;}
+.tr{text-align:right;}
+.tc{text-align:center;}
+.card-dark{position:absolute;width:430px;height:239px;border-radius:20px;background:#101c1d;}
+.pcard{position:absolute;top:1605px;width:357.63px;height:300px;border-radius:20px;background:rgba(255,255,255,.1);border:1px solid #3e6e72;}
+/* ---- סקשן המלצות וידאו ---- */
+#vgrid{position:absolute;left:119px;top:4752px;width:1492px;height:1007px;}
+.vc{position:absolute;width:271px;height:314px;border-radius:20px;background:#d9d9d9;overflow:hidden;padding:0;border:0;cursor:pointer;display:block;font-family:inherit;color:inherit;}
+.vc video,.vc img{width:100%;height:100%;object-fit:cover;display:block;}
+.vc.still{cursor:default;}
+.vc .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .25s ease;background:rgba(16,28,29,.25);}
+.vc:hover .play{opacity:1;}
+.vc .play svg{width:64px;height:64px;}
+/* הכותרת יושבת על הכרטיס הגדול ומתקזזת מול ההגדלה שלו כדי להישאר בגודל קבוע */
+.vhead{position:absolute;left:50%;top:50%;width:860px;text-align:center;white-space:nowrap;
+  transform-origin:50% 50%;pointer-events:none;z-index:6;text-shadow:0 4px 40px rgba(16,28,29,.55);}
+#vmodal{position:fixed;inset:0;z-index:2000;background:rgba(16,28,29,.92);display:none;align-items:center;justify-content:center;}
+#vmodal.open{display:flex;}
+#vmodal .frame{height:50vh;aspect-ratio:9/16;max-width:92vw;border-radius:20px;overflow:hidden;background:#000;}
+#vmodal .frame iframe{width:100%;height:100%;border:0;display:block;}
+#vclose{position:absolute;top:24px;left:24px;width:48px;height:48px;border-radius:50%;border:0;background:#fff3b7;color:#101c1d;font-size:28px;line-height:1;cursor:pointer;}
+/* ---- אקורדיון ההתנגדויות: ריחוף פותח את הכרטיס ---- */
+#objrow{position:absolute;left:117px;top:8820px;width:1494px;height:397px;display:flex;gap:27px;}
+.obj{flex:1 1 0;min-width:0;border-radius:20px;border:1px solid #fff3b7;overflow:hidden;cursor:default;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 26px;
+  transition:flex-grow .45s cubic-bezier(.4,0,.2,1),background-color .45s ease,border-color .45s ease;}
+.obj .ic{flex:none;transition:transform .45s cubic-bezier(.4,0,.2,1),filter .45s ease;}
+.obj .ttl{font-size:35px;font-weight:700;line-height:1.03;text-align:center;color:#fff;margin-top:34px;
+  transition:color .45s ease,margin .45s ease;}
+.obj .bd{font-size:24px;font-weight:400;line-height:1.5;text-align:right;color:#101c1d;width:100%;
+  max-height:0;opacity:0;overflow:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1),opacity .3s ease,margin .45s ease;}
+.obj:hover{flex-grow:2.8;background:#fff3b7;border-color:#fff3b7;}
+/* האייקונים צהובים, אז על הרקע הצהוב הם מוכהים כדי להישאר קריאים */
+.obj:hover .ic{transform:scale(.62);filter:brightness(0);}
+.obj:hover .ttl{color:#101c1d;text-align:right;width:100%;margin-top:12px;}
+.obj:hover .bd{max-height:260px;opacity:1;margin-top:18px;}
+.loc-row{position:absolute;left:199px;width:617px;height:125px;border-radius:10px;background:#101c1d;}
+.field{position:absolute;left:176px;width:668px;height:67px;border-radius:5px;background:#f0f0f0;border:none;font-family:'FbReissfeder',sans-serif;font-size:24px;color:#101c1d;text-align:center;direction:rtl;}
+.field::placeholder{color:#101c1d;opacity:1;}
+img.cover{width:100%;height:100%;object-fit:cover;}
+.lnk{text-decoration:none;display:block;transition:opacity .2s ease;}
+.lnk:hover{opacity:.7;}
+/* כפתור הווצאפ — מחליף צבעים כשהוא עובר מעל סקשן הטופס */
+.wa-bg{fill:#fff3b7;transition:fill .35s ease;}
+.wa-fg{fill:#101c1d;transition:fill .35s ease;}
+#wa.inv .wa-bg{fill:#101c1d;}
+#wa.inv .wa-fg{fill:#fff3b7;}
+#herocta{background:#fff;transform-origin:50% 50%;transition:background-color .25s ease,transform .25s ease;}
+#herocta:hover{background:#fff3b7;transform:scale(1.06);}
+#tl{position:absolute;left:0;top:2431px;width:1728px;height:545px;overflow:hidden;}
+#tltrack{position:absolute;right:0;top:0;width:2529px;height:545px;will-change:transform;}
+#tlbase{position:absolute;right:0;top:20px;width:6200px;height:1px;background:rgba(255,255,255,.3);}
+#tlprog{position:absolute;right:0;top:20px;width:137px;height:1px;background:#fff3b7;}
+.tli{position:absolute;top:0;width:486px;opacity:.28;transition:opacity .45s ease;}
+.tli.on{opacity:1;}
+.tli .nd{position:absolute;right:-2px;top:0;width:40px;height:40px;}
+.tli .hd{position:absolute;right:0;top:79px;width:486px;}
+.tli .bd{position:absolute;right:1.9px;top:178px;width:486px;}
+</style>
+</head>
+<body>
+<div id="stage"><div id="canvas">
+
+<!-- ===== הירו — גובה מסך מלא ===== -->
+<div class="abs" id="hero" style="left:0;top:0;width:1728px;height:1116px;overflow:hidden;z-index:2;">
+  <video autoplay muted loop playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" src="hero-bg.mp4"></video>
+  <div class="abs" style="inset:0;background:linear-gradient(to bottom, rgba(16,28,29,.55) 0%, rgba(16,28,29,.55) 75%, #101c1d 100%);"></div>
+  <div class="abs tc" style="left:210px;top:calc(39.12% - 206.5px);width:1307px;height:331px;display:flex;align-items:center;justify-content:center;font-size:120px;font-weight:700;line-height:.91;mix-blend-mode:difference;">
+    <p><span class="y">תכנית 90 הימים</span><span class="w"> לפריקת מתחים, חיטוב והגנה עצמית</span></p>
+  </div>
+  <div class="abs tc t32 w" style="left:354px;top:calc(57.27% - 1.85px);width:1020px;">
+    <p><span class="b">אימוני אגרוף בקבוצות קטנות (עד 6 זוגות) לגברים בשנות ה-30+</span>.</p>
+    <p>ללא צורך בכושר קודם, בלי להרים ברזלים ולחכות למכונות בחדר כושר.</p>
+  </div>
+  <a id="herocta" href="#form" style="position:absolute;left:533px;top:calc(75.42% - 36.7px);width:662px;height:73.4px;border-radius:5px;display:flex;align-items:center;justify-content:center;text-decoration:none;">
+    <span style="font-size:32px;font-weight:700;color:#101c1d;">אני רוצה לבדוק התאמה לאימון היכרות ←</span>
+  </a>
+  <img class="cover" src="assets/logo-hitbox.png" alt="HITBOX" style="position:absolute;left:17px;top:0;width:138px;height:185px;">
+  <div class="abs t24 w" style="left:853.5px;top:83.33%;transform:translate(-50%,-50%);white-space:nowrap;">3 סניפים: רמת גן | פתח תקווה | תל אביב</div>
+  <img class="abs" src="assets/pin-top.svg" alt="" style="left:1077px;top:calc(82.93% - 10.5px);width:11px;height:21px;">
+</div>
+
+<div id="rest" class="abs" style="left:0;top:0;width:1728px;height:10469px;z-index:1;">
+
+<!-- ===== רקעים ===== -->
+<div class="abs band yellow" style="top:5879px;left:117px;width:1494px;height:616px;border-radius:20px;background:#fff3b7;overflow:hidden;"><img src="assets/texture.png" alt=""></div>
+<img class="abs" src="assets/punching-bag.svg" alt="" style="left:530px;top:5894px;width:687px;height:587px;">
+<div class="band" style="top:3530px;background:#3e6e72;"><img src="assets/texture.png" alt=""></div>
+<div class="band" style="top:4628px;background:#101c1d;"><img src="assets/texture.png" alt=""></div>
+<div class="band" style="top:4681px;background:#101c1d;"><img src="assets/texture.png" alt=""></div>
+<div class="band" style="top:6632px;background:#3e6e72;"><img src="assets/texture.png" alt=""></div>
+<div class="band yellow" style="top:9367px;background:#fff3b7;"><img src="assets/texture.png" alt=""></div>
+
+<!-- ===== איך החיים שלך הולכים להיראות ===== -->
+<div class="abs h100 w tr" style="right:117px;top:1240px;width:838px;">איך החיים שלך</div>
+<div class="abs h100 tr" style="left:773px;top:1339px;width:838px;"><span class="w"> הולכים להיראות </span><span class="y">בעוד 90 יום מהיום?</span></div>
+<div class="abs t24 w tr" style="right:1029px;top:1269px;width:582px;height:268px;display:flex;flex-direction:column;justify-content:flex-end;">
+  <p>האם תביט במראה ותראה את הגרסה החזקה והחטובה שלך, או שוב תדחה את השינוי ל"אחרי החגים"? אתם אתה עובד קשה, משקיע שעות בעבודה ומנהל משפחה וקריירה – אבל מה איתך? הגיע הזמן לשחרר את המתח המצטבר בגב ובצוואר משעות של ישיבה מול המחשב.</p>
+</div>
+<div class="pcard" style="left:1253.4px;"></div>
+<div class="pcard" style="left:875.2px;"></div>
+<div class="pcard" style="left:497px;"></div>
+<div class="pcard" style="left:118.9px;"></div>
+<img class="abs cover" src="assets/card-icon.png" alt="" style="left:1486.6px;top:1631.4px;width:99.2px;height:99.2px;">
+<img class="abs cover" src="assets/card-icon.png" alt="" style="left:1108.5px;top:1631.4px;width:99.2px;height:99.2px;">
+<img class="abs cover" src="assets/card-icon.png" alt="" style="left:730.4px;top:1631.4px;width:99.2px;height:99.2px;">
+<img class="abs cover" src="assets/card-icon.png" alt="" style="left:342px;top:1631.4px;width:99.2px;height:99.2px;">
+<div class="abs h35 w tr" style="right:145.7px;bottom:8590.4px;width:280.8px;">מתאמנים בחדר כושר אבל התוצאות פשוט לא מגיעות?</div>
+<div class="abs h35 w tr" style="right:523.8px;bottom:8590.4px;width:280.8px;">נמאס לך להשתעמם באימונים ולחכות בתור למכשירים?</div>
+<div class="abs h35 w tr" style="right:901.9px;bottom:8590.4px;width:280.8px;">מסיים את יום העבודה מוצף בלחצים ועם שרירים תפוסים?</div>
+<div class="abs h35 w tr" style="right:1280.2px;bottom:8590.4px;width:280.8px;">מרגיש שאין לך יכולת אמיתית להגן על עצמך ועל המשפחה?</div>
+<div class="abs tc" style="left:291px;top:1961px;width:1146px;font-size:32px;line-height:1.57;">
+  <span class="w">תוך 90 יום של אימון ממוקד, </span><span class="y b">התחושה והמראה שלכם משתנים מקצה לקצה.</span>
+</div>
+
+<!-- ===== מה קורה במהלך 90 ימים ===== -->
+<div class="abs h100 w tr" style="right:117px;top:2194px;width:838px;">
+  <p>מה קורה במהלך</p><p>90 ימים?</p>
+</div>
+<div id="tl">
+  <div id="tltrack">
+    <div id="tlbase"></div>
+    <div id="tlprog"></div>
+    <div class="tli on" style="right:117px;">
+      <img class="nd" src="assets/ellipse.svg" alt="">
+      <div class="hd h35 tr"><p class="y">ימים <span dir="ltr">0–30</span></p><p class="w">הראש מתנקה</p></div>
+      <p class="bd t24 w tr">שעה מול השק ואתה לא חושב על העבודה אפילו רגע. יוצא עייף אבל רגוע. גם הגב מרגיש את זה - כל מכה יוצאת מהמותניים ומחזקת בדיוק את השרירים שנתפסו לך משעות של ישיבה במשרד. רוב המתאמנים שלנו אומרים שהגב כואב פחות כבר בחודש הראשון.</p>
+    </div>
+    <div class="tli" style="right:759px;">
+      <img class="nd" src="assets/ellipse.svg" alt="">
+      <div class="hd h35 tr"><p class="y">ימים <span dir="ltr">30–60</span></p><p class="w">מתחילים לראות שינוי</p></div>
+      <p class="bd t24 w tr">נכנסת לכושר. אתה כבר לא מתנשף אחרי הסבב הראשון, הכתפיים והבטן מתהדקות, והחולצות מתחילות לשבת אחרת. גם בעבודה מרגישים את זה - אין את הנפילה של ארבע אחר הצהריים.</p>
+    </div>
+    <div class="tli" style="right:1401px;">
+      <img class="nd" src="assets/ellipse.svg" alt="">
+      <div class="hd h35 tr"><p class="y">ימים <span dir="ltr">60–90</span></p><p class="w">יודע מה אתה עושה</p></div>
+      <p class="bd t24 w tr">כבר לא צריך לחשוב על התנועה, היד יודעת לבד. ואם צריך, אתה יודע להגן על עצמך. זה עושה משהו לביטחון - וזה נשאר איתך גם אחרי שיצאת מהסטודיו.</p>
+    </div>
+    <div class="tli" style="right:2043px;">
+      <img class="nd" src="assets/ellipse.svg" alt="">
+      <div class="hd h35 tr"><p class="y">אחרי 90 יום</p><p class="w">זה כבר חלק ממך</p></div>
+      <p class="bd t24 w tr">כבר לא מתווכח עם עצמך אם ללכת. זה פשוט מה שאתה עושה בימי שני, רביעי ושישי. גוף חזק, ראש נקי, ואם מפספסים שבוע - מרגישים את זה.</p>
+    </div>
+  </div>
+</div>
+<img class="abs" src="assets/rope.svg" alt="" style="left:204px;top:2967px;width:1320px;height:346px;">
+<div class="abs tc" style="left:330px;top:3260px;width:1068px;font-size:700px;font-weight:700;line-height:0;color:rgba(255,255,255,.07);">״</div>
+<div class="abs h100 w tr" style="left:447px;top:3021px;width:1048px;">לוקח 21 יום ליצור הרגל,</div>
+<div class="abs h100 tc" style="left:312px;top:3120px;width:1068px;"><span class="w">ו-90 יום </span><span class="y">ליצור אורח חיים</span></div>
+<div class="abs w" style="left:311.9px;top:3229px;width:177px;font-size:32px;line-height:1.57;">מקסוול מלץ</div>
+
+<!-- ===== מתחילים מאפס ===== -->
+<div class="abs pxi" data-depth="1" style="left:38px;top:3561px;width:486px;height:294px;border-radius:20px;overflow:hidden;">
+  <img src="assets/photo-16.png" alt="" style="position:absolute;left:.07%;top:-83.86%;width:100%;height:306.4%;">
+</div>
+<div class="abs pxi" data-depth="2" style="left:1320px;top:3601px;width:370px;height:464px;border-radius:20px;overflow:hidden;"><img class="cover" src="assets/photo-18.png" alt=""></div>
+<div class="abs pxi" data-depth="4" style="left:1282px;top:4294px;width:486px;height:295px;border-radius:20px;overflow:hidden;transform:scaleX(-1);"><img class="cover" src="assets/photo-17.png" alt=""></div>
+<div class="abs pxi" data-depth="1.5" style="left:97px;top:4336px;width:699px;height:296px;border-radius:20px;overflow:hidden;transform:scaleX(-1);">
+  <img src="assets/photo-19.png" alt="" style="position:absolute;left:0;top:-9.64%;width:100%;height:157.45%;">
+</div>
+<div class="abs h100 tc" style="left:203px;top:3783px;width:1322px;"><span class="y">מתחילים מאפס.</span><span class="w"> בלי ניסיון קודם, ובלי לחטוף מכה אחת.</span></div>
+<p class="abs t24 w tc" style="left:504px;top:4017px;width:720px;">רוב מי שנכנס אלינו לא נגע בכפפות בחיים. אחרי חמש דקות באימון הראשון כבר אין זמן להתבייש.</p>
+<div class="card-dark" style="left:1115px;top:4139px;"></div>
+<div class="card-dark" style="left:649px;top:4139px;"></div>
+<div class="card-dark" style="left:183px;top:4138px;"></div>
+<p class="abs tc" style="left:1152px;top:4172px;width:355px;font-size:32px;line-height:1.32;"><span class="w">מקסימום </span><span class="y b">12 מתאמנים</span><span class="w b"> בקבוצה</span><span class="w">, מאמן שמכיר אותך בשם עובר בין הזוגות ומתקן תוך כדי.</span></p>
+<p class="abs tc" style="left:680.2px;top:4176px;width:368.6px;font-size:32px;line-height:1.32;"><span class="y b">לומדים טכניקה מהיסוד בקצב שלך.</span><span class="w"> גם מי שלא התאמן עשור מסיים את האימון על הרגליים.</span></p>
+<p class="abs tc" style="left:214.2px;top:4175px;width:368.6px;font-size:32px;line-height:1.32;"><span class="y b">עובדים על שקים ולפות. אתה מכה, לא חוטף. </span><span class="w">ההגנה העצמית נבנית מהטכניקה, לא מהחטיפות.</span></p>
+
+<!-- ===== לא מאמינים לנו ===== -->
+<div id="vgrid">
+  <button class="vc" style="left:0;top:0;"      data-r="0" data-c="0" data-id="t11"></button>
+  <button class="vc" style="left:305px;top:0;"  data-r="0" data-c="1" data-id="t03"></button>
+  <button class="vc" style="left:611px;top:0;"  data-r="0" data-c="2" data-id="t01"></button>
+  <button class="vc" style="left:916px;top:0;"  data-r="0" data-c="3" data-id="t04"></button>
+  <button class="vc" style="left:1221px;top:0;" data-r="0" data-c="4" data-id="t12"></button>
+
+  <button class="vc" style="left:0;top:347px;height:313px;"          data-r="1" data-c="0" data-id="t05"></button>
+  <button class="vc" style="left:305px;top:347px;height:313px;"      data-r="1" data-c="1" data-id="t00"></button>
+  <button class="vc hero" style="left:611px;top:347px;height:313px;" data-r="1" data-c="2" data-id="hero"></button>
+  <button class="vc" style="left:916px;top:347px;height:313px;"      data-r="1" data-c="3" data-id="t02"></button>
+  <button class="vc" style="left:1221px;top:347px;height:313px;"     data-r="1" data-c="4" data-id="t06"></button>
+
+  <button class="vc" style="left:0;top:693px;"      data-r="2" data-c="0" data-id="t07"></button>
+  <button class="vc" style="left:305px;top:693px;"  data-r="2" data-c="1" data-id="t08"></button>
+  <button class="vc" style="left:611px;top:693px;"  data-r="2" data-c="2" data-id="t09"></button>
+  <button class="vc" style="left:916px;top:693px;"  data-r="2" data-c="3" data-id="t10"></button>
+  <button class="vc" style="left:1221px;top:693px;" data-r="2" data-c="4" data-still="s3"></button>
+</div>
+
+<!-- ===== במרחק 5 דקות מהמשרד ===== -->
+<div class="abs tr" style="right:162px;top:6145px;width:679px;">
+  <p class="h100" style="color:#3e6e72;">במרחק 5 דקות מהמשרד.</p>
+  <p class="h35" style="color:#000;">&#8203;</p>
+  <p class="h35" style="color:#000;">בלי לצאת מהעיר ובלי לצאת מהשגרה.</p>
+</div>
+<div class="loc-row" style="top:5958px;"></div>
+<div class="loc-row" style="top:6124px;"></div>
+<div class="loc-row" style="top:6291px;"></div>
+<div class="abs h35 tr" style="right:1005px;top:5988px;white-space:nowrap;"><span class="w">ז'בוטינסקי 133, </span><span class="y">רמת גן</span></div>
+<div class="abs h35 tr" style="right:1005px;top:6154px;white-space:nowrap;"><span class="w">ז'בוטינסקי 100, </span><span class="y">פתח תקווה</span></div>
+<div class="abs h35 tr" style="right:1005px;top:6321px;white-space:nowrap;"><span class="w">חפץ חיים 10, ליד מגדלי </span><span class="y">תל אביב</span></div>
+<div class="abs t24 w tr" style="right:1005px;top:6024px;white-space:nowrap;">5 דק' ממתחם הבורסה | חניה בבניין</div>
+<div class="abs t24 w tr" style="right:1005px;top:6190px;white-space:nowrap;">5 דק' ממתחם מתחם BSR CITY</div>
+<div class="abs t24 w tr" style="right:1005px;top:6357px;white-space:nowrap;">גישה מהירה מאיילון</div>
+<img class="abs" src="assets/pin.svg" alt="" style="left:746px;top:5982px;width:33px;height:76px;">
+<img class="abs" src="assets/pin.svg" alt="" style="left:746px;top:6148px;width:33px;height:76px;">
+<img class="abs" src="assets/pin.svg" alt="" style="left:746px;top:6314px;width:33px;height:76px;">
+
+<!-- ===== ענה על 4 שאלות ===== -->
+<div class="abs" style="left:35.9px;top:6527.5px;width:497.1px;height:696.8px;display:flex;align-items:center;justify-content:center;">
+  <img src="assets/glove-left.svg" alt="" style="width:345.9px;height:628.9px;transform:rotate(-15deg);">
+</div>
+<div class="abs h100 y tr" style="right:117px;top:6760px;width:757px;">ענה על 4 שאלות</div>
+<div class="abs h100 w tr" style="right:218px;top:6856px;width:757px;">וקבלו הכוונה</div>
+<div class="abs h100 w tr" style="right:117px;top:6955px;width:757px;">אישית מהצוות</div>
+<div class="abs h35 w tr" style="right:117px;top:7183px;width:442px;">מה הכי מדבר אליך עכשיו?</div>
+<div class="card-dark" style="left:1181px;top:7270px;"></div>
+<div class="card-dark" style="left:715px;top:7270px;"></div>
+<div class="card-dark" style="left:249px;top:7270px;"></div>
+<div class="abs h35 w tc" style="left:1218px;top:7358px;width:355px;">לפרוק את הלחץ מהעבודה</div>
+<div class="abs h35 w tc" style="left:753px;top:7358px;width:355px;">להיכנס לכושר ולחטב את הגוף</div>
+<div class="abs h35 w tc" style="left:287px;top:7358px;width:355px;">להפסיק לכאוב מהישיבה מול המחשב</div>
+
+<!-- ===== אף אחד מהם לא הגיע בכושר ===== -->
+<div class="abs" style="left:134px;top:7867px;width:857px;height:536px;border-radius:20px;background:#fff;"></div>
+<div class="abs" style="left:184px;top:7922px;width:457px;height:414px;background:#d9d9d9;"></div>
+<div class="abs" style="left:413px;top:7922px;width:1px;height:406px;background:#000;"></div>
+<div class="abs t24 tr" style="right:783px;top:7985px;width:266px;height:304px;display:flex;flex-direction:column;justify-content:center;color:#000;">
+  <p>״לורם איפסום דולור סיט אמט חשלו בלובק. שלושע לפמעט לת קלאצי סולגק. מורגם דולור, לרעח. שערש תצטריק ומרגשח. איף,</p>
+</div>
+<div class="abs" style="left:-753px;top:7867px;width:857px;height:536px;border-radius:20px;background:#fff;"></div>
+<div class="abs" style="left:-703px;top:7922px;width:457px;height:414px;background:#d9d9d9;"></div>
+<!-- הכותרת עוגנת לתחתית כמו בפיגמה, כך שהיא גדלה כלפי מעלה ולא נכנסת לטקסט -->
+<div class="abs h100 tr" style="right:117px;bottom:2230.6px;width:538px;"><span class="w">אף אחד מהם </span><span class="y">לא הגיע בכושר.</span></div>
+<p class="abs t24 w tr" style="right:117px;top:8261px;width:536px;">כולם הגיעו עייפים, אחרי יום עבודה, בפעם הראשונה. ההבדל היחיד הוא שהם הגיעו שוב.</p>
+
+<!-- ===== מה שעובר לך בראש עכשיו ===== -->
+<!-- עוגנת לתחתית כמו בפיגמה — 73px מעל הכרטיסים, וגדלה כלפי מעלה אם נשברת לשתי שורות -->
+<div class="abs h100 w tc" style="left:414px;bottom:1722px;width:964px;">מה שעובר לך בראש עכשיו</div>
+<div id="objrow">
+  <div class="obj">
+    <img class="ic" src="assets/icon-30.svg" alt="" style="width:114px;height:114px;">
+    <p class="ttl">אין לי זמן</p>
+    <p class="bd">שעה, שלוש פעמים בשבוע. זה פחות ממה שאתה מבזבז על גלילה בטלפון בערב אחד. והסניפים ממוקמים בדיוק חמש דקות מהמשרד, לפני שאתה עולה על הכביש הביתה.</p>
+  </div>
+  <div class="obj">
+    <img class="ic" src="assets/icon-29.svg" alt="" style="width:167px;height:113px;">
+    <p class="ttl">אני לא בכושר מספיק בשביל אגרוף</p>
+    <p class="bd">אף אחד לא. זו בדיוק הסיבה שהאימון בנוי בשכבות, ולכל תרגיל יש גרסה קלה יותר. אתה קובע את הקצב, המאמן דואג שהטכניקה תהיה נכונה. אחרי שלושה אימונים תבין למה זה בכלל לא היה צריך להיות שיקול.</p>
+  </div>
+  <div class="obj">
+    <img class="ic" src="assets/icon-28.svg" alt="" style="width:70px;height:107px;">
+    <p class="ttl">אני אחטוף מכות</p>
+    <p class="bd">לא. עובדים על שקים וכפות בלבד, בלי ספארינג ובלי זירה. אתה מכה, לא חוטף. אם חיפשת קרבות, זה לא המקום.</p>
+  </div>
+  <div class="obj">
+    <img class="ic" src="assets/icon-27.svg" alt="" style="width:106px;height:101px;">
+    <p class="ttl">נרשמתי כבר פעם לחדר כושר ולא הלכתי</p>
+    <p class="bd">כי אף אחד לא שם לב שנעלמת. פה יש עד 12 מתאמנים באולם ומאמן שיודע איך קוראים לך. כשאתה מפספס שבוע, מישהו שואל למה. זה ההבדל בין מנוי לבין מסגרת.</p>
+  </div>
+  <div class="obj">
+    <img class="ic" src="assets/icon-26.svg" alt="" style="width:62px;height:94px;">
+    <p class="ttl">אני לא בטוח שזה בשבילי</p>
+    <p class="bd">בשביל זה יש אימון ניסיון על חשבוננו. אתה בא, מתאמן, מרגיש איך זה בגוף ואיך זה בראש - ואז מחליט. בלי טפסים, בלי התחייבות, בלי מישהו שירדוף אחריך.</p>
+  </div>
+</div>
+
+<!-- ===== בוא נקבע לך אימון ניסיון ===== -->
+<div class="abs" id="form" style="left:117px;top:9514px;width:785px;height:584px;border-radius:20px;background:#fff;"></div>
+<div class="abs h100 tr" style="right:117px;top:9618px;width:562px;"><span style="color:#101c1d;">בוא נקבע לך </span><span style="color:#3e6e72;">אימון ניסיון</span></div>
+<a class="abs h35 tr lnk" href="tel:+972779706900" style="right:180px;top:9891px;width:214px;color:#101c1d;">077-9706-900</a>
+<a class="abs lnk" href="tel:+972779706900" aria-label="חיוג לסטודיו" style="left:1569px;top:9881px;width:42px;height:43px;"><img src="assets/phone.svg" alt="" style="width:100%;height:100%;"></a>
+<a class="abs h35 tr lnk" href="https://www.instagram.com/oritzhaki_hitbox/" target="_blank" rel="noopener" style="right:180px;top:9955px;width:438px;color:#101c1d;">עקבו אחרינו באינסטגרם</a>
+<a class="abs lnk" href="https://www.instagram.com/oritzhaki_hitbox/" target="_blank" rel="noopener" aria-label="היטבוקס באינסטגרם" style="left:1567px;top:9951px;width:44px;height:44px;"><img src="assets/instagram.svg" alt="" style="width:100%;height:100%;"></a>
+<input class="field" style="top:9606px;" type="text" placeholder="מה השם שלך?">
+<input class="field" style="top:9688px;" type="tel" placeholder="מה הטלפון שלך?">
+<input class="field" style="top:9770px;" type="text" placeholder="סניף מועדף">
+<button class="field" style="top:9931px;background:#3e6e72;color:#fff;font-weight:700;cursor:pointer;">אני רוצה אימון ניסיון</button>
+<input type="checkbox" class="abs" style="left:816px;top:9855px;width:28px;height:28px;accent-color:#3e6e72;">
+<div class="abs tr" style="right:930px;top:9858px;width:618px;font-size:16px;line-height:1.57;color:#000;">בהשארת פרטים באתר אתם מאשרים תוכן שיווקי מהיטבוקס, מתחייבים לא לחפור לכם.</div>
+
+<!-- ===== פוטר ===== -->
+<div class="abs" style="left:104px;top:10358px;width:1520px;height:1px;background:#000;"></div>
+<div class="abs tr" style="right:1239px;top:10225px;width:244px;font-size:16px;line-height:1.57;color:#000;">
+  <p>תנאי שימוש</p><p>מדיניות פרטיות</p><p>הצהרת נגישות</p><p>כל הזכויות שמורות להיטבוקס ©</p>
+</div>
+<div class="abs tr" style="right:737px;top:10225px;font-size:16px;line-height:1.57;color:#000;white-space:nowrap;">
+  <p class="b">שעות פעילות הסטודיו</p><p>ימי א-ה: 6-23</p><p>ימי ו: 6-13</p><p>ימי ש: חצי שעה לאחר צאת שבת-23</p>
+</div>
+<div class="abs tr" style="right:117px;top:10225px;font-size:16px;line-height:1.57;color:#000;white-space:nowrap;">
+  <p class="b">הסניפים</p><p>רמת גן | ז'בוטינסקי 133</p><p>פתח תקווה | ז'בוטינסקי 100, BSR CITY</p><p>תל אביב | חפץ חיים 10</p>
+</div>
+<img class="abs cover" src="assets/logo-ajur.png" alt="HITBOX" style="left:107px;top:10160px;width:148px;height:198px;">
+<div class="abs tc" style="left:864px;top:10391px;width:120px;font-family:'IBM Plex Sans Hebrew',sans-serif;font-size:18px;line-height:2.32;color:#000;">עיצוב ופיתוח ע״י</div>
+<div class="abs" style="left:764.7px;top:10396px;width:81.5px;height:30.7px;overflow:hidden;">
+  <img src="assets/roni-logo.png" alt="" style="position:absolute;left:-16.58%;top:-35.94%;width:133.16%;height:170.31%;">
+</div>
+<div class="abs" style="left:1482px;top:9217px;width:283.6px;height:357.1px;display:flex;align-items:center;justify-content:center;">
+  <img src="assets/glove-right.svg" alt="" style="width:221.4px;height:317.6px;transform:rotate(-12.2deg);">
+</div>
+
+</div>
+
+</div></div>
+<div id="vmodal" role="dialog" aria-modal="true" aria-label="המלצת מתאמן">
+  <button id="vclose" aria-label="סגירה">×</button>
+  <div class="frame"></div>
+</div>
+<a id="wa" href="https://wa.me/972779706900" target="_blank" rel="noopener" style="position:fixed;z-index:1000;width:84.4px;height:84.4px;bottom:20px;">
+  <svg viewBox="0 0 127.4 127.4" style="display:block;width:100%;height:100%;" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="WhatsApp">
+    <g filter="url(#waShadow)"><circle class="wa-bg" cx="63.7" cy="59.7" r="38.5"/></g>
+    <path class="wa-fg" d="M79.0794 45.3111C77.1442 43.3667 74.8393 41.825 72.2993 40.7759C69.7592 39.7267 67.0346 39.191 64.2844 39.2001C52.7608 39.2001 43.3688 48.5451 43.3688 60.0111C43.3688 63.686 44.3397 67.256 46.1548 70.406L43.2 81.2L54.2804 78.302C57.3407 79.961 60.7809 80.843 64.2844 80.843C75.808 80.843 85.2 71.498 85.2 60.0321C85.2 54.4671 83.0261 49.2381 79.0794 45.3111ZM64.2844 77.315C61.1608 77.315 58.1005 76.475 55.4201 74.9L54.7869 74.522L48.202 76.244L49.9538 69.86L49.5317 69.209C47.7958 66.4519 46.8743 63.2645 46.8724 60.0111C46.8724 50.4771 54.6814 42.7071 64.2633 42.7071C68.9065 42.7071 73.2754 44.5131 76.5467 47.7891C78.1668 49.3932 79.4507 51.3014 80.3238 53.4031C81.197 55.5047 81.642 57.7579 81.6332 60.0321C81.6754 69.566 73.8663 77.315 64.2844 77.315ZM73.8241 64.379C73.2965 64.127 70.7216 62.8671 70.2573 62.6781C69.7719 62.5101 69.4342 62.4261 69.0754 62.9301C68.7166 63.4551 67.7246 64.631 67.4291 64.967C67.1337 65.324 66.8171 65.366 66.2894 65.093C65.7618 64.841 64.0734 64.274 62.0894 62.5101C60.5276 61.1241 59.4935 59.4231 59.1769 58.8981C58.8814 58.3731 59.1347 58.1001 59.409 57.8271C59.6412 57.5961 59.9367 57.2181 60.1899 56.9241C60.4432 56.6301 60.5487 56.3991 60.7176 56.0631C60.8864 55.7061 60.802 55.4121 60.6754 55.1601C60.5487 54.9081 59.4935 52.3461 59.0714 51.2961C58.6492 50.2881 58.206 50.4141 57.8894 50.3931H56.8764C56.5176 50.3931 55.9688 50.5191 55.4834 51.0441C55.0191 51.5691 53.6683 52.8291 53.6683 55.3911C53.6683 57.9531 55.5467 60.4311 55.8 60.7671C56.0533 61.1241 59.4935 66.374 64.7276 68.621C65.9729 69.167 66.9437 69.482 67.7035 69.713C68.9487 70.112 70.0884 70.049 70.996 69.923C72.009 69.776 74.0985 68.663 74.5206 67.445C74.9638 66.227 74.9638 65.198 74.8161 64.967C74.6683 64.736 74.3518 64.631 73.8241 64.379Z"/>
+    <defs>
+      <filter id="waShadow" x="0" y="0" width="127.4" height="127.4" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+        <feFlood flood-opacity="0" result="bg"/>
+        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hard"/>
+        <feOffset dy="4"/><feGaussianBlur stdDeviation="12.6"/>
+        <feComposite in2="hard" operator="out"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 0.952941 0 0 0 0 0.717647 0 0 0 1 0"/>
+        <feBlend mode="normal" in2="bg" result="shadow"/>
+        <feBlend mode="normal" in="SourceGraphic" in2="shadow"/>
+      </filter>
+    </defs>
+  </svg>
+</a>
+<script>
+const c=document.getElementById('canvas'),s=document.getElementById('stage'),
+      hero=document.getElementById('hero'),rest=document.getElementById('rest'),wa=document.getElementById('wa'),
+      track=document.getElementById('tltrack'),prog=document.getElementById('tlprog'),
+      items=[...document.querySelectorAll('.tli')];
+// עוצר כשקצה הטקסט של התחנה האחרונה מגיע לשוליים השמאליים של הגריד (117px)
+const TRAVEL=918, NODE_SPAN=1904;
+let k=1,d=0,cy=0,tx=0,txTarget=0,active=-1;
+
+/* שני סקשנים נעולים: הציר, וגריד ההמלצות.
+   center = מרכז הסקשן בקואורדינטות הקנבס, span = אורך הנעילה בפיקסלי קנבס */
+const pins=[
+  {center:2550, span:TRAVEL, start:0, len:0, t:0},   // ציר הזמן
+  {center:5256, span:1000,   start:0, len:0, t:0}    // גריד ההמלצות
+];
+
+function fit(){
+  k=window.innerWidth/1728;
+  const H=window.innerHeight/k;
+  d=H-1116;
+  hero.style.height=H+'px';
+  rest.style.top=d+'px';
+  wa.style.right=Math.max(5,58.5*k-48)+'px';
+  let acc=0;
+  for(const p of pins){
+    p.len=p.span*k;
+    p.start=Math.max(0,(p.center-H/2+d)*k)+acc;
+    acc+=p.len;
+  }
+  s.style.height=((10469+d)*k+acc)+'px';
+  onScroll();
+  tx=txTarget;draw();
+}
+
+function onScroll(){
+  const y=window.scrollY;
+  let off=0;
+  for(const p of pins){
+    if(y>=p.start+p.len){p.t=1;off+=p.len;}
+    else if(y>=p.start){p.t=(y-p.start)/p.len;off+=y-p.start;}
+    else p.t=0;
+  }
+  cy=-(y-off);
+  /* הופך את צבעי כפתור הווצאפ ברגע שהוא נכנס לתחום הרקע הצהוב של הטופס */
+  const waY=(window.innerHeight-62-cy)/k;
+  wa.classList.toggle('inv',waY>=9367);
+  txTarget=pins[0].t*TRAVEL;
+  const i=Math.round(pins[0].t*(items.length-1));
+  if(i!==active){active=i;items.forEach((el,n)=>el.classList.toggle('on',n===i));}
+  if(window.vgridScroll)window.vgridScroll(pins[1].t);
+}
+
+function draw(){
+  c.style.transform='translateY('+cy+'px) scale('+k+')';
+  track.style.transform='translateX('+tx+'px)';
+  prog.style.width=(137+tx/TRAVEL*NODE_SPAN)+'px';
+}
+
+function loop(){
+  tx+=(txTarget-tx)*0.16;
+  if(Math.abs(txTarget-tx)<0.05)tx=txTarget;
+  draw();
+  if(window.vgridDraw)window.vgridDraw();
+  requestAnimationFrame(loop);
+}
+
+// the canvas is fixed, so anchor jumps need to be mapped back to page scroll
+document.querySelector('a[href="#form"]').addEventListener('click',e=>{
+  e.preventDefault();
+  window.scrollTo({top:(9451+d)*k+pinLen-window.innerHeight*0.15,behavior:'smooth'});
+});
+window.addEventListener('scroll',onScroll,{passive:true});
+window.addEventListener('resize',fit);
+fit();loop();
+</script>
+<script src="vgrid.js"></script>
+<script src="parallax.js"></script>
+</body>
+</html>

@@ -205,6 +205,9 @@ p{font-size:var(--body);}
   background:url('assets/texture-m.jpg') center/cover;
   mix-blend-mode:multiply;opacity:.4;}
 #quiz>*{position:relative;}
+/* הכפפה של הדסקטופ, מציצה מהשוליים ומאחורי התוכן */
+.qbag{position:absolute;left:-58px;top:26px;width:172px;height:auto;
+  transform:rotate(-15deg);opacity:.5;pointer-events:none;z-index:0;}
 #quiz .opts{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
 .qopt{width:100%;min-height:66px;padding:16px;border:2px solid var(--sand);
   border-radius:var(--r);background:var(--ink);color:#fff;
@@ -254,6 +257,9 @@ p{font-size:var(--body);}
   background:url('assets/texture-m.jpg') center/cover;
   mix-blend-mode:multiply;opacity:.4;}
 .locs>*{position:relative;}
+/* שק האגרוף שרץ ברקע הפס הצהוב בדסקטופ */
+.lbag{position:absolute;left:-40px;bottom:10px;width:200px;height:auto;
+  opacity:.28;pointer-events:none;z-index:0;}
 .locs>h2{color:var(--teal);}
 /* הסיכה ראשונה בסדר האלמנטים, ולכן ב-RTL היא יושבת בימין */
 .locs .cards{gap:8px;}

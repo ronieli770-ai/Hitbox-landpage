@@ -65,7 +65,7 @@ p{font-size:var(--body);}
 #hero .branches{margin-top:clamp(16px,5vw,26px);font-size:16px;line-height:1.57;
   display:flex;align-items:flex-start;justify-content:center;gap:2px;}
 /* הפין נצמד לשורה הראשונה, ולא למרכז הגוש כשהטקסט נשבר לשתי שורות */
-#hero .branches img{width:10px;height:19px;flex:none;margin-top:3px;}
+#hero .branches img{width:10px;height:19px;flex:none;margin-top:3px;transform:translateX(-7px);}
 
 /* ---------- כרטיסים ----------
    רשת שתיים בשורה, בדיוק כמו במסגרת: כרטיס 160 · מרווח 12 · שורה 16 */
@@ -87,7 +87,7 @@ p{font-size:var(--body);}
 /* ---------- הטיפוגרפיה של הקונטיינרים ----------
    מסגרות המובייל בפיגמה מגדירות טקסט אחיד לכל כרטיס: 22 בולד, גובה שורה 1.03.
    מרוכז כאן כדי שכל הכרטיסים בעמוד ידברו באותו קול. */
-.tile h3,.card p,.branch h3,.acc summary,.tlc h3{
+.tile h3,.card p,.branch h3,.acc .q,.tlc h3{
   font-size:var(--h3);font-weight:700;line-height:1.03;}
 
 /* ---------- מתחילים מאפס ----------
@@ -154,7 +154,12 @@ p{font-size:var(--body);}
 /* ---------- גריד המלצות ----------
    הכרטיס של יוסף פותח בגדול עם הכותרת עליו ומתכווץ למקומו בזמן הגלילה,
    ושאר הכרטיסים קופצים פנימה אחריו — בדיוק כמו בדסקטופ. */
-.vsec{padding-top:64px;padding-bottom:64px;}
+.vsec{padding:64px 0;}
+/* הסקשן ננעץ: vpin גבוה ממסך, ו-vstick נדבק לראשו לאורך ההפרש.
+   הגלילה בטווח הזה מזינה את האנימציה במקום להזיז את העמוד.
+   הגריד גבוה מ-vstick וגולש מתחתיו — vtail שומר לגלישה הזו מקום. */
+.vpin{position:relative;}
+.vstick{position:sticky;top:0;height:100vh;height:100svh;padding:0 var(--pad);}
 .vgrid{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 /* כפתור לא יורש גופן וצבע מהדף — בלי השתיים האלה הכותרת שעליו
    נופלת לגופן ברירת המחדל של הדפדפן */
@@ -216,18 +221,29 @@ p{font-size:var(--body);}
 .consent input{width:22px;height:22px;flex:none;accent-color:var(--sand);}
 
 /* ---------- אקורדיון ---------- */
-.acc{border:1px solid var(--sand);border-radius:var(--r);overflow:hidden;background:transparent;}
+/* ---------- התנגדויות ----------
+   הפתיחה קפיצית: הגובה חורג מעט מהיעד וחוזר, והטקסט עולה אחריו.
+   הגובה מונפש דרך grid-template-rows ולא max-height, כדי שכל תשובה
+   תיפתח בדיוק לגובה שלה בלי לנחש מקסימום. */
+.acc{position:relative;border:1px solid var(--sand);border-radius:var(--r);
+  overflow:hidden;background:transparent;}
 .acc+.acc{margin-top:10px;}
-.acc summary{list-style:none;display:flex;align-items:center;gap:12px;padding:16px;
-  cursor:pointer;font-size:var(--h3);font-weight:700;color:#fff;}
-.acc summary::-webkit-details-marker{display:none;}
-.acc summary img{width:30px;height:30px;flex:none;object-fit:contain;}
-.acc summary::after{content:'+';margin-inline-start:auto;font-size:24px;color:var(--sand);}
-.acc[open] summary::after{content:'−';}
-.acc[open]{background:var(--sand);}
-.acc[open] summary{color:var(--ink);}
-.acc[open] summary img{filter:brightness(0);}
-.acc .body{padding:0 16px 16px;color:var(--ink);font-size:var(--body);}
+.acc .q{width:100%;display:flex;align-items:center;gap:12px;padding:16px;border:0;
+  background:transparent;color:#fff;font-family:inherit;text-align:right;cursor:pointer;}
+.acc .q img{width:30px;height:30px;flex:none;object-fit:contain;}
+.acc .q::after{content:'+';margin-inline-start:auto;font-size:24px;color:var(--sand);flex:none;}
+.acc.on{background:var(--sand);}
+.acc.on .q{color:var(--ink);}
+.acc.on .q img{filter:brightness(0);}
+.acc.on .q::after{content:'\2212';color:var(--ink);}
+.acc .a{display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows .52s cubic-bezier(.34,1.56,.64,1);}
+.acc .a>div{overflow:hidden;}
+.acc .a p{padding:0 16px 16px;color:var(--ink);font-size:var(--body);
+  opacity:0;transform:translateY(16px) scale(.97);
+  transition:opacity .28s ease .1s,transform .5s cubic-bezier(.34,1.56,.64,1) .1s;}
+.acc.on .a{grid-template-rows:1fr;}
+.acc.on .a p{opacity:1;transform:none;}
 
 /* ---------- סניפים ----------
    בדסקטופ הסקשן יושב על פס צהוב, ומשם מגיעים הצבעים ההפוכים:

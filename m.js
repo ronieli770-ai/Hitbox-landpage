@@ -83,37 +83,52 @@ vgrid.querySelector('.hero').insertAdjacentHTML('beforeend',
   const easeInOut = t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
   const backOut = t => 1 + (BACK + 1) * Math.pow(t - 1, 3) + BACK * Math.pow(t - 1, 2);
 
+  const pin = document.getElementById('vpin');
+  const tail = document.getElementById('vtail');
+  const stick = vgrid.parentElement;
   const hero = vgrid.querySelector('.hero');
   const slot = vgrid.querySelector('.vslot');
   const rest = [...vgrid.querySelectorAll('.vcell')].filter(c => c !== hero);
+  let near = [], far = [];
   const head = vgrid.querySelector('.vhead');
   const heroPlay = hero.querySelector('.play');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let cur = 0, target = 0, running = false;
   let open = { l: 0, t: 0, w: 0, h: 0 }, rest_ = { l: 0, t: 0, w: 0, h: 0 };
 
-  function layout() {
-    const gr = vgrid.getBoundingClientRect();
-    rest_ = { l: slot.offsetLeft, t: slot.offsetTop, w: slot.offsetWidth, h: slot.offsetHeight };
-    /* מלוא רוחב המסך, בפרופורציה לאורך, בלי לחרוג מגובה המסך */
-    const w = innerWidth;
-    const h = Math.min(w * 16 / 9, innerHeight * 0.86);
-    open = { l: -gr.left, t: 0, w, h };
+  let PIN = 0;
 
+  function layout() {
+    rest_ = { l: slot.offsetLeft, t: slot.offsetTop, w: slot.offsetWidth, h: slot.offsetHeight };
+    const w = innerWidth;
+    const h = Math.min(w * 16 / 9, innerHeight * 0.88);
+    open = { w, h };
+
+    /* אורך הנעיצה, והמקום שצריך להישמר לשורות שגולשות מתחת ל-vstick */
+    PIN = innerHeight;
+    const spill = Math.max(0, vgrid.offsetHeight - stick.clientHeight);
+    pin.style.height = (stick.clientHeight + PIN) + 'px';
+    tail.style.height = spill + 'px';
+
+    /* מי נראה בזמן הנעיצה נכנס עם ההשהיה מהמרכז; מי שמתחת לקיפול
+       יקבל אנימציה משלו כשיגיע למסך אחרי השחרור */
+    near = []; far = [];
+    const fold = stick.clientHeight;
     const hx = rest_.l + rest_.w / 2, hy = rest_.t + rest_.h / 2;
     const d = rest.map(c => Math.hypot(
       c.offsetLeft + c.offsetWidth / 2 - hx,
       c.offsetTop + c.offsetHeight / 2 - hy));
     const max = Math.max(...d, 1);
-    rest.forEach((c, i) => { c.dataset.delay = ITEM_DELAY + d[i] / max * STAGGER; });
+    rest.forEach((c, i) => {
+      c.dataset.delay = ITEM_DELAY + d[i] / max * STAGGER;
+      (c.offsetTop + c.offsetHeight <= fold ? near : far).push(c);
+    });
   }
 
-  /* הכיווץ מתחיל ברגע שמרכז הווידאו והכותרת מגיע למרכז המסך,
-     ונמשך לאורך שלושה רבעים ממסך של גלילה. */
+  /* ההתקדמות נמדדת מתוך הנעיצה: כל פיקסל גלילה בטווח הזה מזין את
+     האנימציה, והעמוד עצמו עומד במקום */
   function scrollProgress() {
-    const top = vgrid.getBoundingClientRect().top;
-    const from = (innerHeight - open.h) / 2;
-    return clamp01((from - top) / (innerHeight * 0.75));
+    return clamp01(-pin.getBoundingClientRect().top / PIN);
   }
 
   function play(cell) {
@@ -124,32 +139,41 @@ vgrid.querySelector('.hero').insertAdjacentHTML('beforeend',
     v.play().catch(() => { });
   }
 
+  function pop(c, t) {
+    const k = t <= 0 ? 0 : t >= 1 ? 1 : backOut(t);
+    const o = clamp01(t * 3);
+    c.style.transform = `scale(${(ITEM_SCALE + (1 - ITEM_SCALE) * k).toFixed(4)})`;
+    c.style.opacity = o.toFixed(3);
+    if (o > 0.02) play(c);
+  }
+
   function apply(p) {
+    const gr = vgrid.getBoundingClientRect();
     const T = p * TOTAL;
     const e = easeInOut(clamp01(T / OPEN_DUR));
     const mix = (a, b) => a + (b - a) * e;
-    hero.style.left = mix(open.l, rest_.l).toFixed(1) + 'px';
-    hero.style.top = mix(open.t, rest_.t).toFixed(1) + 'px';
+    /* הפריים הפתוח ממורכז במסך כל עוד הסקשן נעוץ, ולפני כן יושב בראש הגריד */
+    const oT = Math.max(0, (innerHeight - open.h) / 2 - gr.top);
+    hero.style.left = mix(-gr.left, rest_.l).toFixed(1) + 'px';
+    hero.style.top = mix(oT, rest_.t).toFixed(1) + 'px';
     hero.style.width = mix(open.w, rest_.w).toFixed(1) + 'px';
     hero.style.height = mix(open.h, rest_.h).toFixed(1) + 'px';
-    head.style.opacity = clamp01(1 - e * 2.2).toFixed(3);   /* נעלמת עד אמצע הכניסה */
+    head.style.opacity = clamp01(1 - e * 2.2).toFixed(3);
     heroPlay.style.opacity = clamp01((e - 0.75) / 0.25).toFixed(3);
     if (p > 0) play(hero);
 
-    rest.forEach(c => {
-      const t = clamp01((T - c.dataset.delay) / ITEM_DUR);
-      const k = t <= 0 ? 0 : t >= 1 ? 1 : backOut(t);
-      const o = clamp01(t * 3);
-      c.style.transform = `scale(${(ITEM_SCALE + (1 - ITEM_SCALE) * k).toFixed(4)})`;
-      c.style.opacity = o.toFixed(3);
-      if (o > 0.02) play(c);
-    });
+    near.forEach(c => pop(c, clamp01((T - c.dataset.delay) / ITEM_DUR)));
+    /* השורות שמתחת לקיפול נכנסות לפי המיקום שלהן, תוך כדי הגלילה שאחרי השחרור */
+    far.forEach(c => pop(c, clamp01(
+      (innerHeight * 0.92 - c.getBoundingClientRect().top) / (innerHeight * 0.3))));
   }
 
   function frame() {
-    if (Math.abs(target - cur) < 0.0005) { cur = target; apply(cur); running = false; return; }
-    cur += (target - cur) * 0.12;
+    const settled = Math.abs(target - cur) < 0.0005;
+    if (settled) cur = target;
     apply(cur);
+    if (settled) { running = false; return; }
+    cur += (target - cur) * 0.12;
     requestAnimationFrame(frame);
   }
 
@@ -182,15 +206,27 @@ document.getElementById('rail').innerHTML = WALL.map(w =>
    </article>`).join('');
 
 /* ---------- התנגדויות ---------- */
-document.getElementById('objs').innerHTML = OBJECTIONS.map(o =>
-  `<details class="acc">
-     <summary><img src="assets/${o.ic}.svg" alt="">${o.q}</summary>
-     <p class="body">${o.a}</p>
-   </details>`).join('');
+/* details סוגר את התוכן מיד ולכן אין לו אנימציית סגירה — כאן המצב
+   מוחזק במחלקה, כדי שגם הסגירה תרוץ */
+const objs = document.getElementById('objs');
+objs.innerHTML = OBJECTIONS.map(o =>
+  `<div class="acc">
+     <button class="q" type="button" aria-expanded="false">
+       <img src="assets/${o.ic}.svg" alt="">${o.q}</button>
+     <div class="a"><div><p>${o.a}</p></div></div>
+   </div>`).join('');
+
 /* פתוח אחד בכל רגע */
-document.querySelectorAll('.acc').forEach(d => d.addEventListener('toggle', () => {
-  if (d.open) document.querySelectorAll('.acc[open]').forEach(o => { if (o !== d) o.open = false; });
-}));
+objs.addEventListener('click', e => {
+  const q = e.target.closest('.q');
+  if (!q) return;
+  const acc = q.parentElement, isOpen = acc.classList.contains('on');
+  objs.querySelectorAll('.acc.on').forEach(o => {
+    o.classList.remove('on');
+    o.querySelector('.q').setAttribute('aria-expanded', 'false');
+  });
+  if (!isOpen) { acc.classList.add('on'); q.setAttribute('aria-expanded', 'true'); }
+});
 
 /* ---------- פופ־אפ הווידאו ---------- */
 const vm = document.getElementById('vm'), frame = vm.querySelector('.frame');

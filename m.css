@@ -88,7 +88,7 @@ p{font-size:var(--body);}
 
 /* ---------- מתחילים מאפס ----------
    רקע טורקיז עם הטקסטורה במכפלה, וכרטיסים שחורים עם זוהר צהוב מתחת. */
-.zero{position:relative;background:var(--teal);overflow:hidden;}
+.zero{position:relative;background:var(--teal);overflow:hidden;margin-top:34px;}
 .zero::before{content:'';position:absolute;inset:0;pointer-events:none;
   background:url('assets/texture-m.jpg') center/cover;
   mix-blend-mode:multiply;opacity:.4;}
@@ -217,8 +217,9 @@ p{font-size:var(--body);}
   mix-blend-mode:multiply;opacity:.4;}
 .locs>*{position:relative;}
 .locs>h2{color:var(--teal);}
+/* הסיכה ראשונה בסדר האלמנטים, ולכן ב-RTL היא יושבת בימין */
 .locs .branch{border:0;background:var(--ink);border-radius:10px;padding:14px 16px;
-  display:flex;align-items:center;justify-content:space-between;gap:14px;}
+  min-height:104px;display:flex;align-items:center;gap:14px;}
 .locs .branch h3{color:#fff;}
 .locs .branch img{width:18px;height:auto;flex:none;}
 

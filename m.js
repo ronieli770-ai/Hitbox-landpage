@@ -362,3 +362,16 @@ const TL_MARK = 0.75;
   addEventListener('load', () => { layout(); sync(); });
   layout(); sync();
 })();
+
+/* ---------- הטופס התחתון ---------- */
+(function () {
+  const form = document.getElementById('lead');
+  if (!form) return;
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    const data = Object.fromEntries(new FormData(form).entries());
+    console.log('פרטי הליד:', data);
+    location.href = 'thanks.html?goal=' + encodeURIComponent(data.goal || '');
+  });
+})();

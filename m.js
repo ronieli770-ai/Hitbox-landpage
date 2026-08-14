@@ -55,20 +55,105 @@ const PLAY = '<span class="play"><svg viewBox="0 0 64 64" fill="none">' +
 
 /* ---------- גריד ההמלצות ---------- */
 const vgrid = document.getElementById('vgrid');
-vgrid.innerHTML = CLIPS.map(c =>
-  `<button class="vcell" type="button" data-guid="${c.guid}" aria-label="צפייה בהמלצה">
+vgrid.innerHTML = CLIPS.map((c, i) =>
+  `<button class="vcell${i ? '' : ' hero'}" type="button" data-guid="${c.guid}" aria-label="צפייה בהמלצה">
      <video muted loop playsinline preload="none" poster="assets/vid/${c.id}.jpg"
-            data-src="assets/vid/${c.id}.mp4"></video>${PLAY}
+            data-src="assets/vid/${c.id}.mp4"></video>${i ? PLAY : ''}
    </button>`).join('');
+vgrid.querySelector('.hero').insertAdjacentHTML('beforeend',
+  '<div class="vhead"><p>לא מאמין לנו?</p><p class="y">תשמע אותם.</p></div>');
 
-/* הסרטונים מתחילים לרוץ רק כשהם על המסך */
-const io = new IntersectionObserver(es => es.forEach(e => {
-  const v = e.target.querySelector('video');
-  if (!v) return;
-  if (e.isIntersecting) { if (!v.src) v.src = v.dataset.src; v.play().catch(() => { }); }
-  else v.pause();
-}), { threshold: .25 });
-vgrid.querySelectorAll('.vcell').forEach(c => io.observe(c));
+/* ---------- פתיחת הגריד ----------
+   אותם קבועים כמו בדסקטופ. ההבדל היחיד הוא ההגדלה ההתחלתית של הכרטיס
+   המרכזי — בדסקטופ הוא גדל פי 3 לתוך גריד רחב, וכאן פי 1.9 כדי למלא את
+   רוחב הטלפון בלי לחתוך את המתאמן. */
+(function () {
+  const MID_SCALE = 1.9, ITEM_SCALE = 0.2;
+  const MID_DUR = 0.6, ITEM_DUR = 1.0, ITEM_DELAY = 0.1, STAGGER = 0.8, BACK = 1.4;
+  const TOTAL = ITEM_DELAY + ITEM_DUR + STAGGER;
+
+  const clamp01 = t => t < 0 ? 0 : t > 1 ? 1 : t;
+  const easeInOut = t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  const backOut = t => 1 + (BACK + 1) * Math.pow(t - 1, 3) + BACK * Math.pow(t - 1, 2);
+
+  const cells = [...vgrid.querySelectorAll('.vcell')];
+  const hero = cells[0], rest = cells.slice(1);
+  const head = vgrid.querySelector('.vhead');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let cur = 0, target = 0, running = false;
+
+  /* ההשהיה של כל כרטיס נגזרת מהמרחק שלו מהכרטיס המרכזי */
+  function layout() {
+    const hx = hero.offsetLeft + hero.offsetWidth / 2;
+    const hy = hero.offsetTop + hero.offsetHeight / 2;
+    const d = rest.map(c => Math.hypot(
+      c.offsetLeft + c.offsetWidth / 2 - hx,
+      c.offsetTop + c.offsetHeight / 2 - hy));
+    const max = Math.max(...d, 1);
+    rest.forEach((c, i) => { c.dataset.delay = ITEM_DELAY + d[i] / max * STAGGER; });
+  }
+
+  /* מתחיל כשראש הגריד מגיע ל-85% מגובה המסך ומסתיים ב-15% */
+  function scrollProgress() {
+    const top = vgrid.getBoundingClientRect().top;
+    return clamp01((innerHeight * 0.85 - top) / (innerHeight * 0.7));
+  }
+
+  function play(cell) {
+    const v = cell.querySelector('video');
+    if (!v || v.dataset.on) return;
+    v.dataset.on = '1';
+    if (!v.src) v.src = v.dataset.src;
+    v.play().catch(() => { });
+  }
+
+  function apply(p) {
+    const T = p * TOTAL;
+    const s = MID_SCALE + (1 - MID_SCALE) * easeInOut(clamp01(T / MID_DUR));
+    hero.style.transform = `scale(${s.toFixed(4)})`;
+    head.style.transform = `translate(-50%,-50%) scale(${(1 / s).toFixed(4)})`;
+    head.style.opacity = clamp01((s - 1.25) / (MID_SCALE - 1.25)).toFixed(3);
+    if (p > 0) play(hero);
+    rest.forEach(c => {
+      const t = clamp01((T - c.dataset.delay) / ITEM_DUR);
+      const e = t <= 0 ? 0 : t >= 1 ? 1 : backOut(t);
+      const o = clamp01(t * 3);
+      c.style.transform = `scale(${(ITEM_SCALE + (1 - ITEM_SCALE) * e).toFixed(4)})`;
+      c.style.opacity = o.toFixed(3);
+      if (o > 0.02) play(c);   /* מנגן ברגע שהוא נראה, לא בסוף הכניסה */
+    });
+  }
+
+  /* scrub מרוכך — הערך רודף אחרי הגלילה במקום לקפוץ איתה */
+  function frame() {
+    if (Math.abs(target - cur) < 0.0005) { cur = target; apply(cur); running = false; return; }
+    cur += (target - cur) * 0.12;
+    apply(cur);
+    requestAnimationFrame(frame);
+  }
+
+  function onScroll() {
+    target = scrollProgress();
+    if (reduced) { cur = target; apply(cur); return; }
+    if (!running) { running = true; requestAnimationFrame(frame); }
+  }
+
+  layout();
+  apply(0);
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', () => { layout(); onScroll(); });
+  addEventListener('load', () => { layout(); onScroll(); });
+  onScroll();
+
+  /* עוצר את הניגון כשהסקשן יוצא מהמסך */
+  new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) return;
+    cells.forEach(c => {
+      const v = c.querySelector('video');
+      if (v) { v.pause(); delete v.dataset.on; }
+    });
+  }), { threshold: 0 }).observe(vgrid);
+})();
 
 /* ---------- לפני־אחרי ---------- */
 document.getElementById('rail').innerHTML = WALL.map(w =>

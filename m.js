@@ -12,7 +12,8 @@ const CLIPS = [
   { id: 't05', guid: 'dd2c7d47-68e0-49f7-97be-45a88da622a8' },
   { id: 't06', guid: 'dec0da24-44cb-490f-b37b-79732668c42e' },
   { id: 't09', guid: '50e1c26c-5fb6-43c4-a0b6-1cb6600e83b4' },
-  { id: 't12', guid: '1ada0673-6c7a-4451-a29f-02909c658646' }
+  { id: 't12', guid: '1ada0673-6c7a-4451-a29f-02909c658646' },
+  { id: 't03', guid: '4c6b5497-8041-4695-8940-0208ea01fb96' }
 ];
 
 const WALL = [
@@ -55,41 +56,50 @@ const PLAY = '<span class="play"><svg viewBox="0 0 64 64" fill="none">' +
 
 /* ---------- גריד ההמלצות ---------- */
 const vgrid = document.getElementById('vgrid');
-vgrid.innerHTML = CLIPS.map((c, i) =>
-  `<button class="vcell${i ? '' : ' hero'}" type="button" data-guid="${c.guid}" aria-label="צפייה בהמלצה">
-     <video muted loop playsinline preload="none" poster="assets/vid/${c.id}.jpg"
-            data-src="assets/vid/${c.id}.mp4"></video>${i ? PLAY : ''}
-   </button>`).join('');
+vgrid.innerHTML =
+  '<span class="vslot"></span>' +
+  CLIPS.map((c, i) =>
+    `<button class="vcell${i ? '' : ' hero'}" type="button" data-guid="${c.guid}" aria-label="צפייה בהמלצה">
+       <video muted loop playsinline preload="none" poster="assets/vid/${c.id}.jpg"
+              data-src="assets/vid/${c.id}.mp4"></video>${i ? PLAY : ''}
+     </button>`).join('');
 vgrid.querySelector('.hero').insertAdjacentHTML('beforeend',
   '<div class="vhead"><p>לא מאמין לנו?</p><p class="y">תשמע אותם.</p></div>');
 
 /* ---------- פתיחת הגריד ----------
-   אותם קבועים כמו בדסקטופ. ההבדל היחיד הוא ההגדלה ההתחלתית של הכרטיס
-   המרכזי — בדסקטופ הוא גדל פי 3 לתוך גריד רחב, וכאן פי 1.9 כדי למלא את
-   רוחב הטלפון בלי לחתוך את המתאמן. */
+   הכרטיס של יוסף נפרש על רוחב המסך לאורך, עם הכותרת עליו, ובגלילה הוא
+   נכנס למשבצת שלו בגריד בזמן שהשאר קופצים פנימה.
+
+   הצורה שלו משתנה מפריים מלא-מסך למשבצת של 3/4, כלומר יחס הצדדים משתנה.
+   לכן הוא נע ע"י left/top/width/height ולא ע"י scale — transform היה מועך
+   את הווידאו, ואילו כאן object-fit מחשב את החיתוך מחדש בכל גודל. */
 (function () {
   const ITEM_SCALE = 0.2;
-  const MID_DUR = 0.6, ITEM_DUR = 1.0, ITEM_DELAY = 0.1, STAGGER = 0.8, BACK = 1.4;
+  const ITEM_DUR = 1.0, ITEM_DELAY = 0.15, STAGGER = 0.85, BACK = 1.4;
   const TOTAL = ITEM_DELAY + ITEM_DUR + STAGGER;
+  const OPEN_DUR = 0.55;      /* כמה מציר הזמן לוקח לכרטיס להיכנס למשבצת */
 
   const clamp01 = t => t < 0 ? 0 : t > 1 ? 1 : t;
   const easeInOut = t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
   const backOut = t => 1 + (BACK + 1) * Math.pow(t - 1, 3) + BACK * Math.pow(t - 1, 2);
 
-  /* ההגדלה נגזרת מרוחב המסך במקום להיות קבועה: הכרטיס נפתח בדיוק לרוחב
-     הטלפון ולא מילימטר מעבר, כדי שלא ייווצר מקום לגלול אליו הצידה. */
-  let MID_SCALE = 1.5;
-  const cells = [...vgrid.querySelectorAll('.vcell')];
-  const hero = cells[0], rest = cells.slice(1);
+  const hero = vgrid.querySelector('.hero');
+  const slot = vgrid.querySelector('.vslot');
+  const rest = [...vgrid.querySelectorAll('.vcell')].filter(c => c !== hero);
   const head = vgrid.querySelector('.vhead');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let cur = 0, target = 0, running = false;
+  let open = { l: 0, t: 0, w: 0, h: 0 }, rest_ = { l: 0, t: 0, w: 0, h: 0 };
 
-  /* ההשהיה של כל כרטיס נגזרת מהמרחק שלו מהכרטיס המרכזי */
   function layout() {
-    MID_SCALE = hero.offsetWidth ? innerWidth / hero.offsetWidth : 1.2;
-    const hx = hero.offsetLeft + hero.offsetWidth / 2;
-    const hy = hero.offsetTop + hero.offsetHeight / 2;
+    const gr = vgrid.getBoundingClientRect();
+    rest_ = { l: slot.offsetLeft, t: slot.offsetTop, w: slot.offsetWidth, h: slot.offsetHeight };
+    /* מלוא רוחב המסך, בפרופורציה לאורך, בלי לחרוג מגובה המסך */
+    const w = innerWidth;
+    const h = Math.min(w * 16 / 9, innerHeight * 0.86);
+    open = { l: -gr.left, t: 0, w, h };
+
+    const hx = rest_.l + rest_.w / 2, hy = rest_.t + rest_.h / 2;
     const d = rest.map(c => Math.hypot(
       c.offsetLeft + c.offsetWidth / 2 - hx,
       c.offsetTop + c.offsetHeight / 2 - hy));
@@ -97,10 +107,9 @@ vgrid.querySelector('.hero').insertAdjacentHTML('beforeend',
     rest.forEach((c, i) => { c.dataset.delay = ITEM_DELAY + d[i] / max * STAGGER; });
   }
 
-  /* מתחיל כשראש הגריד מגיע ל-85% מגובה המסך ומסתיים ב-15% */
   function scrollProgress() {
     const top = vgrid.getBoundingClientRect().top;
-    return clamp01((innerHeight * 0.85 - top) / (innerHeight * 0.7));
+    return clamp01((innerHeight * 0.55 - top) / (innerHeight * 0.7));
   }
 
   function play(cell) {
@@ -113,23 +122,25 @@ vgrid.querySelector('.hero').insertAdjacentHTML('beforeend',
 
   function apply(p) {
     const T = p * TOTAL;
-    const s = MID_SCALE + (1 - MID_SCALE) * easeInOut(clamp01(T / MID_DUR));
-    hero.style.transform = `scale(${s.toFixed(4)})`;
-    head.style.transform = `translate(-50%,-50%) scale(${(1 / s).toFixed(4)})`;
-    const fade = 1 + (MID_SCALE - 1) * 0.45;   /* הכותרת נעלמת עד אמצע הכיווץ */
-    head.style.opacity = clamp01((s - fade) / (MID_SCALE - fade)).toFixed(3);
+    const e = easeInOut(clamp01(T / OPEN_DUR));
+    const mix = (a, b) => a + (b - a) * e;
+    hero.style.left = mix(open.l, rest_.l).toFixed(1) + 'px';
+    hero.style.top = mix(open.t, rest_.t).toFixed(1) + 'px';
+    hero.style.width = mix(open.w, rest_.w).toFixed(1) + 'px';
+    hero.style.height = mix(open.h, rest_.h).toFixed(1) + 'px';
+    head.style.opacity = clamp01(1 - e * 2.2).toFixed(3);   /* נעלמת עד אמצע הכניסה */
     if (p > 0) play(hero);
+
     rest.forEach(c => {
       const t = clamp01((T - c.dataset.delay) / ITEM_DUR);
-      const e = t <= 0 ? 0 : t >= 1 ? 1 : backOut(t);
+      const k = t <= 0 ? 0 : t >= 1 ? 1 : backOut(t);
       const o = clamp01(t * 3);
-      c.style.transform = `scale(${(ITEM_SCALE + (1 - ITEM_SCALE) * e).toFixed(4)})`;
+      c.style.transform = `scale(${(ITEM_SCALE + (1 - ITEM_SCALE) * k).toFixed(4)})`;
       c.style.opacity = o.toFixed(3);
-      if (o > 0.02) play(c);   /* מנגן ברגע שהוא נראה, לא בסוף הכניסה */
+      if (o > 0.02) play(c);
     });
   }
 
-  /* scrub מרוכך — הערך רודף אחרי הגלילה במקום לקפוץ איתה */
   function frame() {
     if (Math.abs(target - cur) < 0.0005) { cur = target; apply(cur); running = false; return; }
     cur += (target - cur) * 0.12;
@@ -143,20 +154,15 @@ vgrid.querySelector('.hero').insertAdjacentHTML('beforeend',
     if (!running) { running = true; requestAnimationFrame(frame); }
   }
 
-  layout();
-  apply(0);
+  layout(); apply(0);
   addEventListener('scroll', onScroll, { passive: true });
-  addEventListener('resize', () => { layout(); onScroll(); });
-  addEventListener('load', () => { layout(); onScroll(); });
+  addEventListener('resize', () => { layout(); apply(cur); onScroll(); });
+  addEventListener('load', () => { layout(); apply(cur); onScroll(); });
   onScroll();
 
-  /* עוצר את הניגון כשהסקשן יוצא מהמסך */
   new IntersectionObserver(es => es.forEach(e => {
     if (e.isIntersecting) return;
-    cells.forEach(c => {
-      const v = c.querySelector('video');
-      if (v) { v.pause(); delete v.dataset.on; }
-    });
+    vgrid.querySelectorAll('video').forEach(v => { v.pause(); delete v.dataset.on; });
   }), { threshold: 0 }).observe(vgrid);
 })();
 

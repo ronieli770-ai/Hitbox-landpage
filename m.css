@@ -61,7 +61,7 @@ p{font-size:var(--body);}
   min-height:clamp(52px,15.25vw,64px);border-radius:5px;}
 #hero .btn span{font-size:var(--lead);line-height:.99;}
 #hero .branches{margin-top:clamp(16px,5vw,26px);font-size:16px;line-height:1.57;
-  display:flex;align-items:flex-start;justify-content:center;gap:5px;}
+  display:flex;align-items:flex-start;justify-content:center;gap:2px;}
 /* הפין נצמד לשורה הראשונה, ולא למרכז הגוש כשהטקסט נשבר לשתי שורות */
 #hero .branches img{width:10px;height:19px;flex:none;margin-top:3px;}
 
@@ -97,7 +97,7 @@ p{font-size:var(--body);}
 .zero>*{position:relative;}
 .zero>h2{text-align:center;}
 .zero>.lead{text-align:center;color:rgba(255,255,255,.7);}
-.zero .cards{gap:40px;margin-top:28px;}
+.zero .cards{gap:30px;margin-top:28px;}
 .zero .card{border:0;background:var(--ink);padding:20px 29px;min-height:136px;
   display:flex;align-items:center;justify-content:center;
   box-shadow:0 8px 4px var(--sand);}
@@ -153,10 +153,12 @@ p{font-size:var(--body);}
    הכרטיס של יוסף פותח בגדול עם הכותרת עליו ומתכווץ למקומו בזמן הגלילה,
    ושאר הכרטיסים קופצים פנימה אחריו — בדיוק כמו בדסקטופ. */
 .vsec{padding-top:64px;padding-bottom:64px;}
-.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.vgrid{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .vcell{position:relative;border:0;padding:0;border-radius:14px;overflow:hidden;
   background:#1a2a2b;aspect-ratio:3/4;cursor:pointer;will-change:transform;}
-.vcell.hero{grid-column:1/-1;aspect-ratio:16/11;z-index:5;}
+/* משבצת ריקה ששומרת לכרטיס המרכזי את מקומו בגריד בזמן שהוא מרחף מעליו */
+.vslot{aspect-ratio:3/4;}
+.vcell.hero{position:absolute;z-index:5;aspect-ratio:auto;will-change:width,height,top,left;}
 .vcell video,.vcell img{width:100%;height:100%;object-fit:cover;}
 .vcell .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   background:rgba(16,28,29,.2);}
@@ -164,8 +166,8 @@ p{font-size:var(--body);}
 .vcell.hero .play{display:none;}
 
 /* הכותרת יושבת על הווידאו ומקבלת את ההגדלה ההפוכה, כדי שתיראה תמיד בגודל העיצוב */
-.vhead{position:absolute;left:50%;top:50%;width:min(88vw,340px);
-  text-align:center;white-space:nowrap;pointer-events:none;
+.vhead{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:min(88vw,340px);text-align:center;white-space:nowrap;pointer-events:none;
   font-size:var(--h2);font-weight:700;line-height:.99;
   text-shadow:0 2px 18px rgba(16,28,29,.6);}
 

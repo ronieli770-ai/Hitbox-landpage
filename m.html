@@ -63,8 +63,9 @@ p{font-size:var(--body);}
   min-height:clamp(52px,15.25vw,64px);border-radius:5px;}
 #hero .btn span{font-size:var(--lead);line-height:.99;}
 #hero .branches{margin-top:clamp(16px,5vw,26px);font-size:16px;line-height:1.57;
-  display:flex;align-items:center;justify-content:center;gap:7px;}
-#hero .branches img{width:10px;height:19px;flex:none;}
+  display:flex;align-items:flex-start;justify-content:center;gap:10px;}
+/* הפין נצמד לשורה הראשונה, ולא למרכז הגוש כשהטקסט נשבר לשתי שורות */
+#hero .branches img{width:10px;height:19px;flex:none;margin-top:3px;}
 
 /* ---------- כרטיסים ----------
    רשת שתיים בשורה, בדיוק כמו במסגרת: כרטיס 160 · מרווח 12 · שורה 16 */
@@ -317,6 +318,6 @@ footer .fine b{display:block;margin-top:10px;}
 
 <div id="vm"><button id="vmx" aria-label="סגירה">×</button><div class="frame"></div></div>
 
-<script src="m.js?v=202608131742"></script>
+<script src="m.js?v=202608141555"></script>
 </body>
 </html>

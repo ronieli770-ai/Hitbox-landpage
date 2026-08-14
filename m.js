@@ -68,7 +68,7 @@ vgrid.querySelector('.hero').insertAdjacentHTML('beforeend',
    המרכזי — בדסקטופ הוא גדל פי 3 לתוך גריד רחב, וכאן פי 1.9 כדי למלא את
    רוחב הטלפון בלי לחתוך את המתאמן. */
 (function () {
-  const MID_SCALE = 1.9, ITEM_SCALE = 0.2;
+  const ITEM_SCALE = 0.2;
   const MID_DUR = 0.6, ITEM_DUR = 1.0, ITEM_DELAY = 0.1, STAGGER = 0.8, BACK = 1.4;
   const TOTAL = ITEM_DELAY + ITEM_DUR + STAGGER;
 
@@ -76,6 +76,9 @@ vgrid.querySelector('.hero').insertAdjacentHTML('beforeend',
   const easeInOut = t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
   const backOut = t => 1 + (BACK + 1) * Math.pow(t - 1, 3) + BACK * Math.pow(t - 1, 2);
 
+  /* ההגדלה נגזרת מרוחב המסך במקום להיות קבועה: הכרטיס נפתח בדיוק לרוחב
+     הטלפון ולא מילימטר מעבר, כדי שלא ייווצר מקום לגלול אליו הצידה. */
+  let MID_SCALE = 1.5;
   const cells = [...vgrid.querySelectorAll('.vcell')];
   const hero = cells[0], rest = cells.slice(1);
   const head = vgrid.querySelector('.vhead');
@@ -84,6 +87,7 @@ vgrid.querySelector('.hero').insertAdjacentHTML('beforeend',
 
   /* ההשהיה של כל כרטיס נגזרת מהמרחק שלו מהכרטיס המרכזי */
   function layout() {
+    MID_SCALE = hero.offsetWidth ? innerWidth / hero.offsetWidth : 1.2;
     const hx = hero.offsetLeft + hero.offsetWidth / 2;
     const hy = hero.offsetTop + hero.offsetHeight / 2;
     const d = rest.map(c => Math.hypot(
@@ -112,7 +116,8 @@ vgrid.querySelector('.hero').insertAdjacentHTML('beforeend',
     const s = MID_SCALE + (1 - MID_SCALE) * easeInOut(clamp01(T / MID_DUR));
     hero.style.transform = `scale(${s.toFixed(4)})`;
     head.style.transform = `translate(-50%,-50%) scale(${(1 / s).toFixed(4)})`;
-    head.style.opacity = clamp01((s - 1.25) / (MID_SCALE - 1.25)).toFixed(3);
+    const fade = 1 + (MID_SCALE - 1) * 0.45;   /* הכותרת נעלמת עד אמצע הכיווץ */
+    head.style.opacity = clamp01((s - fade) / (MID_SCALE - fade)).toFixed(3);
     if (p > 0) play(hero);
     rest.forEach(c => {
       const t = clamp01((T - c.dataset.delay) / ITEM_DUR);

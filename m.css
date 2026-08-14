@@ -18,9 +18,11 @@
   --small:16px;                      /* שורת סניפים 16 */
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html{scroll-behavior:smooth;}
+/* clip חוסם את הגלישה בלי ליצור תיבת גלילה משלו, בניגוד ל-hidden
+   שבטלפון עדיין מאפשר לגרור את העמוד הצידה. hidden נשאר לדפדפנים ישנים. */
+html{scroll-behavior:smooth;overflow-x:hidden;overflow-x:clip;}
 body{background:var(--ink);color:#fff;font-family:'Fb',sans-serif;direction:rtl;
-  overflow-x:hidden;line-height:1.5;}
+  overflow-x:hidden;overflow-x:clip;line-height:1.5;}
 img,video{display:block;max-width:100%;}
 section{padding:52px var(--pad);}
 h1,h2{font-weight:700;line-height:.99;}
@@ -95,7 +97,7 @@ p{font-size:var(--body);}
 .zero>*{position:relative;}
 .zero>h2{text-align:center;}
 .zero>.lead{text-align:center;color:rgba(255,255,255,.7);}
-.zero .cards{gap:20px;margin-top:28px;}
+.zero .cards{gap:40px;margin-top:28px;}
 .zero .card{border:0;background:var(--ink);padding:20px 29px;min-height:136px;
   display:flex;align-items:center;justify-content:center;
   box-shadow:0 8px 4px var(--sand);}

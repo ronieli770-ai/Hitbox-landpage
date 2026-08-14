@@ -1,0 +1,178 @@
+/* ============================================================
+   עיצוב עמוד המובייל — נגזר ממסגרות הפיגמה ברוחב 400
+   ============================================================ */
+@font-face{font-family:'Fb';src:url('פונט/FbReissfeder-Regular.otf') format('opentype');font-weight:400;font-display:swap;}
+@font-face{font-family:'Fb';src:url('פונט/FbReissfeder-Bold.otf') format('opentype');font-weight:700;font-display:swap;}
+
+:root{
+  --ink:#101c1d; --teal:#3e6e72; --sand:#fff3b7; --line:#23393a;
+  --r:20px;
+  /* כל הגדלים נגזרים ממסגרות המובייל בפיגמה ברוחב 400 */
+  --pad:clamp(20px,8.5vw,36px);      /* שוליים 34 */
+  --h1:clamp(34px,11.25vw,48px);     /* כותרת הירו 45 */
+  --h2:clamp(27px,8.75vw,38px);      /* כותרת סקשן 35 */
+  --h3:clamp(18px,5.5vw,24px);       /* כותרת כרטיס 22 */
+  --lead:clamp(16px,5vw,22px);       /* משפט מוביל 20 */
+  --body:clamp(15px,4.5vw,19px);     /* טקסט רץ 18 */
+  --small:16px;                      /* שורת סניפים 16 */
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{background:var(--ink);color:#fff;font-family:'Fb',sans-serif;direction:rtl;
+  overflow-x:hidden;line-height:1.5;}
+img,video{display:block;max-width:100%;}
+section{padding:52px var(--pad);}
+h1,h2{font-weight:700;line-height:.99;}
+section>h2{text-align:right;}
+section>.lead{text-align:right;font-size:var(--body);line-height:1.29;}
+h1{font-size:var(--h1);} h2{font-size:var(--h2);}
+.y{color:var(--sand);} .muted{color:#9fb3b4;}
+p{font-size:var(--body);}
+.lead{margin-top:14px;}
+
+/* כפתורים */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  min-height:56px;padding:12px 16px;border:0;border-radius:8px;cursor:pointer;
+  font-family:inherit;font-size:16px;font-weight:700;text-decoration:none;
+  background:var(--sand);color:var(--ink);}
+.btn.ghost{background:transparent;border:2px solid var(--sand);color:var(--sand);}
+
+/* ---------- הירו ----------
+   לוגו ממורכז למעלה, וגוש התוכן מעט מעל מרכז המסך — כמו במסגרת בפיגמה. */
+#hero{position:relative;min-height:100vh;min-height:100svh;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;
+  padding:18px var(--pad) calc(9vh + env(safe-area-inset-bottom));}
+#hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+#hero .veil{position:absolute;inset:0;z-index:1;
+  background:linear-gradient(to bottom,rgba(16,28,29,.4) 0%,rgba(16,28,29,.5) 38%,
+    rgba(16,28,29,.88) 80%,var(--ink) 100%);}
+#hero>*{position:relative;z-index:2;}
+#hero .logo{width:clamp(70px,21vw,92px);}
+
+#hero .block{margin-top:auto;margin-bottom:auto;width:100%;
+  max-width:360px;text-align:center;}
+#hero h1{line-height:.93;}
+#hero .lead{margin-top:clamp(20px,6vw,30px);line-height:1.32;font-size:var(--lead);}
+#hero .btn{margin-top:clamp(22px,7vw,34px);
+  width:clamp(240px,65vw,300px);margin-inline:auto;
+  min-height:clamp(52px,15.25vw,64px);border-radius:5px;}
+#hero .btn span{font-size:var(--lead);line-height:.99;}
+#hero .branches{margin-top:clamp(16px,5vw,26px);font-size:16px;line-height:1.57;
+  display:flex;align-items:flex-start;justify-content:center;gap:10px;}
+/* הפין נצמד לשורה הראשונה, ולא למרכז הגוש כשהטקסט נשבר לשתי שורות */
+#hero .branches img{width:10px;height:19px;flex:none;margin-top:3px;}
+
+/* ---------- כרטיסים ----------
+   רשת שתיים בשורה, בדיוק כמו במסגרת: כרטיס 160 · מרווח 12 · שורה 16 */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px 12px;margin-top:26px;}
+.tile{border:1px solid var(--teal);border-radius:var(--r);background:rgba(255,255,255,.1);
+  padding:16px 8px;min-height:228px;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;}
+.tile img{width:clamp(52px,16.5vw,70px);height:auto;flex:none;}
+.tile h3{margin-top:auto;margin-bottom:auto;font-size:var(--h3);font-weight:700;
+  line-height:1.03;text-align:center;width:90%;}
+
+/* טור רגיל, למקומות שבהם אין רשת */
+.cards{display:flex;flex-direction:column;gap:12px;margin-top:22px;}
+.card{border:1px solid var(--teal);border-radius:var(--r);padding:18px;
+  background:rgba(255,255,255,.06);}
+.card h3{font-size:var(--h3);font-weight:700;line-height:1.15;}
+.card p{margin-top:8px;color:#cfe0e1;}
+
+/* ---------- ציר ---------- */
+.step{border-inline-start:2px solid var(--teal);padding:0 0 26px 0;
+  padding-inline-start:18px;position:relative;}
+.step:last-child{border-color:transparent;padding-bottom:0;}
+.step::before{content:'';position:absolute;inset-inline-start:-9px;top:2px;
+  width:16px;height:16px;border-radius:50%;background:var(--sand);}
+.step b{display:block;color:var(--sand);font-size:var(--small);}
+.step h3{font-size:var(--h3);font-weight:700;margin-top:2px;}
+.step p{margin-top:6px;color:#cfe0e1;}
+
+/* ---------- ציטוט ---------- */
+.quote{text-align:center;padding:44px var(--pad);background:var(--teal);}
+.quote p{font-size:var(--h2);font-weight:700;line-height:1.15;}
+.quote span{display:block;margin-top:12px;font-size:var(--small);opacity:.85;}
+
+/* ---------- גריד המלצות ---------- */
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px;}
+.vcell{position:relative;border:0;padding:0;border-radius:14px;overflow:hidden;
+  background:#1a2a2b;aspect-ratio:3/4;cursor:pointer;}
+.vcell:first-child{grid-column:1/-1;aspect-ratio:16/11;}
+.vcell video,.vcell img{width:100%;height:100%;object-fit:cover;}
+.vcell .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(16,28,29,.2);}
+.vcell .play svg{width:46px;height:46px;}
+
+/* ---------- לפני־אחרי ---------- */
+.rail{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;
+  margin-top:22px;padding-bottom:6px;scrollbar-width:none;}
+.rail::-webkit-scrollbar{display:none;}
+.ba{flex:none;width:78vw;scroll-snap-align:center;background:#fff;color:var(--ink);
+  border-radius:var(--r);overflow:hidden;}
+.ba .pic{position:relative;aspect-ratio:11/10;background:#d9d9d9;}
+.ba .pic img{width:100%;height:100%;object-fit:cover;}
+.ba .pic i{position:absolute;left:50%;top:0;bottom:0;width:2px;background:#fff;transform:translateX(-50%);}
+.ba .txt{padding:14px 16px 18px;}
+.ba .delta{font-size:22px;font-weight:700;color:var(--teal);}
+.ba .kg{margin-top:6px;font-size:13px;opacity:.6;}
+
+/* ---------- שאלון ---------- */
+#quiz .opts{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
+.qopt{width:100%;min-height:66px;padding:16px;border:2px solid var(--sand);
+  border-radius:var(--r);background:var(--ink);color:#fff;
+  font-family:inherit;font-size:17px;font-weight:700;line-height:1.25;cursor:pointer;}
+.qback{margin-top:14px;width:auto;padding:10px 26px;min-height:0;font-size:14px;}
+.field{width:100%;min-height:54px;padding:12px 14px;border:0;border-radius:8px;
+  background:#f0f0f0;color:var(--ink);font-family:inherit;font-size:16px;
+  text-align:center;direction:rtl;}
+.field::placeholder{color:var(--ink);opacity:.75;}
+.consent{display:flex;gap:10px;align-items:flex-start;margin-top:16px;font-size:var(--small);}
+.consent input{width:22px;height:22px;flex:none;accent-color:var(--sand);}
+
+/* ---------- אקורדיון ---------- */
+.acc{border:1px solid var(--sand);border-radius:var(--r);overflow:hidden;background:transparent;}
+.acc+.acc{margin-top:10px;}
+.acc summary{list-style:none;display:flex;align-items:center;gap:12px;padding:16px;
+  cursor:pointer;font-size:var(--h3);font-weight:700;color:#fff;}
+.acc summary::-webkit-details-marker{display:none;}
+.acc summary img{width:30px;height:30px;flex:none;object-fit:contain;}
+.acc summary::after{content:'+';margin-inline-start:auto;font-size:24px;color:var(--sand);}
+.acc[open] summary::after{content:'−';}
+.acc[open]{background:var(--sand);}
+.acc[open] summary{color:var(--ink);}
+.acc[open] summary img{filter:brightness(0);}
+.acc .body{padding:0 16px 16px;color:var(--ink);font-size:var(--body);}
+
+/* ---------- סניפים ---------- */
+.branch{border:1px solid var(--line);border-radius:var(--r);padding:16px;background:#182a2b;}
+.branch+.branch{margin-top:10px;}
+.branch h3{font-size:var(--h3);font-weight:700;}
+.branch p{margin-top:4px;font-size:var(--small);color:#cfe0e1;}
+
+/* ---------- פוטר ---------- */
+footer{background:var(--sand);color:var(--ink);padding:34px var(--pad) calc(28px + env(safe-area-inset-bottom));}
+footer h2{margin-bottom:6px;}
+footer .row{display:flex;gap:10px;margin-top:18px;}
+footer .row a{flex:1;min-height:50px;display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--ink);border-radius:8px;color:var(--ink);text-decoration:none;
+  font-weight:700;font-size:14px;}
+footer .fine{margin-top:22px;font-size:12px;line-height:1.6;opacity:.75;}
+footer .fine b{display:block;margin-top:10px;}
+
+/* ---------- ווצאפ צף ---------- */
+#wa{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:60;
+  width:56px;height:56px;border-radius:50%;background:var(--sand);
+  display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.4);}
+#wa svg{width:30px;height:30px;fill:var(--ink);}
+
+/* ---------- פופ־אפ וידאו ---------- */
+#vm{position:fixed;inset:0;z-index:90;background:rgba(16,28,29,.94);display:none;
+  align-items:center;justify-content:center;padding:16px;}
+#vm.on{display:flex;}
+#vm .frame{width:100%;max-width:460px;aspect-ratio:9/16;border-radius:var(--r);
+  overflow:hidden;background:#000;}
+#vm iframe{width:100%;height:100%;border:0;}
+#vmx{position:absolute;top:calc(14px + env(safe-area-inset-top));left:14px;
+  width:44px;height:44px;border:0;border-radius:50%;background:var(--sand);
+  color:var(--ink);font-size:24px;cursor:pointer;}

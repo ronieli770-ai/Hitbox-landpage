@@ -156,8 +156,11 @@ p{font-size:var(--body);}
    ושאר הכרטיסים קופצים פנימה אחריו — בדיוק כמו בדסקטופ. */
 .vsec{padding-top:64px;padding-bottom:64px;}
 .vgrid{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+/* כפתור לא יורש גופן וצבע מהדף — בלי השתיים האלה הכותרת שעליו
+   נופלת לגופן ברירת המחדל של הדפדפן */
 .vcell{position:relative;border:0;padding:0;border-radius:14px;overflow:hidden;
-  background:#1a2a2b;aspect-ratio:3/4;cursor:pointer;will-change:transform;}
+  background:#1a2a2b;aspect-ratio:3/4;cursor:pointer;will-change:transform;
+  font-family:inherit;color:inherit;}
 /* משבצת ריקה ששומרת לכרטיס המרכזי את מקומו בגריד בזמן שהוא מרחף מעליו */
 .vslot{aspect-ratio:3/4;}
 .vcell.hero{position:absolute;z-index:5;aspect-ratio:auto;will-change:width,height,top,left;}
@@ -165,13 +168,15 @@ p{font-size:var(--body);}
 .vcell .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   background:rgba(16,28,29,.2);}
 .vcell .play svg{width:46px;height:46px;}
-.vcell.hero .play{display:none;}
+/* כפתור ההפעלה על הכרטיס המרכזי נדלק רק כשהוא מגיע לגודלו הסופי */
+.vcell.hero .play{opacity:0;}
 
 /* הכותרת יושבת על הווידאו ומקבלת את ההגדלה ההפוכה, כדי שתיראה תמיד בגודל העיצוב */
 .vhead{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
   width:min(88vw,340px);text-align:center;white-space:nowrap;pointer-events:none;
-  font-size:var(--h2);font-weight:700;line-height:.99;
   text-shadow:0 2px 18px rgba(16,28,29,.6);}
+.vhead p{font-size:var(--h2);font-weight:700;line-height:.99;color:#fff;}
+.vhead p.y{color:var(--sand);}
 
 /* ---------- לפני־אחרי ---------- */
 .rail{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;

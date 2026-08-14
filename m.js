@@ -61,7 +61,7 @@ vgrid.innerHTML =
   CLIPS.map((c, i) =>
     `<button class="vcell${i ? '' : ' hero'}" type="button" data-guid="${c.guid}" aria-label="צפייה בהמלצה">
        <video muted loop playsinline preload="none" poster="assets/vid/${c.id}.jpg"
-              data-src="assets/vid/${c.id}.mp4"></video>${i ? PLAY : ''}
+              data-src="assets/vid/${c.id}.mp4"></video>${PLAY}
      </button>`).join('');
 vgrid.querySelector('.hero').insertAdjacentHTML('beforeend',
   '<div class="vhead"><p>לא מאמין לנו?</p><p class="y">תשמע אותם.</p></div>');
@@ -87,6 +87,7 @@ vgrid.querySelector('.hero').insertAdjacentHTML('beforeend',
   const slot = vgrid.querySelector('.vslot');
   const rest = [...vgrid.querySelectorAll('.vcell')].filter(c => c !== hero);
   const head = vgrid.querySelector('.vhead');
+  const heroPlay = hero.querySelector('.play');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let cur = 0, target = 0, running = false;
   let open = { l: 0, t: 0, w: 0, h: 0 }, rest_ = { l: 0, t: 0, w: 0, h: 0 };
@@ -107,9 +108,12 @@ vgrid.querySelector('.hero').insertAdjacentHTML('beforeend',
     rest.forEach((c, i) => { c.dataset.delay = ITEM_DELAY + d[i] / max * STAGGER; });
   }
 
+  /* הכיווץ מתחיל ברגע שמרכז הווידאו והכותרת מגיע למרכז המסך,
+     ונמשך לאורך שלושה רבעים ממסך של גלילה. */
   function scrollProgress() {
     const top = vgrid.getBoundingClientRect().top;
-    return clamp01((innerHeight * 0.55 - top) / (innerHeight * 0.7));
+    const from = (innerHeight - open.h) / 2;
+    return clamp01((from - top) / (innerHeight * 0.75));
   }
 
   function play(cell) {
@@ -129,6 +133,7 @@ vgrid.querySelector('.hero').insertAdjacentHTML('beforeend',
     hero.style.width = mix(open.w, rest_.w).toFixed(1) + 'px';
     hero.style.height = mix(open.h, rest_.h).toFixed(1) + 'px';
     head.style.opacity = clamp01(1 - e * 2.2).toFixed(3);   /* נעלמת עד אמצע הכניסה */
+    heroPlay.style.opacity = clamp01((e - 0.75) / 0.25).toFixed(3);
     if (p > 0) play(hero);
 
     rest.forEach(c => {

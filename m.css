@@ -195,7 +195,7 @@ p{font-size:var(--body);}
 /* ---------- השאלון ----------
    בדסקטופ הוא יושב על פס טורקיז עם הטקסטורה מעליו, ותשובותיו קופסאות שחורות
    עם זוהר צהוב. כאן אותו טיפול, כמו בסקשן "מתחילים מאפס". */
-#quiz{position:relative;overflow:hidden;background:var(--teal);}
+#quiz{position:relative;overflow:hidden;background:var(--teal);margin-top:34px;}
 #quiz::before{content:'';position:absolute;inset:0;pointer-events:none;
   background:url('assets/texture-m.jpg') center/cover;
   mix-blend-mode:multiply;opacity:.4;}

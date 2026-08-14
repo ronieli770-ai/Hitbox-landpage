@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+<title>אפשרויות הנפשה לאקורדיון ההתנגדויות — HITBOX</title>
+<style>
+@font-face{font-family:'Fb';src:url('פונט/FbReissfeder-Regular.otf') format('opentype');font-weight:400;font-display:swap;}
+@font-face{font-family:'Fb';src:url('פונט/FbReissfeder-Bold.otf') format('opentype');font-weight:700;font-display:swap;}
+
+:root{--ink:#101c1d;--teal:#3e6e72;--sand:#fff3b7;--r:20px;
+  --pad:clamp(20px,8.5vw,36px);--h3:clamp(18px,5.5vw,24px);--body:clamp(15px,4.5vw,19px);}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{overflow-x:clip;}
+body{background:var(--ink);color:#fff;font-family:'Fb',sans-serif;direction:rtl;
+  line-height:1.5;overflow-x:clip;padding:0 0 80px;}
+
+header{padding:40px var(--pad) 8px;}
+header h1{font-size:clamp(26px,7.5vw,34px);font-weight:700;line-height:1.02;}
+header h1 span{color:var(--sand);}
+header p{margin-top:12px;font-size:var(--body);color:#a8c0c2;}
+
+section{padding:34px var(--pad) 0;}
+.hd{display:flex;align-items:baseline;gap:10px;margin-bottom:6px;}
+.hd b{font-size:var(--h3);font-weight:700;}
+.hd i{font-style:normal;font-size:13px;color:var(--sand);border:1px solid var(--sand);
+  border-radius:999px;padding:2px 9px;flex:none;}
+.note{font-size:14.5px;color:#a8c0c2;margin-bottom:16px;}
+
+/* ---------- שלד משותף לכל האפשרויות ---------- */
+.acc{border:1px solid var(--sand);border-radius:var(--r);overflow:hidden;position:relative;}
+.acc+.acc{margin-top:10px;}
+.q{width:100%;display:flex;align-items:center;gap:12px;padding:16px;border:0;
+  background:transparent;color:#fff;font-family:inherit;font-size:var(--h3);
+  font-weight:700;line-height:1.03;text-align:right;cursor:pointer;position:relative;z-index:2;}
+.q img{width:30px;height:30px;flex:none;object-fit:contain;}
+.q::after{content:'+';margin-inline-start:auto;font-size:24px;color:var(--sand);flex:none;}
+.acc.on .q::after{content:'\2212';}
+.a{display:grid;grid-template-rows:0fr;position:relative;z-index:2;}
+.a>div{overflow:hidden;}
+.a p{padding:0 16px 16px;font-size:var(--body);}
+.acc.on .a{grid-template-rows:1fr;}
+
+/* ברירת המחדל: הצהוב ממלא את הקופסה בפתיחה */
+.acc.on{background:var(--sand);}
+.acc.on .q{color:var(--ink);}
+.acc.on .q::after{color:var(--ink);}
+.acc.on .q img{filter:brightness(0);}
+.acc.on .a p{color:var(--ink);}
+
+/* ============ 1 · גלישה רכה ============ */
+[data-fx="slide"] .a{transition:grid-template-rows .42s cubic-bezier(.22,1,.36,1);}
+[data-fx="slide"] .a p{opacity:0;transform:translateY(10px);
+  transition:opacity .3s ease .08s,transform .34s cubic-bezier(.22,1,.36,1) .08s;}
+[data-fx="slide"].on .a p{opacity:1;transform:none;}
+
+/* ============ 2 · מילים עולות ============ */
+[data-fx="words"] .a{transition:grid-template-rows .4s cubic-bezier(.22,1,.36,1);}
+[data-fx="words"] .a w{display:inline-block;opacity:0;transform:translateY(14px);
+  transition:opacity .32s ease,transform .42s cubic-bezier(.22,1,.36,1);}
+[data-fx="words"].on .a w{opacity:1;transform:none;}
+
+/* ============ 3 · וילון ============ */
+[data-fx="curtain"] .a{transition:grid-template-rows .34s cubic-bezier(.22,1,.36,1);}
+[data-fx="curtain"] .a p{clip-path:inset(0 0 100% 0);
+  transition:clip-path .55s cubic-bezier(.22,1,.36,1) .06s;}
+[data-fx="curtain"].on .a p{clip-path:inset(0 0 0 0);}
+
+/* ============ 4 · מברשת צהובה ============ */
+[data-fx="sweep"]{background:transparent;}
+[data-fx="sweep"].on{background:transparent;}
+[data-fx="sweep"]::before{content:'';position:absolute;inset:0;z-index:1;
+  background:var(--sand);transform:scaleX(0);transform-origin:right center;
+  transition:transform .5s cubic-bezier(.22,1,.36,1);}
+[data-fx="sweep"].on::before{transform:scaleX(1);}
+[data-fx="sweep"] .q,[data-fx="sweep"] .q::after,[data-fx="sweep"] .a p{
+  transition:color .3s ease .16s;}
+[data-fx="sweep"] .q img{transition:filter .3s ease .16s;}
+[data-fx="sweep"] .a{transition:grid-template-rows .42s cubic-bezier(.22,1,.36,1) .1s;}
+
+/* ============ 5 · טשטוש נמס ============ */
+[data-fx="blur"] .a{transition:grid-template-rows .4s cubic-bezier(.22,1,.36,1);}
+[data-fx="blur"] .a p{opacity:0;filter:blur(7px);letter-spacing:.055em;
+  transition:opacity .38s ease .06s,filter .48s ease .06s,letter-spacing .48s ease .06s;}
+[data-fx="blur"].on .a p{opacity:1;filter:none;letter-spacing:normal;}
+
+/* ============ 6 · קפיצי ============ */
+[data-fx="spring"] .a{transition:grid-template-rows .52s cubic-bezier(.34,1.56,.64,1);}
+[data-fx="spring"] .a p{opacity:0;transform:translateY(16px) scale(.97);
+  transition:opacity .28s ease .1s,transform .5s cubic-bezier(.34,1.56,.64,1) .1s;}
+[data-fx="spring"].on .a p{opacity:1;transform:none;}
+
+@media (prefers-reduced-motion:reduce){
+  .a,.a p,.a w,[data-fx="sweep"]::before{transition-duration:.01ms !important;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>אקורדיון ההתנגדויות — <span>שש הנפשות</span></h1>
+  <p>כל בלוק הוא אותו רכיב בדיוק עם הנפשה אחרת. פתחי וסגרי כמה פעמים — ההבדל מורגש בעיקר בסגירה. תגידי לי מספר.</p>
+</header>
+
+<div id="app"></div>
+
+<script>
+const OBJECTIONS = [
+  { ic: 'icon-30', q: 'אין לי זמן',
+    a: 'שעה, פעם-פעמיים בשבוע — פחות ממה שאתה מבזבז על הטלפון בערב אחד. והסניפים חמש דקות מהמשרד, בדרך הביתה.' },
+  { ic: 'icon-29', q: 'אני לא בכושר מספיק בשביל אגרוף',
+    a: 'רוב מי שמגיע אלינו לא. לכל תרגיל יש גרסה קלה יותר, אתה קובע את הקצב והמאמן דואג לטכניקה.' },
+  { ic: 'icon-28', q: 'אני אחטוף מכות',
+    a: 'עובדים בזוגות בצורה מבוקרת ועל שקים, לא עולים לקרבות זירה.' }
+];
+
+const FX = [
+  { id: 'slide',   n: 'גלישה רכה',
+    d: 'הקופסה נפתחת והטקסט עולה עשרה פיקסלים ונדלק. שקטה, לא גונבת תשומת לב מהתוכן.' },
+  { id: 'words',   n: 'מילים עולות',
+    d: 'כל מילה נכנסת בתורה בהפרש קצר. מרגיש כמו מישהו שעונה לך, אבל מאריך את הקריאה.' },
+  { id: 'curtain', n: 'וילון',
+    d: 'הטקסט נחשף משורה לשורה מלמעלה למטה במקום לזוז. נקי, מתאים לפסקאות ארוכות.' },
+  { id: 'sweep',   n: 'מברשת צהובה',
+    d: 'הצהוב נמרח על הקופסה מימין לשמאל והטקסט מתהפך לכהה כשהוא עובר. הכי אנרגטי.' },
+  { id: 'blur',    n: 'טשטוש נמס',
+    d: 'הטקסט מגיע מטושטש ומרווח ומתחדד למקומו. יוקרתי, קצת איטי לקריאה מהירה.' },
+  { id: 'spring',  n: 'קפיצי',
+    d: 'הפתיחה חורגת מעט מהגובה הסופי וחוזרת. שובב — מתאים אם רוצים תחושת משחק.' }
+];
+
+const wrap = t => t.split(' ').map(w => `<w>${w}</w>`).join(' ');
+
+document.getElementById('app').innerHTML = FX.map((f, k) => `
+  <section>
+    <div class="hd"><i>${k + 1}</i><b>${f.n}</b></div>
+    <p class="note">${f.d}</p>
+    ${OBJECTIONS.map(o => `
+      <div class="acc" data-fx="${f.id}">
+        <button class="q" type="button"><img src="assets/${o.ic}.svg" alt="">${o.q}</button>
+        <div class="a"><div><p>${f.id === 'words' ? wrap(o.a) : o.a}</p></div></div>
+      </div>`).join('')}
+  </section>`).join('');
+
+/* המילים באפשרות 2 נכנסות בהפרש קבוע זו אחר זו */
+document.querySelectorAll('[data-fx="words"] .a').forEach(a =>
+  a.querySelectorAll('w').forEach((w, i) => {
+    w.style.transitionDelay = (0.06 + i * 0.022).toFixed(3) + 's';
+  }));
+
+/* פתוח אחד בכל בלוק, כמו בעמוד עצמו */
+document.getElementById('app').addEventListener('click', e => {
+  const q = e.target.closest('.q');
+  if (!q) return;
+  const acc = q.parentElement, open = acc.classList.contains('on');
+  acc.closest('section').querySelectorAll('.acc.on').forEach(o => o.classList.remove('on'));
+  if (!open) acc.classList.add('on');
+});
+</script>
+</body>
+</html>

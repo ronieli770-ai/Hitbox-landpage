@@ -208,25 +208,36 @@ p{font-size:var(--body);}
 /* ---------- השאלון ----------
    בדסקטופ הוא יושב על פס טורקיז עם הטקסטורה מעליו, ותשובותיו קופסאות שחורות
    עם זוהר צהוב. כאן אותו טיפול, כמו בסקשן "מתחילים מאפס". */
-/* בלי overflow:hidden — הכפפה אמורה לחרוג מהסקשן כלפי מעלה,
-   והמרווח מעליו הוא המקום שהיא חורגת אליו */
-#quiz{position:relative;background:var(--teal);margin-top:72px;}
+/* גובה מסך מלא, לפי מסגרת המובייל 402x880.
+   השק תלוי מלמעלה ונחתך בקצה העליון, והתוכן יושב בשליש התחתון:
+   ריפוד עליון 293/402 מרוחב הסקשן, ותחתון 79/880 מגובהו. */
+#quiz{position:relative;overflow:hidden;background:var(--teal);margin-top:72px;
+  min-height:100vh;min-height:100svh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:73vw var(--pad) 9svh;}
 #quiz::before{content:'';position:absolute;inset:0;pointer-events:none;
   background:url('assets/texture-m.jpg') center/cover;
   mix-blend-mode:multiply;opacity:.4;}
 #quiz>*{position:relative;}
 /* הבורר חייב להיות חזק מ-‎#quiz>* — אחרת ה-ID גובר, האיור חוזר
-   ל-relative ותופס שורה שלמה בפריסה במקום לרחף */
-#quiz .qbag{position:absolute;left:-26px;top:-62px;width:116px;height:auto;
-  transform:rotate(-15deg);opacity:.95;pointer-events:none;z-index:2;}
-#quiz .opts{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
-.qopt{width:100%;min-height:66px;padding:16px;border:2px solid var(--sand);
+   ל-relative ותופס שורה שלמה בפריסה במקום לרחף.
+   המידות יחסיות לרוחב הסקשן, כך שהפרופורציה נשמרת בכל מסך:
+   רוחב 194.9/402, ומרכז התיבה המסובבת ב-(116, 79). */
+#quiz .qbag{position:absolute;left:28.9%;top:19.7vw;width:48.5%;height:auto;
+  transform:translate(-50%,-50%) rotate(-15deg);
+  pointer-events:none;z-index:0;}
+#quiz>h2{flex:none;}
+#quiz>.lead{flex:none;margin-top:20px;}
+#quiz .opts{flex:none;display:flex;flex-direction:column;gap:22px;margin-top:36px;}
+.qopt{width:100%;min-height:71px;padding:14px 16px;border:2px solid var(--sand);
   border-radius:var(--r);background:var(--ink);color:#fff;
   font-family:inherit;font-size:17px;font-weight:700;line-height:1.25;cursor:pointer;
   transition:background-color .18s ease,color .18s ease;}
 /* התשובה שנבחרה מתמלאת בצבע המסגרת עד שהשאלה מתחלפת */
 .qopt.on{background:var(--sand);color:var(--ink);}
-.qback{margin-top:14px;width:auto;padding:10px 26px;min-height:0;font-size:14px;}
+/* 118x49, צמוד לצד הפותח — בכיוון ימין-לשמאל זהו הצד הימני */
+.qback{align-self:flex-start;flex:none;width:118px;min-height:49px;
+  margin-top:22px;padding:0;font-size:15px;}
 .field{width:100%;min-height:54px;padding:12px 14px;border:0;border-radius:8px;
   background:#f0f0f0;color:var(--ink);font-family:inherit;font-size:16px;
   text-align:center;direction:rtl;}

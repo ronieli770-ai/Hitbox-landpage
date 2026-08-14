@@ -170,28 +170,31 @@ vm.addEventListener('click', e => { if (e.target === vm) closeVm(); });
   paint();
 })();
 
-/* ---------- ציר הזמן: הדגשה וקו שמתמלא לפי הגלילה ---------- */
+/* ---------- ציר הזמן: הדגשה וקו שמתמלא לפי גלילת העמוד ---------- */
 (function () {
   const tl = document.getElementById('tl');
   if (!tl) return;
   const cards = [...tl.querySelectorAll('.tlc')];
+  let queued = false;
 
   function sync() {
-    /* התחנה הקרובה למרכז המסך היא הפעילה, וכל מה שלפניה נצבע */
-    const mid = tl.getBoundingClientRect().left + tl.clientWidth / 2;
-    let best = 0, dist = Infinity;
+    queued = false;
+    /* התחנה שנמצאת מול קו הקריאה היא הפעילה, וכל מה שמעליה כבר נצבע */
+    const line = innerHeight * 0.5;
+    let active = -1;
+    cards.forEach((c, i) => { if (c.getBoundingClientRect().top <= line) active = i; });
+    if (active < 0 && tl.getBoundingClientRect().top < innerHeight) active = 0;
     cards.forEach((c, i) => {
-      const r = c.getBoundingClientRect();
-      const d = Math.abs(r.left + r.width / 2 - mid);
-      if (d < dist) { dist = d; best = i; }
-    });
-    cards.forEach((c, i) => {
-      c.classList.toggle('on', i === best);
-      c.classList.toggle('done', i <= best);
+      c.classList.toggle('on', i === active);
+      c.classList.toggle('done', i < active);
     });
   }
 
-  tl.addEventListener('scroll', sync, { passive: true });
+  addEventListener('scroll', () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(sync);
+  }, { passive: true });
   addEventListener('resize', sync);
   sync();
 })();

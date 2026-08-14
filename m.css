@@ -80,26 +80,27 @@ p{font-size:var(--body);}
 .card p{margin-top:8px;color:#cfe0e1;}
 
 /* ---------- ציר הזמן ----------
-   גלילה אופקית באצבע. קו מחבר בין העיגולים ונצבע בצהוב ככל שמתקדמים,
-   והתחנה שבמרכז מוארת — אותה שפה של הדסקטופ, בלי נעילת גלילה. */
-.tl{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;
-  margin-top:26px;padding-bottom:4px;scrollbar-width:none;}
-.tl::-webkit-scrollbar{display:none;}
-.tlc{position:relative;flex:none;width:76vw;max-width:340px;scroll-snap-align:center;}
+   טור אנכי: קו עובר דרך העיגולים ונצבע בצהוב ככל שגוללים,
+   והתחנה שמולך מוארת בעוד השאר מעומעמות. */
+.tl{margin-top:26px;}
+.tlc{position:relative;padding-inline-end:34px;padding-bottom:30px;}
+.tlc:last-child{padding-bottom:0;}
 
-/* הקו עובר בגובה מרכז העיגול וממשיך אל הכרטיס הבא */
-.tlc::after{content:'';position:absolute;top:7px;right:8px;left:-14px;height:2px;
-  background:rgba(255,255,255,.25);transition:background-color .4s ease;z-index:0;}
-.tlc:last-child::after{left:0;}
+.tlc .nd{position:absolute;inset-inline-end:0;top:3px;z-index:1;
+  width:16px;height:16px;border-radius:50%;background:var(--sand);
+  opacity:.35;transition:opacity .45s ease;}
+.tlc.on .nd{opacity:1;}
+
+/* הקו יורד מהעיגול אל התחנה הבאה */
+.tlc::after{content:'';position:absolute;inset-inline-end:7px;top:19px;bottom:0;
+  width:2px;background:rgba(255,255,255,.25);transition:background-color .45s ease;}
+.tlc:last-child::after{display:none;}
 .tlc.done::after{background:var(--sand);}
 
-.tlc .nd{position:relative;z-index:1;display:block;width:16px;height:16px;
-  border-radius:50%;background:var(--sand);opacity:.35;transition:opacity .4s ease;}
-.tlc.on .nd{opacity:1;}
-.tlc .txt{opacity:.32;transition:opacity .4s ease;}
+.tlc .txt{opacity:.32;transition:opacity .45s ease;}
 .tlc.on .txt{opacity:1;}
-.tlc b{display:block;margin-top:14px;color:var(--sand);font-size:var(--small);}
-.tlc h3{margin-top:2px;font-size:var(--h3);font-weight:700;line-height:1.03;}
+.tlc b{display:block;color:var(--sand);font-size:var(--small);line-height:1;}
+.tlc h3{margin-top:4px;font-size:var(--h3);font-weight:700;line-height:1.03;}
 .tlc p{margin-top:8px;color:#cfe0e1;}
 
 /* ---------- ציטוט ---------- */

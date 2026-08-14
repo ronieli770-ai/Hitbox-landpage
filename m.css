@@ -323,8 +323,13 @@ select.ff{appearance:none;
 /* ---------- ווצאפ צף ---------- */
 #wa{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:60;
   width:56px;height:56px;border-radius:50%;background:var(--sand);
-  display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.4);}
-#wa svg{width:30px;height:30px;fill:var(--ink);}
+  display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.4);
+  transition:opacity .3s ease,transform .3s ease,background-color .3s ease,box-shadow .3s ease;}
+#wa svg{width:30px;height:30px;fill:var(--ink);transition:fill .3s ease;}
+/* מעל סקשן הטופס הכפתור מחשיך ונעלם — שם הטופס עצמו הוא הקריאה לפעולה */
+#wa.gone{background:var(--ink);opacity:0;transform:scale(.7);
+  box-shadow:none;pointer-events:none;}
+#wa.gone svg{fill:var(--sand);}
 
 /* ---------- פופ־אפ וידאו ---------- */
 #vm{position:fixed;inset:0;z-index:90;background:rgba(16,28,29,.94);display:none;

@@ -375,3 +375,24 @@ const TL_MARK = 0.75;
     location.href = 'thanks.html?goal=' + encodeURIComponent(data.goal || '');
   });
 })();
+
+/* ---------- כפתור הווצאפ הצף ---------- */
+(function () {
+  const wa = document.getElementById('wa');
+  const foot = document.querySelector('footer');
+  if (!wa || !foot) return;
+  /* גובה הכפתור ועוד השוליים משני צדיו — הרגע שבו הפוטר מגיע אליו */
+  const REACH = 84;
+  let queued = false;
+  function sync() {
+    queued = false;
+    wa.classList.toggle('gone', foot.getBoundingClientRect().top <= innerHeight - REACH);
+  }
+  addEventListener('scroll', () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(sync);
+  }, { passive: true });
+  addEventListener('resize', sync);
+  sync();
+})();

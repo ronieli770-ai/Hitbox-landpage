@@ -18,6 +18,12 @@
   --small:16px;                      /* שורת סניפים 16 */
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+/* שדות טופס לא יורשים את כיוון הדף, ולכן סימני פיסוק וכוכביות בסוף מחרוזת
+   עברית נזרקים לצד הלא נכון. ההגדרה כאן חלה על ההקלדה, על ה-placeholder
+   ועל רשימות הבחירה גם יחד. */
+input,select,textarea{direction:rtl;text-align:right;font-family:inherit;}
+::placeholder{direction:rtl;text-align:right;}
+input[type=checkbox]{text-align:initial;}
 /* ל-hidden אין סיכוי מול display שנקבע במחלקה, ובלי זה כפתורים מוסתרים נראים */
 [hidden]{display:none !important;}
 /* clip חוסם את הגלישה בלי ליצור תיבת גלילה משלו, בניגוד ל-hidden

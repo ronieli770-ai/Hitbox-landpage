@@ -207,6 +207,21 @@ p{font-size:var(--body);}
 .acc[open] summary img{filter:brightness(0);}
 .acc .body{padding:0 16px 16px;color:var(--ink);font-size:var(--body);}
 
+/* ---------- סניפים ----------
+   בדסקטופ הסקשן יושב על פס צהוב, ומשם מגיעים הצבעים ההפוכים:
+   כותרת טורקיז, משפט שחור, ושורות כתובת שחורות עם סיכה. */
+.locs{position:relative;overflow:hidden;margin:0 14px;border-radius:var(--r);
+  background:var(--sand);color:var(--ink);}
+.locs::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:url('assets/texture-m.jpg') center/cover;
+  mix-blend-mode:multiply;opacity:.4;}
+.locs>*{position:relative;}
+.locs>h2{color:var(--teal);}
+.locs .branch{border:0;background:var(--ink);border-radius:10px;padding:14px 16px;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;}
+.locs .branch h3{color:#fff;}
+.locs .branch img{width:18px;height:auto;flex:none;}
+
 /* ---------- סניפים ---------- */
 .branch{border:1px solid var(--line);border-radius:var(--r);padding:16px;background:#182a2b;}
 .branch+.branch{margin-top:10px;}

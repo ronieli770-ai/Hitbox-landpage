@@ -169,3 +169,30 @@ vm.addEventListener('click', e => { if (e.target === vm) closeVm(); });
 
   paint();
 })();
+
+/* ---------- ציר הזמן: הדגשה ופס התקדמות לפי הגלילה ---------- */
+(function () {
+  const tl = document.getElementById('tl');
+  const fill = document.getElementById('tlfill');
+  if (!tl || !fill) return;
+  const cards = [...tl.querySelectorAll('.tlc')];
+  const max = () => Math.max(1, tl.scrollWidth - tl.clientWidth);
+
+  function sync() {
+    const p = Math.abs(tl.scrollLeft) / max();
+    fill.style.width = (25 + p * 75) + '%';
+    /* התחנה הקרובה למרכז המסך היא הפעילה */
+    const mid = tl.getBoundingClientRect().left + tl.clientWidth / 2;
+    let best = 0, dist = Infinity;
+    cards.forEach((c, i) => {
+      const r = c.getBoundingClientRect();
+      const d = Math.abs(r.left + r.width / 2 - mid);
+      if (d < dist) { dist = d; best = i; }
+    });
+    cards.forEach((c, i) => c.classList.toggle('on', i === best));
+  }
+
+  tl.addEventListener('scroll', sync, { passive: true });
+  addEventListener('resize', sync);
+  sync();
+})();

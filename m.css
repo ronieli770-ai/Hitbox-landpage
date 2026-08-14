@@ -79,15 +79,23 @@ p{font-size:var(--body);}
 .card h3{font-size:var(--h3);font-weight:700;line-height:1.15;}
 .card p{margin-top:8px;color:#cfe0e1;}
 
-/* ---------- ציר ---------- */
-.step{border-inline-start:2px solid var(--teal);padding:0 0 26px 0;
-  padding-inline-start:18px;position:relative;}
-.step:last-child{border-color:transparent;padding-bottom:0;}
-.step::before{content:'';position:absolute;inset-inline-start:-9px;top:2px;
-  width:16px;height:16px;border-radius:50%;background:var(--sand);}
-.step b{display:block;color:var(--sand);font-size:var(--small);}
-.step h3{font-size:var(--h3);font-weight:700;margin-top:2px;}
-.step p{margin-top:6px;color:#cfe0e1;}
+/* ---------- ציר הזמן ----------
+   גלילה אופקית באצבע. התחנה שבמרכז מוארת והשאר מעומעמות,
+   ופס ההתקדמות מתמלא — אותה שפה של הדסקטופ, בלי נעילת גלילה. */
+.tl{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;
+  margin-top:26px;padding-bottom:4px;scrollbar-width:none;}
+.tl::-webkit-scrollbar{display:none;}
+.tlc{flex:none;width:76vw;max-width:340px;scroll-snap-align:center;
+  opacity:.32;transition:opacity .4s ease;}
+.tlc.on{opacity:1;}
+.tlc .nd{display:block;width:16px;height:16px;border-radius:50%;background:var(--sand);}
+.tlc b{display:block;margin-top:14px;color:var(--sand);font-size:var(--small);}
+.tlc h3{margin-top:2px;font-size:var(--h3);font-weight:700;line-height:1.03;}
+.tlc p{margin-top:8px;color:#cfe0e1;}
+.tlbar{position:relative;height:4px;margin-top:18px;border-radius:2px;
+  background:rgba(255,255,255,.18);}
+.tlbar i{position:absolute;right:0;top:0;height:100%;border-radius:2px;
+  background:var(--sand);width:25%;transition:width .18s linear;}
 
 /* ---------- ציטוט ---------- */
 .quote{text-align:center;padding:44px var(--pad);background:var(--teal);}

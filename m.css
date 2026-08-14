@@ -62,10 +62,12 @@ p{font-size:var(--body);}
   width:clamp(240px,65vw,300px);margin-inline:auto;
   min-height:clamp(52px,15.25vw,64px);border-radius:5px;}
 #hero .btn span{font-size:var(--lead);line-height:.99;}
+/* הסיכה והטקסט הם קבוצה אחת שממורכזת יחד, והמרווח ביניהם נשמר ע"י gap.
+   קודם הוא נוצר ע"י הזזה, וזו נכנסה לתוך הספרה 3 במקום להתרחק ממנה. */
 #hero .branches{margin-top:clamp(16px,5vw,26px);font-size:16px;line-height:1.57;
-  display:flex;align-items:flex-start;justify-content:center;gap:2px;}
+  display:flex;align-items:flex-start;justify-content:center;gap:7px;}
 /* הפין נצמד לשורה הראשונה, ולא למרכז הגוש כשהטקסט נשבר לשתי שורות */
-#hero .branches img{width:10px;height:19px;flex:none;margin-top:3px;transform:translateX(-7px);}
+#hero .branches img{width:10px;height:19px;flex:none;margin-top:3px;}
 
 /* ---------- כרטיסים ----------
    רשת שתיים בשורה, בדיוק כמו במסגרת: כרטיס 160 · מרווח 12 · שורה 16 */

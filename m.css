@@ -18,6 +18,8 @@
   --small:16px;                      /* שורת סניפים 16 */
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+/* ל-hidden אין סיכוי מול display שנקבע במחלקה, ובלי זה כפתורים מוסתרים נראים */
+[hidden]{display:none !important;}
 /* clip חוסם את הגלישה בלי ליצור תיבת גלילה משלו, בניגוד ל-hidden
    שבטלפון עדיין מאפשר לגרור את העמוד הצידה. hidden נשאר לדפדפנים ישנים. */
 html{scroll-behavior:smooth;overflow-x:hidden;overflow-x:clip;}
@@ -196,7 +198,10 @@ p{font-size:var(--body);}
 #quiz .opts{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
 .qopt{width:100%;min-height:66px;padding:16px;border:2px solid var(--sand);
   border-radius:var(--r);background:var(--ink);color:#fff;
-  font-family:inherit;font-size:17px;font-weight:700;line-height:1.25;cursor:pointer;}
+  font-family:inherit;font-size:17px;font-weight:700;line-height:1.25;cursor:pointer;
+  transition:background-color .18s ease,color .18s ease;}
+/* התשובה שנבחרה מתמלאת בצבע המסגרת עד שהשאלה מתחלפת */
+.qopt.on{background:var(--sand);color:var(--ink);}
 .qback{margin-top:14px;width:auto;padding:10px 26px;min-height:0;font-size:14px;}
 .field{width:100%;min-height:54px;padding:12px 14px;border:0;border-radius:8px;
   background:#f0f0f0;color:var(--ink);font-family:inherit;font-size:16px;

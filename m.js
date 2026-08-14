@@ -211,19 +211,27 @@ vm.addEventListener('click', e => { if (e.target === vm) closeVm(); });
 
 /* ---------- השאלון ---------- */
 (function () {
+  const title = document.getElementById('q-title');
   const head = document.getElementById('q-head');
   const opts = document.getElementById('q-opts');
   const back = document.getElementById('q-back');
   const form = document.getElementById('q-result');
   const sub = document.getElementById('q-sub');
   const answers = {};
-  let i = 0;
+  let i = 0, busy = false;
 
   function paint() {
     const item = QUESTIONS[i];
     head.textContent = item.q;
-    opts.innerHTML = item.a.map(t => `<button class="qopt" type="button">${t}</button>`).join('');
-    back.hidden = i === 0;
+    opts.innerHTML = item.a.map(t =>
+      `<button class="qopt" type="button">${t}</button>`).join('');
+    back.hidden = i === 0;          /* אין לאן לחזור מהשאלה הראשונה */
+  }
+
+  /* בסיום נשארים על המסך רק הכותרת החדשה, הטופס והחזרה */
+  function show(asking) {
+    title.hidden = head.hidden = opts.hidden = !asking;
+    form.hidden = asking;
   }
 
   function finish() {
@@ -235,23 +243,27 @@ vm.addEventListener('click', e => { if (e.target === vm) closeVm(); });
       h.type = 'hidden'; h.name = k; h.value = v;
       form.appendChild(h);
     }
-    head.hidden = opts.hidden = true;
-    form.hidden = false;
+    show(false);
     back.hidden = false;
   }
 
   opts.addEventListener('click', e => {
     const b = e.target.closest('.qopt');
-    if (!b) return;
+    if (!b || busy) return;
+    busy = true;
+    b.classList.add('on');           /* נשארת מסומנת עד שהשאלה מתחלפת */
     answers[QUESTIONS[i].key] = b.textContent.trim();
-    i++;
-    if (i >= QUESTIONS.length) finish();
-    else paint();
-    document.getElementById('quiz').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => {
+      busy = false;
+      i++;
+      if (i >= QUESTIONS.length) finish();
+      else paint();
+      document.getElementById('quiz').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 280);
   });
 
   back.addEventListener('click', () => {
-    if (!form.hidden) { form.hidden = true; head.hidden = opts.hidden = false; i = QUESTIONS.length - 1; }
+    if (!form.hidden) { show(true); i = QUESTIONS.length - 1; }
     else if (i > 0) i--;
     paint();
   });

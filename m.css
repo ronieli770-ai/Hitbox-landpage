@@ -80,22 +80,27 @@ p{font-size:var(--body);}
 .card p{margin-top:8px;color:#cfe0e1;}
 
 /* ---------- ציר הזמן ----------
-   גלילה אופקית באצבע. התחנה שבמרכז מוארת והשאר מעומעמות,
-   ופס ההתקדמות מתמלא — אותה שפה של הדסקטופ, בלי נעילת גלילה. */
+   גלילה אופקית באצבע. קו מחבר בין העיגולים ונצבע בצהוב ככל שמתקדמים,
+   והתחנה שבמרכז מוארת — אותה שפה של הדסקטופ, בלי נעילת גלילה. */
 .tl{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;
   margin-top:26px;padding-bottom:4px;scrollbar-width:none;}
 .tl::-webkit-scrollbar{display:none;}
-.tlc{flex:none;width:76vw;max-width:340px;scroll-snap-align:center;
-  opacity:.32;transition:opacity .4s ease;}
-.tlc.on{opacity:1;}
-.tlc .nd{display:block;width:16px;height:16px;border-radius:50%;background:var(--sand);}
+.tlc{position:relative;flex:none;width:76vw;max-width:340px;scroll-snap-align:center;}
+
+/* הקו עובר בגובה מרכז העיגול וממשיך אל הכרטיס הבא */
+.tlc::after{content:'';position:absolute;top:7px;right:8px;left:-14px;height:2px;
+  background:rgba(255,255,255,.25);transition:background-color .4s ease;z-index:0;}
+.tlc:last-child::after{left:0;}
+.tlc.done::after{background:var(--sand);}
+
+.tlc .nd{position:relative;z-index:1;display:block;width:16px;height:16px;
+  border-radius:50%;background:var(--sand);opacity:.35;transition:opacity .4s ease;}
+.tlc.on .nd{opacity:1;}
+.tlc .txt{opacity:.32;transition:opacity .4s ease;}
+.tlc.on .txt{opacity:1;}
 .tlc b{display:block;margin-top:14px;color:var(--sand);font-size:var(--small);}
 .tlc h3{margin-top:2px;font-size:var(--h3);font-weight:700;line-height:1.03;}
 .tlc p{margin-top:8px;color:#cfe0e1;}
-.tlbar{position:relative;height:4px;margin-top:18px;border-radius:2px;
-  background:rgba(255,255,255,.18);}
-.tlbar i{position:absolute;right:0;top:0;height:100%;border-radius:2px;
-  background:var(--sand);width:25%;transition:width .18s linear;}
 
 /* ---------- ציטוט ---------- */
 .quote{text-align:center;padding:44px var(--pad);background:var(--teal);}

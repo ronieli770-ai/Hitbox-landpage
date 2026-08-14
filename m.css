@@ -80,24 +80,22 @@ p{font-size:var(--body);}
 .card p{margin-top:8px;color:#cfe0e1;}
 
 /* ---------- ציר הזמן ----------
-   טור אנכי: קו עובר דרך העיגולים ונצבע בצהוב ככל שגוללים,
-   והתחנה שמולך מוארת בעוד השאר מעומעמות. */
-.tl{margin-top:26px;}
+   קו אחד רציף שנצבע לינארית עם הגלילה. עיגול נדלק ברגע שהצבע מגיע אליו,
+   והטקסט שלו מתגלה באותו רגע — הכל מקשה אחת. */
+.tl{position:relative;margin-top:26px;}
 .tlc{position:relative;padding-inline-end:34px;padding-bottom:30px;}
 .tlc:last-child{padding-bottom:0;}
 
+.tlline{position:absolute;inset-inline-end:7px;width:2px;
+  background:rgba(255,255,255,.22);z-index:0;}
+.tlline i{position:absolute;top:0;left:0;right:0;height:0;background:var(--sand);}
+
 .tlc .nd{position:absolute;inset-inline-end:0;top:3px;z-index:1;
   width:16px;height:16px;border-radius:50%;background:var(--sand);
-  opacity:.35;transition:opacity .45s ease;}
+  opacity:.3;transition:opacity .35s ease;}
 .tlc.on .nd{opacity:1;}
 
-/* הקו יורד מהעיגול אל התחנה הבאה */
-.tlc::after{content:'';position:absolute;inset-inline-end:7px;top:19px;bottom:0;
-  width:2px;background:rgba(255,255,255,.25);transition:background-color .45s ease;}
-.tlc:last-child::after{display:none;}
-.tlc.done::after{background:var(--sand);}
-
-.tlc .txt{opacity:.32;transition:opacity .45s ease;}
+.tlc .txt{opacity:.32;transition:opacity .35s ease;}
 .tlc.on .txt{opacity:1;}
 .tlc b{display:block;color:var(--sand);font-size:var(--small);line-height:1;}
 .tlc h3{margin-top:4px;font-size:var(--h3);font-weight:700;line-height:1.03;}

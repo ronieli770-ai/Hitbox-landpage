@@ -170,23 +170,37 @@ vm.addEventListener('click', e => { if (e.target === vm) closeVm(); });
   paint();
 })();
 
-/* ---------- ציר הזמן: הדגשה וקו שמתמלא לפי גלילת העמוד ---------- */
+/* ---------- ציר הזמן ----------
+   הקו נצבע לינארית לפי הגלילה, ועיגול וטקסט נדלקים ברגע שהצבע מגיע אליהם.
+   קו הקריאה: רבע מגובה המסך מלמטה. */
+const TL_MARK = 0.75;
+
 (function () {
   const tl = document.getElementById('tl');
-  if (!tl) return;
+  const line = tl && tl.querySelector('.tlline');
+  const fill = document.getElementById('tlfill');
+  if (!tl || !line || !fill) return;
   const cards = [...tl.querySelectorAll('.tlc')];
+  const nodes = cards.map(c => c.querySelector('.nd'));
   let queued = false;
+
+  /* הקו נמתח ממרכז העיגול הראשון עד מרכז האחרון */
+  function layout() {
+    const top = tl.getBoundingClientRect().top;
+    const a = nodes[0].getBoundingClientRect();
+    const b = nodes[nodes.length - 1].getBoundingClientRect();
+    line.style.top = (a.top - top + a.height / 2) + 'px';
+    line.style.height = (b.top - a.top) + 'px';
+  }
 
   function sync() {
     queued = false;
-    /* התחנה שנמצאת מול קו הקריאה היא הפעילה, וכל מה שמעליה כבר נצבע */
-    const line = innerHeight * 0.5;
-    let active = -1;
-    cards.forEach((c, i) => { if (c.getBoundingClientRect().top <= line) active = i; });
-    if (active < 0 && tl.getBoundingClientRect().top < innerHeight) active = 0;
-    cards.forEach((c, i) => {
-      c.classList.toggle('on', i === active);
-      c.classList.toggle('done', i < active);
+    const mark = innerHeight * TL_MARK;
+    const r = line.getBoundingClientRect();
+    fill.style.height = Math.max(0, Math.min(r.height, mark - r.top)) + 'px';
+    nodes.forEach((n, i) => {
+      const b = n.getBoundingClientRect();
+      cards[i].classList.toggle('on', b.top + b.height / 2 <= mark);
     });
   }
 
@@ -195,6 +209,7 @@ vm.addEventListener('click', e => { if (e.target === vm) closeVm(); });
     queued = true;
     requestAnimationFrame(sync);
   }, { passive: true });
-  addEventListener('resize', sync);
-  sync();
+  addEventListener('resize', () => { layout(); sync(); });
+  addEventListener('load', () => { layout(); sync(); });
+  layout(); sync();
 })();

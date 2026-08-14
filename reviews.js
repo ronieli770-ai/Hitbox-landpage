@@ -3,14 +3,15 @@
    הקובץ עצמאי: מזריק את הסגנון ואת המבנה בעצמו.
    ============================================================ */
 
-const PLACE_ID = 'ChIJSf1mgb5LHRURVjL9o4BIQOw';   // היטבוקס רמת גן
+const PLACE_ID = 'ChIJSf1mgb5LHRURVjL9o4BIQOw';   // היטבוקס רמת גן — לשימוש ה-API
+const CID = '10325028178909130511';              // מזהה העסק, לקישור לעמוד הביקורות
 const API_KEY = '';        // ריק = משתמש ברשימה שלמטה. עם מפתח = מושך חי מגוגל.
 const FIRST_DELAY = 4000;  // כמה להמתין לפני ההופעה הראשונה
 
 /* הביקורות שמוצגות כשאין מפתח API.
    כאן מחליפים אותן בביקורות אמיתיות מהעמוד העסקי — שם, ניקוד, מתי, וטקסט. */
 const REVIEWS = {
-  place: { url: 'https://www.google.com/maps/place/?q=place_id:' + PLACE_ID },
+  place: { url: 'https://maps.google.com/?cid=' + CID },
   reviews: [
     { author: 'דוגמה א׳', initial: 'ד', rating: 5, when: 'לפני חודש',
       text: 'טקסט לדוגמה שממתין להחלפה בביקורת אמיתית מהעמוד העסקי.' },

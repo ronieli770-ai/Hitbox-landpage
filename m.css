@@ -200,14 +200,17 @@ p{font-size:var(--body);}
 /* ---------- השאלון ----------
    בדסקטופ הוא יושב על פס טורקיז עם הטקסטורה מעליו, ותשובותיו קופסאות שחורות
    עם זוהר צהוב. כאן אותו טיפול, כמו בסקשן "מתחילים מאפס". */
-#quiz{position:relative;overflow:hidden;background:var(--teal);margin-top:34px;}
+/* בלי overflow:hidden — הכפפה אמורה לחרוג מהסקשן כלפי מעלה,
+   והמרווח מעליו הוא המקום שהיא חורגת אליו */
+#quiz{position:relative;background:var(--teal);margin-top:72px;}
 #quiz::before{content:'';position:absolute;inset:0;pointer-events:none;
   background:url('assets/texture-m.jpg') center/cover;
   mix-blend-mode:multiply;opacity:.4;}
 #quiz>*{position:relative;}
-/* הכפפה של הדסקטופ, מציצה מהשוליים ומאחורי התוכן */
-.qbag{position:absolute;left:-58px;top:26px;width:172px;height:auto;
-  transform:rotate(-15deg);opacity:.5;pointer-events:none;z-index:0;}
+/* הבורר חייב להיות חזק מ-‎#quiz>* — אחרת ה-ID גובר, האיור חוזר
+   ל-relative ותופס שורה שלמה בפריסה במקום לרחף */
+#quiz .qbag{position:absolute;left:-26px;top:-62px;width:116px;height:auto;
+  transform:rotate(-15deg);opacity:.95;pointer-events:none;z-index:2;}
 #quiz .opts{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
 .qopt{width:100%;min-height:66px;padding:16px;border:2px solid var(--sand);
   border-radius:var(--r);background:var(--ink);color:#fff;

@@ -185,6 +185,14 @@ p{font-size:var(--body);}
 .ba .kg{margin-top:6px;font-size:13px;opacity:.6;}
 
 /* ---------- שאלון ---------- */
+/* ---------- השאלון ----------
+   בדסקטופ הוא יושב על פס טורקיז עם הטקסטורה מעליו, ותשובותיו קופסאות שחורות
+   עם זוהר צהוב. כאן אותו טיפול, כמו בסקשן "מתחילים מאפס". */
+#quiz{position:relative;overflow:hidden;background:var(--teal);}
+#quiz::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:url('assets/texture-m.jpg') center/cover;
+  mix-blend-mode:multiply;opacity:.4;}
+#quiz>*{position:relative;}
 #quiz .opts{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
 .qopt{width:100%;min-height:66px;padding:16px;border:2px solid var(--sand);
   border-radius:var(--r);background:var(--ink);color:#fff;

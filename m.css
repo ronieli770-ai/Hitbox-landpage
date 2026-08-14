@@ -58,7 +58,7 @@ p{font-size:var(--body);}
   min-height:clamp(52px,15.25vw,64px);border-radius:5px;}
 #hero .btn span{font-size:var(--lead);line-height:.99;}
 #hero .branches{margin-top:clamp(16px,5vw,26px);font-size:16px;line-height:1.57;
-  display:flex;align-items:flex-start;justify-content:center;gap:10px;}
+  display:flex;align-items:flex-start;justify-content:center;gap:5px;}
 /* הפין נצמד לשורה הראשונה, ולא למרכז הגוש כשהטקסט נשבר לשתי שורות */
 #hero .branches img{width:10px;height:19px;flex:none;margin-top:3px;}
 

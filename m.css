@@ -80,6 +80,27 @@ p{font-size:var(--body);}
 .card h3{font-size:var(--h3);font-weight:700;line-height:1.15;}
 .card p{margin-top:8px;color:#cfe0e1;}
 
+/* ---------- הטיפוגרפיה של הקונטיינרים ----------
+   מסגרות המובייל בפיגמה מגדירות טקסט אחיד לכל כרטיס: 22 בולד, גובה שורה 1.03.
+   מרוכז כאן כדי שכל הכרטיסים בעמוד ידברו באותו קול. */
+.tile h3,.card p,.branch h3,.acc summary,.tlc h3{
+  font-size:var(--h3);font-weight:700;line-height:1.03;}
+
+/* ---------- מתחילים מאפס ----------
+   רקע טורקיז עם הטקסטורה במכפלה, וכרטיסים שחורים עם זוהר צהוב מתחת. */
+.zero{position:relative;background:var(--teal);overflow:hidden;}
+.zero::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:url('assets/texture-m.jpg') center/cover;
+  mix-blend-mode:multiply;opacity:.4;}
+.zero>*{position:relative;}
+.zero>h2{text-align:center;}
+.zero>.lead{text-align:center;color:rgba(255,255,255,.7);}
+.zero .cards{gap:20px;margin-top:28px;}
+.zero .card{border:0;background:var(--ink);padding:20px 29px;min-height:136px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 4px rgba(255,243,183,.55);}
+.zero .card p{margin-top:0;color:#fff;text-align:center;}
+
 /* ---------- ציר הזמן ----------
    קו אחד רציף שנצבע לינארית עם הגלילה. עיגול נדלק ברגע שהצבע מגיע אליו,
    והטקסט שלו מתגלה באותו רגע — הכל מקשה אחת. */

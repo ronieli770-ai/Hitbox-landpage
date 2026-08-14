@@ -109,8 +109,11 @@ p{font-size:var(--body);}
    כמו בדסקטופ: בלי רקע. גרשיים ענקיים ב-7% לבן מאחורי הטקסט,
    ושתי פינות צהובות בלבד — ימנית-עליונה ושמאלית-תחתונה. */
 .quote{position:relative;text-align:center;padding:56px var(--pad) 52px;}
-.quote::before{content:'\05F4';position:absolute;inset-inline-start:50%;top:50%;
-  transform:translate(-50%,-50%) translateY(.34em);
+/* ממורכז אופקית ע"י מתיחה לרוחב מלא ו-text-align, ולא ע"י אחוזים והזזה —
+   ב-RTL הצמד הזה מזיז את הסימן לצד במקום למרכז.
+   ההזזה האנכית מפצה על כך שהדיו של הגרשיים יושבת בראש תיבת האות. */
+.quote::before{content:'\05F4';position:absolute;left:0;right:0;top:50%;
+  text-align:center;transform:translateY(-50%) translateY(.28em);
   font-size:clamp(150px,44vw,190px);font-weight:700;line-height:1;
   color:rgba(255,255,255,.07);pointer-events:none;}
 .quote>*{position:relative;}
@@ -119,8 +122,9 @@ p{font-size:var(--body);}
 
 .cnr{position:absolute;inset:16px 12px;pointer-events:none;}
 .cnr::before,.cnr::after{content:'';position:absolute;width:54px;height:54px;}
-.cnr::before{top:0;right:0;border-top:2px solid var(--sand);border-inline-end:2px solid var(--sand);}
-.cnr::after{bottom:0;left:0;border-bottom:2px solid var(--sand);border-inline-start:2px solid var(--sand);}
+/* גבולות פיזיים בכוונה: ב-RTL ה-inline-end הוא הצד השמאלי, וזה הפך את הפינות */
+.cnr::before{top:0;right:0;border-top:2px solid var(--sand);border-right:2px solid var(--sand);}
+.cnr::after{bottom:0;left:0;border-bottom:2px solid var(--sand);border-left:2px solid var(--sand);}
 
 /* ---------- גריד המלצות ---------- */
 .vgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px;}

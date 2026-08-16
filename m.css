@@ -362,7 +362,7 @@ select.ff{appearance:none;
 .fcredit{margin-top:22px;padding-top:18px;border-top:1px solid var(--ink);
   display:flex;align-items:center;justify-content:center;gap:10px;}
 .fcredit span{font-size:13px;}
-.fcredit img{width:78px;height:auto;}
+.fcredit img{width:108px;height:auto;}
 
 /* ---------- ווצאפ צף ---------- */
 #wa{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:60;

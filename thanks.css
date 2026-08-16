@@ -1,0 +1,79 @@
+/* ============================================================
+   עמוד התודה — גרסת האתר
+   כל הכללים מצומצמים מראש תחת .thx, כדי שלא ידלפו לממשק וורדפרס
+   ושלא יפסידו לערכת העיצוב של אלמנטור.
+   ============================================================ */
+@font-face{font-family:'FbReissfeder';src:url('פונט/FbReissfeder-Regular.otf') format('opentype');font-weight:400;font-display:swap;}
+@font-face{font-family:'FbReissfeder';src:url('פונט/FbReissfeder-Bold.otf') format('opentype');font-weight:700;font-display:swap;}
+
+body .thx{position:relative;min-height:100vh;
+  background:#101c1d !important;color:#fff !important;
+  font-family:'FbReissfeder',sans-serif !important;direction:rtl !important;
+  display:flex;flex-direction:column;align-items:center;
+  padding:48px 24px 64px !important;overflow-x:hidden;}
+body .thx *{box-sizing:border-box;}
+
+/* אותה טקסטורה שרצה על דף הנחיתה */
+body .thx::before{content:'';position:fixed;inset:0;pointer-events:none;
+  background:url('assets/texture-m.jpg') center/cover;mix-blend-mode:multiply;opacity:.35;}
+
+body .thx main{position:relative;width:100%;max-width:1200px;
+  display:flex;flex-direction:column;align-items:center;}
+
+body .thx .logo{width:104px;height:auto;margin:0 0 34px !important;}
+
+body .thx h1{font-family:'FbReissfeder',sans-serif !important;
+  font-size:clamp(44px,6vw,86px) !important;font-weight:700 !important;
+  line-height:.99 !important;text-align:center;color:#fff !important;margin:0 !important;}
+body .thx h1 span{color:#fff3b7 !important;}
+
+body .thx .lead{margin:20px 0 0 !important;font-size:clamp(18px,2.2vw,26px) !important;
+  line-height:1.57 !important;text-align:center;max-width:760px;color:#fff !important;}
+body .thx .note{margin:10px 0 0 !important;font-size:16px !important;
+  line-height:1.57 !important;text-align:center;color:#fff !important;}
+
+body .thx h2{font-family:'FbReissfeder',sans-serif !important;
+  margin:64px 0 0 !important;font-size:clamp(26px,3.2vw,40px) !important;
+  font-weight:700 !important;line-height:1.03 !important;text-align:center;color:#fff !important;}
+
+body .thx .grid{margin-top:28px;display:flex;flex-wrap:wrap;gap:26px;justify-content:center;}
+body .thx .card{width:271px;height:314px;border-radius:20px;background:#d9d9d9;
+  overflow:hidden;border:0;padding:0;cursor:pointer;position:relative;display:block;
+  font-family:inherit;transition:transform .25s ease,box-shadow .25s ease;}
+body .thx .card:hover,body .thx .card:focus-visible{outline:none;
+  transform:translateY(-4px);box-shadow:0 8px 4px #fff3b7;}
+body .thx .card video,body .thx .card img{width:100%;height:100%;object-fit:cover;display:block;}
+body .thx .card .play{position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;background:rgba(16,28,29,.25);opacity:0;transition:opacity .25s ease;}
+body .thx .card:hover .play{opacity:1;}
+body .thx .card .play svg{width:64px;height:64px;}
+
+/* אייקונים בלבד, בשורה אחת — 64 פיקסלים הוא יעד המגע המומלץ */
+body .thx .social{margin-top:64px;display:flex;gap:22px;justify-content:center;align-items:center;}
+body .thx .social a{display:inline-flex;align-items:center;justify-content:center;
+  width:64px;height:64px;border-radius:50%;flex:none;
+  border:2px solid #fff3b7;color:#fff3b7 !important;text-decoration:none;
+  transition:background-color .25s ease,color .25s ease,transform .25s ease;}
+body .thx .social a:hover,body .thx .social a:focus-visible{outline:none;
+  background:#fff3b7;color:#101c1d !important;transform:translateY(-3px);}
+body .thx .social svg{width:30px;height:30px;fill:currentColor;flex:none;}
+
+body .thx .back{margin-top:48px;font-size:18px;color:#8ba3a5 !important;text-decoration:none;}
+body .thx .back:hover{color:#fff3b7 !important;}
+
+/* הקונפטי מעל התוכן ומתחת לפופ-אפ, ואינו חוסם לחיצות */
+body .thx #confetti{position:fixed;inset:0;width:100%;height:100%;z-index:40;pointer-events:none;}
+
+body .thx #modal{position:fixed;inset:0;z-index:50;background:rgba(16,28,29,.92);
+  display:none;align-items:center;justify-content:center;}
+body .thx #modal.open{display:flex;}
+body .thx #modal .frame{height:50vh;aspect-ratio:9/16;max-width:92vw;
+  border-radius:20px;overflow:hidden;background:#000;}
+body .thx #modal iframe{width:100%;height:100%;border:0;display:block;}
+body .thx #close{position:absolute;top:24px;left:24px;z-index:5;
+  width:48px;height:48px;border-radius:50%;border:0;
+  background:#fff3b7;color:#101c1d;font-size:28px;line-height:1;cursor:pointer;}
+
+@media (max-width:600px){
+  body .thx .card{width:calc(50% - 13px);height:auto;aspect-ratio:271/314;}
+}

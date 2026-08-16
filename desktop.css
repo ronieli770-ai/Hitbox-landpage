@@ -1,0 +1,112 @@
+/* ============================================================
+   שכבת הדסקטופ — נטענת מעל m.css מרוחב 900 ומעלה
+   אותו מבנה HTML ואותן אנימציות; רק הפריסה נפרשת לרוחב.
+   הפרופורציות נגזרות מקנבס הדסקטופ המקורי (1728) ומוקטנות
+   לרוחב תוכן של 1240, כך שהיחסים בין הרכיבים נשמרים.
+   ============================================================ */
+
+@media (min-width:900px){
+
+  body{
+    --pad:clamp(28px,4vw,60px);
+    --h1:clamp(56px,5.2vw,86px);    /* h100 בקנבס המקורי */
+    --h2:clamp(38px,3.4vw,56px);
+    --h3:clamp(22px,1.7vw,28px);    /* h35 */
+    --lead:clamp(20px,1.5vw,26px);
+    --body:clamp(17px,1.3vw,22px);  /* t24 */
+    --small:18px;
+    --wrap:1240px;
+  }
+
+  /* כל סקשן ממורכז ברוחב אחיד, כמו רוחב התוכן בקנבס */
+  body section,body .quote,body footer{
+    padding-inline:calc((100vw - min(var(--wrap),100vw - 2*var(--pad)))/2) !important;
+    padding-block:clamp(80px,7vw,130px) !important;}
+
+  /* ---------- הירו ---------- */
+  body #hero{min-height:100vh;min-height:100svh;}
+  body #hero .block{max-width:1000px;margin-inline:auto;}
+  body #hero h1{font-size:var(--h1) !important;}
+  body #hero .lead{max-width:760px;margin-inline:auto;}
+  body #hero .btn{max-width:520px;margin-inline:auto;}
+  body #hero .logo{width:clamp(70px,6vw,104px);}
+
+  /* ---------- סקשן 2: ארבע כרטיסיות בשורה ---------- */
+  body .grid2{grid-template-columns:repeat(4,1fr) !important;gap:24px !important;}
+  body .grid2 .tile{min-height:300px !important;padding:26px 18px !important;}
+  body .grid2 .tile img{width:clamp(56px,4.4vw,74px) !important;}
+
+  /* ---------- ציר הזמן: ארבע תחנות בשורה, הקו אופקי ---------- */
+  body .tl{display:grid;grid-template-columns:repeat(4,1fr);gap:34px;margin-top:56px;}
+  body .tlc{padding-inline-end:0 !important;padding-bottom:0 !important;padding-top:42px;}
+  body .tlc .nd{inset-inline-end:auto !important;inset-inline-start:0 !important;top:0 !important;}
+  body .tlline{inset-inline-end:auto !important;inset-inline-start:8px;
+    top:8px !important;width:auto !important;height:2px !important;
+    right:var(--pad) !important;}
+  body .tlline i{top:0;bottom:0;height:100% !important;width:0;}
+
+  /* ---------- הציטוט ---------- */
+  body .quote{padding-block:clamp(90px,8vw,150px) !important;}
+  body .quote p{font-size:clamp(40px,3.6vw,62px);}
+  body .cnr{inset:24px clamp(40px,6vw,110px);}
+  body .cnr::before,body .cnr::after{width:96px;height:96px;}
+
+  /* ---------- מתחילים מאפס: שלושה כרטיסים בשורה ---------- */
+  body .zero .cards{flex-direction:row !important;gap:24px !important;align-items:stretch;}
+  body .zero .card{flex:1 1 0;min-height:210px !important;padding:32px 30px !important;}
+
+  /* ---------- גריד ההמלצות: ארבע בשורה ---------- */
+  body .vgrid{grid-template-columns:repeat(4,1fr) !important;gap:18px !important;}
+  body .vstick{padding-inline:calc((100vw - min(var(--wrap),100vw - 2*var(--pad)))/2) !important;}
+  body .vhead{width:min(78vw,900px) !important;}
+  body .vhead p{font-size:clamp(52px,4.6vw,80px) !important;}
+  body .vcell .play svg{width:64px;height:64px;}
+
+  /* ---------- סניפים: שלוש שורות רחבות ---------- */
+  body .locs{margin-inline:auto !important;max-width:var(--wrap);border-radius:24px;}
+  body .locs .cards{display:grid;grid-template-columns:1fr;gap:14px !important;}
+  body .locs .branch{min-height:118px !important;padding:22px 30px !important;gap:22px !important;}
+  body .locs .branch img{width:26px !important;}
+  body .lbag{width:300px !important;left:auto !important;right:-30px !important;bottom:20px !important;}
+
+  /* ---------- השאלון ---------- */
+  body #quiz{padding-block:clamp(90px,7vw,130px) !important;}
+  body #quiz .opts{flex-direction:row !important;gap:18px !important;}
+  body .qopt{flex:1 1 0;min-height:190px !important;padding:28px 22px !important;
+    font-size:clamp(19px,1.5vw,24px) !important;}
+  body #quiz .qbag{width:clamp(200px,17vw,290px) !important;left:2% !important;top:12vw !important;}
+  body #q-result .cards{flex-direction:row !important;gap:16px !important;}
+  body .field{min-height:62px !important;}
+  body .qback{align-self:flex-start;}
+
+  /* ---------- לפני־אחרי ---------- */
+  body .rail{gap:22px !important;}
+  body .rail .ba{min-width:clamp(360px,30vw,460px);}
+
+  /* ---------- התנגדויות ---------- */
+  body .acc .q{padding:24px 28px !important;font-size:var(--h3) !important;}
+  body .acc .a p{padding:0 28px 24px !important;font-size:var(--body) !important;}
+  body .acc summary img,body .acc .q img{width:38px !important;height:38px !important;}
+
+  /* ---------- הפוטר ---------- */
+  body footer{padding-block:clamp(80px,6vw,120px) !important;}
+  body .fcard{max-width:780px;padding:40px 44px !important;}
+  body #lead{gap:14px !important;}
+  body .fcontact{flex-direction:row !important;gap:40px !important;}
+  body .fine{flex-direction:row !important;gap:60px !important;justify-content:space-between;}
+  body .fine div{flex:1 1 0;}
+  body .glove{width:230px !important;left:-60px !important;top:-40px !important;}
+  body .flogo{width:120px !important;}
+
+  /* ---------- הרכיבים הצפים ---------- */
+  body #wa{width:70px !important;height:70px !important;right:26px !important;bottom:26px !important;}
+  body #wa svg{width:38px !important;height:38px !important;}
+  body #grev-toast{left:26px !important;right:auto !important;
+    width:390px !important;bottom:26px !important;}
+  body #grev-toast .gr-quote{-webkit-line-clamp:3 !important;}
+}
+
+/* מסכים רחבים במיוחד — התוכן לא נמתח מעבר למידה נוחה לקריאה */
+@media (min-width:1700px){
+  body{--wrap:1360px;}
+}

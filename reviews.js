@@ -53,6 +53,8 @@ const SHOW_TIME = 7000;    // כמה זמן כל ביקורת נשארת
   box-shadow:0 12px 34px rgba(16,28,29,.35);font-family:'Fb','FbReissfeder',sans-serif;direction:rtl;
   transform:translateX(-120%);opacity:0;transition:transform .55s cubic-bezier(.16,1,.3,1),opacity .4s ease;}
 #grev-toast.in{transform:translateX(0);opacity:1;}
+/* נסוגה כשמגיעים לטופס — הכלל אחרי .in כדי לגבור עליו */
+#grev-toast.gone{transform:translateX(-120%);opacity:0;pointer-events:none;}
 /* מסלול הקרוסלה: כל הביקורות זו לצד זו במרווח קבוע, והמסלול מחליק
    שלב אחד בכל פעם — כך כרטיס אחד דוחף את הבא ולא מתחלף במקום */
 #grev-toast .gr-vp{overflow:hidden;}

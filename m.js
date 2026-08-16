@@ -394,7 +394,11 @@ const TL_MARK = 0.75;
   let queued = false;
   function sync() {
     queued = false;
-    wa.classList.toggle('gone', foot.getBoundingClientRect().top <= innerHeight - REACH);
+    const reached = foot.getBoundingClientRect().top <= innerHeight - REACH;
+    wa.classList.toggle('gone', reached);
+    /* חלונית הביקורות נבנית בהשהיה, ולכן נשלפת בכל פעם מחדש */
+    const rev = document.getElementById('grev-toast');
+    if (rev) rev.classList.toggle('gone', reached);
   }
   addEventListener('scroll', () => {
     if (queued) return;

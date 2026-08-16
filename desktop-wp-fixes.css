@@ -47,7 +47,9 @@ body #canvas .credit,body #canvas .credit img{margin:0 !important;padding:0 !imp
 /* max-width בלבד. קביעת height כאן גוברת על .cover שמגדיר
    height:100%, וכל התמונות חוזרות לגודלן הטבעי. */
 body #canvas img{max-width:none !important;}
-body #canvas img.cover{width:100% !important;height:100% !important;object-fit:cover;}
+/* .cover מוגדר בקנבס עצמו ובלי !important, כדי שתמונה עם מידות
+   משלה תשמור עליהן. חזרה על הכלל עם !important דרסה אותן וניפחה
+   כל תמונה כזו לגודל הקנבס. */
 
 /* ---------- אין צביעה בלחיצה ---------- */
 body #canvas button,body #canvas a,body #canvas input,body #canvas .qopt{

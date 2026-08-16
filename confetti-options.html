@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+<title>אפשרויות קונפטי לעמוד התודה — HITBOX</title>
+<style>
+@font-face{font-family:'Fb';src:url('פונט/FbReissfeder-Regular.otf') format('opentype');font-weight:400;font-display:swap;}
+@font-face{font-family:'Fb';src:url('פונט/FbReissfeder-Bold.otf') format('opentype');font-weight:700;font-display:swap;}
+
+:root{--ink:#101c1d;--teal:#3e6e72;--sand:#fff3b7;--r:20px;--pad:clamp(20px,8.5vw,36px);}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{overflow-x:clip;}
+body{background:var(--ink);color:#fff;font-family:'Fb',sans-serif;direction:rtl;
+  line-height:1.5;overflow-x:clip;padding-bottom:70px;}
+
+header{padding:40px var(--pad) 0;}
+header h1{font-size:clamp(26px,7.5vw,34px);font-weight:700;line-height:1.02;}
+header h1 span{color:var(--sand);}
+header p{margin-top:12px;font-size:15px;color:#a8c0c2;}
+
+section{padding:34px var(--pad) 0;}
+.hd{display:flex;align-items:baseline;gap:10px;}
+.hd b{font-size:clamp(18px,5.5vw,24px);font-weight:700;}
+.hd i{font-style:normal;font-size:13px;color:var(--sand);border:1px solid var(--sand);
+  border-radius:999px;padding:2px 9px;flex:none;}
+.note{margin:6px 0 14px;font-size:14.5px;color:#a8c0c2;}
+
+/* ---------- הבמה: חיקוי של ראש עמוד התודה ---------- */
+.stage{position:relative;border-radius:var(--r);overflow:hidden;background:var(--ink);
+  border:1px solid #24393a;aspect-ratio:9/13;max-height:70vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:24px;}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+.stage .logo{width:64px;height:auto;margin-bottom:18px;position:relative;}
+.stage h2{position:relative;font-size:clamp(22px,6.5vw,30px);font-weight:700;line-height:1;}
+.stage h2 span{color:var(--sand);}
+.stage p{position:relative;margin-top:12px;font-size:14px;color:#a8c0c2;max-width:26ch;}
+
+.replay{margin-top:12px;width:100%;min-height:48px;border:2px solid var(--sand);
+  border-radius:8px;background:transparent;color:var(--sand);font-family:inherit;
+  font-size:15px;font-weight:700;cursor:pointer;}
+.replay:active{background:var(--sand);color:var(--ink);}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>קונפטי לעמוד התודה — <span>חמש אפשרויות</span></h1>
+  <p>כל אחת רצה פעם אחת כשהיא נכנסת למסך, בדיוק כמו שתרוץ בכניסה לעמוד. אפשר להריץ שוב עם הכפתור מתחת. הצבעים הם של האתר בלבד.</p>
+</header>
+
+<div id="app"></div>
+
+<script>
+const COLORS = ['#fff3b7', '#ffffff', '#3e6e72', '#8fd0d4', '#f5e08a'];
+
+const FX = [
+  { id: 'rain', n: 'גשם קלאסי',
+    d: 'פתיתים יורדים מלמעלה לאורך כל הרוחב ומסתחררים בדרך. עדין, ולא חוסם את הכותרת לרגע.' },
+  { id: 'burst', n: 'פיצוץ מהמרכז',
+    d: 'מטח אחד יוצא מאמצע המסך לכל הכיוונים ונופל. הכי חגיגי, וגם הכי קצר.' },
+  { id: 'cannons', n: 'שתי קטפולטות',
+    d: 'שני מטחים מהפינות התחתונות פנימה, כמו פוצץ מסיבה. התנועה מלמטה למעלה עושה את ההבדל.' },
+  { id: 'drift', n: 'נשירה עדינה',
+    d: 'מעט פתיתים, גדולים ואיטיים, מרחפים למטה כמו עלים. שקטה ויוקרתית.' },
+  { id: 'double', n: 'מטח ואחריו גשם',
+    d: 'פיצוץ קצר מהמרכז ואז נשירה רכה שממשיכה עוד כמה שניות. המרשימה מכולן.' }
+];
+
+document.getElementById('app').innerHTML = FX.map((f, k) => `
+  <section>
+    <div class="hd"><i>${k + 1}</i><b>${f.n}</b></div>
+    <p class="note">${f.d}</p>
+    <div class="stage" data-fx="${f.id}">
+      <canvas></canvas>
+      <img class="logo" src="assets/logo-hitbox.png" alt="">
+      <h2>תודה שהשארת פרטים.<br><span>נחזור אליך בהקדם.</span></h2>
+      <p>הצוות של היטבוקס יצור איתך קשר לתיאום אימון הניסיון.</p>
+    </div>
+    <button class="replay" type="button" data-for="${f.id}">הרץ שוב</button>
+  </section>`).join('');
+
+/* ============================================================
+   מנוע אחד. כל אפשרות רק מגדירה איך נולד פתית — מאיפה, לאיזה
+   כיוון ובאיזו מהירות — ומשם הפיזיקה זהה: כבידה, גרר וסחרור.
+   ============================================================ */
+const rnd = (a, b) => a + Math.random() * (b - a);
+const pick = a => a[(Math.random() * a.length) | 0];
+
+function piece(x, y, vx, vy, size) {
+  return {
+    x, y, vx, vy,
+    w: size, h: size * rnd(0.35, 0.6),
+    rot: rnd(0, Math.PI * 2), spin: rnd(-0.24, 0.24),
+    color: pick(COLORS), life: 0,
+    /* הסחרור סביב הציר האנכי — מה שגורם לפתית "להיעלם" לרגע כשהוא בצד */
+    flip: rnd(0, Math.PI * 2), flipSpeed: rnd(0.08, 0.2)
+  };
+}
+
+/* כל מפיץ מחזיר מערך של פתיתים חדשים. t הוא הזמן מתחילת ההרצה בשניות. */
+const EMIT = {
+  rain(W, H, t, first) {
+    if (t > 2.2) return [];
+    const n = first ? 60 : 3;
+    return Array.from({ length: n }, () =>
+      piece(rnd(0, W), rnd(-H * 0.35, -10), rnd(-24, 24), rnd(90, 190), rnd(7, 13)));
+  },
+
+  burst(W, H, t, first) {
+    if (!first) return [];
+    return Array.from({ length: 130 }, () => {
+      const a = rnd(0, Math.PI * 2), v = rnd(180, 520);
+      return piece(W / 2, H * 0.42, Math.cos(a) * v, Math.sin(a) * v, rnd(7, 13));
+    });
+  },
+
+  cannons(W, H, t, first) {
+    if (!first) return [];
+    const out = [];
+    for (const side of [0, 1]) {
+      for (let i = 0; i < 70; i++) {
+        /* יורה כלפי מעלה ופנימה: זווית צרה סביב 60 מעלות מהאופק */
+        const a = rnd(-1.25, -0.55) * (side ? 1 : 1);
+        const dir = side ? -1 : 1;
+        const v = rnd(420, 760);
+        out.push(piece(side ? W + 10 : -10, H + 10,
+          Math.cos(a) * v * dir, Math.sin(a) * v, rnd(7, 12)));
+      }
+    }
+    return out;
+  },
+
+  drift(W, H, t, first) {
+    if (t > 5) return [];
+    const n = first ? 14 : 1;
+    return Array.from({ length: n }, () =>
+      piece(rnd(0, W), rnd(-60, -10), rnd(-14, 14), rnd(40, 75), rnd(12, 19)));
+  },
+
+  double(W, H, t, first) {
+    if (first) {
+      return Array.from({ length: 90 }, () => {
+        const a = rnd(0, Math.PI * 2), v = rnd(160, 460);
+        return piece(W / 2, H * 0.4, Math.cos(a) * v, Math.sin(a) * v, rnd(7, 12));
+      });
+    }
+    if (t < 0.7 || t > 4) return [];
+    return Array.from({ length: 2 }, () =>
+      piece(rnd(0, W), -14, rnd(-18, 18), rnd(60, 120), rnd(8, 14)));
+  }
+};
+
+const GRAVITY = 620, DRAG = 0.985;
+
+function run(stage, id) {
+  const canvas = stage.querySelector('canvas');
+  const ctx = canvas.getContext('2d');
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  const W = stage.clientWidth, H = stage.clientHeight;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  let bits = EMIT[id](W, H, 0, true);
+  let t = 0, last = performance.now();
+  if (stage._stop) stage._stop();
+  let alive = true;
+  stage._stop = () => { alive = false; };
+
+  function frame(now) {
+    if (!alive) return;
+    const dt = Math.min((now - last) / 1000, 0.05);
+    last = now; t += dt;
+
+    bits = bits.concat(EMIT[id](W, H, t, false));
+
+    ctx.clearRect(0, 0, W, H);
+    for (let i = bits.length - 1; i >= 0; i--) {
+      const b = bits[i];
+      b.vy += GRAVITY * dt;
+      b.vx *= DRAG; b.vy *= DRAG;
+      b.x += b.vx * dt; b.y += b.vy * dt;
+      b.rot += b.spin; b.flip += b.flipSpeed;
+      b.life += dt;
+
+      if (b.y > H + 40 || b.x < -60 || b.x > W + 60) { bits.splice(i, 1); continue; }
+
+      ctx.save();
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.rot);
+      /* רוחב הפתית מתכווץ לפי הסחרור, וזה מה שנותן תחושת נייר מסתובב */
+      ctx.scale(Math.cos(b.flip), 1);
+      ctx.globalAlpha = Math.max(0, 1 - Math.max(0, b.life - 2.4) / 1.2);
+      ctx.fillStyle = b.color;
+      ctx.fillRect(-b.w / 2, -b.h / 2, b.w, b.h);
+      ctx.restore();
+    }
+
+    if (bits.length) requestAnimationFrame(frame);
+    else ctx.clearRect(0, 0, W, H);
+  }
+  requestAnimationFrame(frame);
+}
+
+/* רצה פעם אחת כשהבמה נכנסת למסך — כמו שיקרה בכניסה לעמוד */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  run(e.target, e.target.dataset.fx);
+  io.unobserve(e.target);
+}), { threshold: .45 });
+document.querySelectorAll('.stage').forEach(s => io.observe(s));
+
+document.getElementById('app').addEventListener('click', e => {
+  const b = e.target.closest('.replay');
+  if (!b) return;
+  run(document.querySelector(`.stage[data-fx="${b.dataset.for}"]`), b.dataset.for);
+});
+</script>
+</body>
+</html>

@@ -83,3 +83,20 @@ body #grev-toast .gr-x{top:4px !important;left:4px !important;
   display:flex !important;align-items:center !important;justify-content:center !important;
   font-size:24px !important;border-radius:50% !important;color:#5d6f70 !important;}
 body #grev-toast .gr-x:active{background:rgba(16,28,29,.08) !important;}
+
+/* ---------- איפוס מרווחי התבנית בתוך הקונטיינרים ----------
+   התבנית מוסיפה margin-bottom לכותרות ולפסקאות ועוד margin-top לכותרות,
+   וזה מה שניפח את שורות הסניפים מ-104 ל-133 פיקסלים ופירק את הריווח
+   הפנימי. מאפסים, ואז מחזירים במפורש רק את המרווחים שאנחנו הגדרנו. */
+body .tile h3,body .card p,body .branch h3,body .branch p,
+body .tlc h3,body .tlc p,body .tlc b,body .acc .a p,body .acc .q,
+body .quote p,body .quote cite,body .lead,body .vhead p,
+body .fcard h2,body .fcontact a,body .fine div{
+  margin-top:0 !important;margin-bottom:0 !important;}
+
+body .tile h3{margin-top:14px !important;}
+body .branch p{margin-top:8px !important;}
+body .tlc h3{margin-top:4px !important;}
+body .tlc p{margin-top:8px !important;}
+body .lead{margin-top:14px !important;}
+body .quote cite{margin-top:14px !important;}

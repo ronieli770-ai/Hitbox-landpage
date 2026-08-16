@@ -99,7 +99,17 @@ const FROM_TEXT = {
 const CONFETTI_COLORS = ['#fff3b7', '#ffffff', '#3e6e72', '#8fd0d4', '#f5e08a'];
 const GRAVITY = 620, DRAG = 0.985, FADE_AFTER = 2.4;
 
-(function () {
+/* המדידה חייבת לקרות אחרי שהגופן והלוגו נטענו: עד אז הכותרת יושבת
+   גבוה יותר, ומטח שנורה לפי המיקום ההוא יוצא מעליה. */
+function whenSettled(go) {
+  const logo = document.querySelector('.logo');
+  const waits = [document.fonts ? document.fonts.ready : Promise.resolve()];
+  if (logo && !logo.complete)
+    waits.push(new Promise(done => { logo.onload = logo.onerror = done; }));
+  Promise.all(waits).then(() => requestAnimationFrame(() => requestAnimationFrame(go)));
+}
+
+whenSettled(function () {
   const canvas = document.getElementById('confetti');
   if (!canvas || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
@@ -173,4 +183,4 @@ const GRAVITY = 620, DRAG = 0.985, FADE_AFTER = 2.4;
     else canvas.remove();     /* נגמר — מסירים את הקנבס לגמרי */
   }
   requestAnimationFrame(frame);
-})();
+});

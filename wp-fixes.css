@@ -31,6 +31,8 @@ body #hero h1{line-height:.93 !important;}
 body .tile h3,body .card p,body .branch h3,body .acc .q,body .tlc h3{line-height:1.03 !important;}
 body .vhead p{margin:0 !important;line-height:.99 !important;}
 body .quote p{line-height:1.15 !important;}
+/* ריווח שורות מבוקש בכרטיסי "מתחילים מאפס" */
+body .zero .card p{line-height:1.2rem !important;}
 
 /* ---------- טקסט תמיד יורד שורה, לעולם לא נחתך ----------
    התבנית מחילה nowrap על כפתורים, וזו הסיבה שתשובות השאלון

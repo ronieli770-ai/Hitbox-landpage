@@ -129,7 +129,7 @@ p{font-size:var(--body);}
 .zero .card{border:0;background:var(--ink);padding:20px 29px;min-height:136px;
   display:flex;align-items:center;justify-content:center;
   box-shadow:0 8px 4px var(--sand);will-change:transform,opacity;}
-.zero .card p{margin-top:0;color:#fff;text-align:center;}
+.zero .card p{margin-top:0;color:#fff;text-align:center;line-height:1.2rem;}
 
 /* ---------- ציר הזמן ----------
    קו אחד רציף שנצבע לינארית עם הגלילה. עיגול נדלק ברגע שהצבע מגיע אליו,

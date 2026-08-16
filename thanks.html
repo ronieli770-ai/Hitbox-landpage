@@ -54,11 +54,14 @@ h2{margin-top:64px;font-size:clamp(26px,3.2vw,40px);font-weight:700;line-height:
 #modal.open{display:flex;}
 #modal .frame{height:50vh;aspect-ratio:9/16;max-width:92vw;border-radius:20px;overflow:hidden;background:#000;}
 #modal iframe{width:100%;height:100%;border:0;display:block;}
+/* הקונפטי מעל התוכן אך מתחת לפופ-אפ הווידאו, ואינו חוסם לחיצות */
+#confetti{position:fixed;inset:0;z-index:40;pointer-events:none;}
 #close{position:absolute;top:24px;left:24px;width:48px;height:48px;border-radius:50%;border:0;
   background:#fff3b7;color:#101c1d;font-size:28px;line-height:1;cursor:pointer;}
 </style>
 </head>
 <body>
+<canvas id="confetti"></canvas>
 <main>
   <img class="logo" src="assets/logo-hitbox.png" alt="HITBOX">
   <h1>תודה שהשארת פרטים.<br><span>נחזור אליך בהקדם.</span></h1>
@@ -88,6 +91,6 @@ h2{margin-top:64px;font-size:clamp(26px,3.2vw,40px);font-weight:700;line-height:
   <div class="frame"></div>
 </div>
 
-<script src="thanks.js?v=202608161717"></script>
+<script src="thanks.js?v=202608161722"></script>
 </body>
 </html>

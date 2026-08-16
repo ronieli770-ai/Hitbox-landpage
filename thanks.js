@@ -90,3 +90,75 @@ const FROM_TEXT = {
   modal.addEventListener('click', e => { if (e.target === modal) close(); });
   addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) close(); });
 })();
+
+/* ============================================================
+   קונפטי בכניסה — מטח אחד מהמרכז
+   מצויר ב-canvas ולא באלמנטים: מאתיים פתיתים ב-DOM היו מכריחים את
+   הדפדפן לחשב פריסה מחדש בכל פריים, וזה נתקע בטלפון.
+   ============================================================ */
+const CONFETTI_COLORS = ['#fff3b7', '#ffffff', '#3e6e72', '#8fd0d4', '#f5e08a'];
+const GRAVITY = 620, DRAG = 0.985, FADE_AFTER = 2.4;
+
+(function () {
+  const canvas = document.getElementById('confetti');
+  if (!canvas || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const ctx = canvas.getContext('2d');
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  const W = innerWidth, H = innerHeight;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const pick = a => a[(Math.random() * a.length) | 0];
+
+  /* המטח מתפרס לפי המסך: מסך גדול מקבל יותר פתיתים ומהירות גבוהה יותר,
+     אחרת הפיצוץ נבלע באמצע ולא מגיע לקצוות */
+  const spread = Math.max(1, Math.min(W, H) / 640);
+  const count = Math.min(220, Math.round(90 + W * 0.12));
+
+  const bits = Array.from({ length: count }, () => {
+    const a = rnd(0, Math.PI * 2), v = rnd(180, 520) * spread, size = rnd(7, 13);
+    return {
+      x: W / 2, y: H * 0.42,
+      vx: Math.cos(a) * v, vy: Math.sin(a) * v,
+      w: size, h: size * rnd(0.35, 0.6),
+      rot: rnd(0, Math.PI * 2), spin: rnd(-0.24, 0.24),
+      flip: rnd(0, Math.PI * 2), flipSpeed: rnd(0.08, 0.2),
+      color: pick(CONFETTI_COLORS), life: 0
+    };
+  });
+
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min((now - last) / 1000, 0.05);
+    last = now;
+
+    ctx.clearRect(0, 0, W, H);
+    for (let i = bits.length - 1; i >= 0; i--) {
+      const b = bits[i];
+      b.vy += GRAVITY * dt;
+      b.vx *= DRAG; b.vy *= DRAG;
+      b.x += b.vx * dt; b.y += b.vy * dt;
+      b.rot += b.spin; b.flip += b.flipSpeed;
+      b.life += dt;
+
+      if (b.y > H + 40 || b.x < -60 || b.x > W + 60) { bits.splice(i, 1); continue; }
+
+      ctx.save();
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.rot);
+      /* הכיווץ האופקי לפי הסחרור הוא מה שנותן תחושת נייר מסתובב */
+      ctx.scale(Math.cos(b.flip), 1);
+      ctx.globalAlpha = Math.max(0, 1 - Math.max(0, b.life - FADE_AFTER) / 1.2);
+      ctx.fillStyle = b.color;
+      ctx.fillRect(-b.w / 2, -b.h / 2, b.w, b.h);
+      ctx.restore();
+    }
+
+    if (bits.length) requestAnimationFrame(frame);
+    else canvas.remove();     /* נגמר — מסירים את הקנבס לגמרי */
+  }
+  requestAnimationFrame(frame);
+})();

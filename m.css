@@ -240,7 +240,7 @@ p{font-size:var(--body);}
   pointer-events:none;z-index:0;}
 #quiz>h2{flex:none;}
 #quiz>.lead{flex:none;margin-top:20px;}
-#quiz .opts{flex:none;display:flex;flex-direction:column;gap:15px;margin-top:36px;}
+#quiz .opts{flex:none;display:flex;flex-direction:column;gap:10px;margin-top:36px;}
 .qopt{width:100%;min-height:71px;padding:14px 16px;border:2px solid var(--sand);
   border-radius:var(--r);background:var(--ink);color:#fff;
   font-family:inherit;font-size:17px;font-weight:700;line-height:1.25;cursor:pointer;

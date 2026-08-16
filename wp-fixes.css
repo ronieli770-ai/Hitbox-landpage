@@ -44,7 +44,9 @@ body .qopt,body .btn,body .fsend,body .acc .q,body .acc .a p{
 body span[dir=ltr]{white-space:nowrap !important;}
 
 /* ---------- סקשן 2: מסגרות בגובה אחיד וטקסט צמוד למעלה ---------- */
-body .grid2{align-items:stretch !important;}
+/* grid-auto-rows משווה את כל השורות; בלעדיו כל שורה מקבלת
+   גובה משלה והמסגרות יוצאות לא אחידות */
+body .grid2{align-items:stretch !important;grid-auto-rows:1fr !important;}
 body .grid2 .tile{height:100% !important;justify-content:flex-start !important;}
 body .grid2 .tile h3{margin-top:14px !important;margin-bottom:0 !important;}
 

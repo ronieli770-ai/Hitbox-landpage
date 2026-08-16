@@ -312,7 +312,9 @@ vm.addEventListener('click', e => { if (e.target === vm) closeVm(); });
     e.preventDefault();
     if (!form.reportValidity()) return;
     console.log('פרטי הליד:', Object.fromEntries(new FormData(form).entries()));
-    location.href = 'thanks.html?goal=' + encodeURIComponent(answers.goal || '');
+    /* באתר היעד נקבע מבחוץ; בגרסת הקבצים נשאר הקובץ המקומי */
+    location.href = (window.HITBOX_THANKS || 'thanks.html') +
+      '?goal=' + encodeURIComponent(answers.goal || '');
   });
 
   paint();
@@ -380,7 +382,8 @@ const TL_MARK = 0.75;
     if (!form.reportValidity()) return;
     const data = Object.fromEntries(new FormData(form).entries());
     console.log('פרטי הליד:', data);
-    location.href = 'thanks.html?goal=' + encodeURIComponent(data.goal || '');
+    location.href = (window.HITBOX_THANKS || 'thanks.html') +
+      '?goal=' + encodeURIComponent(data.goal || '');
   });
 })();
 

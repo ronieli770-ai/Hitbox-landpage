@@ -100,3 +100,7 @@ body .tlc h3{margin-top:4px !important;}
 body .tlc p{margin-top:8px !important;}
 body .lead{margin-top:14px !important;}
 body .quote cite{margin-top:14px !important;}
+
+/* המיזוג חייב לשרוד גם מול ערכת אלמנטור */
+body #hero .block{isolation:isolate !important;}
+body #hero h1{mix-blend-mode:difference !important;}

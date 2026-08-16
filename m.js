@@ -299,7 +299,6 @@ vm.addEventListener('click', e => { if (e.target === vm) closeVm(); });
       i++;
       if (i >= QUESTIONS.length) finish();
       else paint();
-      document.getElementById('quiz').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 280);
   });
 

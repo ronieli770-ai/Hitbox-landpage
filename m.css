@@ -226,7 +226,7 @@ p{font-size:var(--body);}
 #quiz{position:relative;overflow:hidden;background:var(--teal);margin-top:72px;
   min-height:100vh;min-height:100svh;
   display:flex;flex-direction:column;justify-content:center;
-  padding:73vw var(--pad) 9svh;}
+  padding:58vw var(--pad) 9svh;}
 #quiz::before{content:'';position:absolute;inset:0;pointer-events:none;
   background:url('assets/texture-m.jpg') center/cover;
   mix-blend-mode:multiply;opacity:.4;}
@@ -235,12 +235,12 @@ p{font-size:var(--body);}
    ל-relative ותופס שורה שלמה בפריסה במקום לרחף.
    המידות יחסיות לרוחב הסקשן, כך שהפרופורציה נשמרת בכל מסך:
    רוחב 194.9/402, ומרכז התיבה המסובבת ב-(116, 79). */
-#quiz .qbag{position:absolute;left:28.9%;top:19.7vw;width:48.5%;height:auto;
+#quiz .qbag{position:absolute;left:26%;top:15.4vw;width:38%;height:auto;
   transform:translate(-50%,-50%) rotate(-15deg);
   pointer-events:none;z-index:0;}
 #quiz>h2{flex:none;}
 #quiz>.lead{flex:none;margin-top:20px;}
-#quiz .opts{flex:none;display:flex;flex-direction:column;gap:22px;margin-top:36px;}
+#quiz .opts{flex:none;display:flex;flex-direction:column;gap:15px;margin-top:36px;}
 .qopt{width:100%;min-height:71px;padding:14px 16px;border:2px solid var(--sand);
   border-radius:var(--r);background:var(--ink);color:#fff;
   font-family:inherit;font-size:17px;font-weight:700;line-height:1.25;cursor:pointer;

@@ -7,12 +7,14 @@ const PLACE_ID = 'ChIJSf1mgb5LHRURVjL9o4BIQOw';   // היטבוקס רמת גן 
 const CID = '10325028178909130511';              // מזהה העסק, לקישור לעמוד הביקורות
 const API_KEY = '';        // ריק = משתמש ברשימה שלמטה. עם מפתח = מושך חי מגוגל.
 const FIRST_DELAY = 4000;  // כמה להמתין לפני ההופעה הראשונה
+/* לחיצה על החלונית מובילה לעמוד הביקורות של העסק במפות */
+const MAPS_URL = 'https://www.google.com/maps/place/%D7%94%D7%99%D7%98%D7%91%D7%95%D7%A7%D7%A1+HITBOX+-+%D7%90%D7%99%D7%92%D7%A8%D7%95%D7%A3+%D7%A7%D7%9C%D7%90%D7%A1%D7%99+%7C+%D7%AA%D7%90%D7%99%D7%9C%D7%A0%D7%93%D7%99+%7C+%D7%A7%D7%99%D7%A7%D7%91%D7%95%D7%A7%D7%A1+%7C+%D7%A1%D7%98%D7%95%D7%93%D7%99%D7%95+%D7%9C%D7%A7%D7%91%D7%95%D7%A6%D7%95%D7%AA+%D7%A7%D7%98%D7%A0%D7%95%D7%AA+%D7%95%D7%90%D7%99%D7%9E%D7%95%D7%A0%D7%99%D7%9D+%D7%90%D7%99%D7%A9%D7%99%D7%99%D7%9D+%D7%91%D7%A8%D7%9E%D7%AA+%D7%92%D7%9F%E2%80%AD/@32.0902957,34.8196606,17z/data=!4m8!3m7!1s0x151d4bbe8166fd49:0xec404880a3fd3256!8m2!3d32.0902957!4d34.8196606!9m1!1b1!16s%2Fg%2F11rgt76g_1';  // כמה להמתין לפני ההופעה הראשונה
 
 /* ביקורות אמיתיות מהעמוד העסקי, כפי שהועתקו משם.
    הטקסט נחתך אוטומטית לשלוש שורות עם שלוש נקודות, כך שגודל החלונית קבוע
    ולא משנה כמה ארוכה הביקורת. */
 const REVIEWS = {
-  place: { url: 'https://maps.google.com/?cid=' + CID },
+  place: { url: MAPS_URL },
   reviews: [
     { author: 'Song Min hae', initial: 'S', rating: 5, when: 'לפני חודשיים',
       text: 'אני זר ולא חשבתי שיהיה קל ללמוד איגרוף בישראל. הם לימדו אותי ונתנו לי הרבה ידע על איגרוף. הרגשתי טוב, נהניתי, נפצעתי לפעמים, אבל זה היה ממש כיף.😊' },
@@ -172,7 +174,7 @@ const SHOW_TIME = 7000;    // כמה זמן כל ביקורת נשארת
     fetch(`https://places.googleapis.com/v1/places/${PLACE_ID}?languageCode=he&fields=googleMapsUri,reviews&key=${API_KEY}`)
       .then(r => r.json())
       .then(d => start({
-        place: { url: d.googleMapsUri },
+        place: { url: MAPS_URL },
         reviews: (d.reviews || []).map(r => ({
           author: r.authorAttribution?.displayName || '',
           photo: r.authorAttribution?.photoUri || '',

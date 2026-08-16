@@ -154,7 +154,7 @@ const clamp01 = t => t < 0 ? 0 : t > 1 ? 1 : t;
     /* ה-iframe נוצר רק בקליק — כלום לא נטען מ-Bunny לפני כן */
     const f = document.createElement('iframe');
     f.src = `https://iframe.mediadelivery.net/embed/${BUNNY_LIB}/${guid}` +
-      '?autoplay=true&loop=false&muted=false&preload=false&responsive=true';
+      '?autoplay=true&loop=false&muted=false&preload=true&responsive=true';
     f.loading = 'lazy';
     f.allow = 'accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;';
     f.allowFullscreen = true;

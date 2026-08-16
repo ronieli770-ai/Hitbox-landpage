@@ -71,7 +71,7 @@ const FROM_TEXT = {
     lastFocus = card;
     const f = document.createElement('iframe');
     f.src = `https://iframe.mediadelivery.net/embed/${BUNNY_LIB}/${card.dataset.guid}` +
-      '?autoplay=true&loop=false&muted=false&preload=false&responsive=true';
+      '?autoplay=true&loop=false&muted=false&preload=true&responsive=true';
     f.allow = 'accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;';
     f.allowFullscreen = true;
     frame.replaceChildren(f);

@@ -235,7 +235,7 @@ vgrid.addEventListener('click', e => {
   if (!cell) return;
   const f = document.createElement('iframe');
   f.src = `https://iframe.mediadelivery.net/embed/${BUNNY_LIB}/${cell.dataset.guid}` +
-    '?autoplay=true&muted=false&preload=false&responsive=true';
+    '?autoplay=true&muted=false&preload=true&responsive=true';
   f.allow = 'autoplay;encrypted-media;picture-in-picture;';
   f.allowFullscreen = true;
   frame.replaceChildren(f);

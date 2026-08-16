@@ -1,0 +1,81 @@
+/* ============================================================
+   תיקונים לגרסת הוורדפרס בלבד
+   הבוררים של ערכת העיצוב של אלמנטור הם מחלקות ושלנו תגים, ולכן הם
+   גוברים ללא קשר לסדר הטעינה. כל מה שכאן מחזיר ערכים שכבר הוגדרו
+   ב-m.css. הקובץ נטען רק בעמוד שבאתר, לא בגרסת הגיטהאב.
+   ============================================================ */
+
+/* ---------- שורש: רקע, גופן וכיוון ---------- */
+html body{background:var(--ink) !important;color:#fff !important;
+  font-family:'Fb',sans-serif !important;direction:rtl !important;}
+body h1,body h2,body h3,body h4,body p,body a,body span,body button,
+body input,body select,body li,body b,body strong,body cite,body summary{
+  font-family:'Fb',sans-serif !important;}
+
+/* ---------- הקונטיינרים של אלמנטור לא מרחיבים את העמוד ----------
+   בלי ההגבלה הזו הם גדלים לרוחב האלמנט הרחב ביותר — קרוסלת
+   הלפני־אחרי — והתוכן נדחף אל מחוץ למסך. */
+body .e-con,body .e-con-inner,body .elementor-widget,
+body .elementor-widget-container,body .elementor-element{
+  max-width:100% !important;width:100% !important;
+  margin-left:0 !important;margin-right:0 !important;}
+body .elementor-widget-html,body .elementor-widget-container{
+  margin:0 !important;padding:0 !important;}
+body .e-con,body .e-con-inner,body .elementor,body .elementor-element{overflow-x:clip;}
+
+/* ---------- משקל וגובה שורה ---------- */
+body h1,body h2,body h3,body h4,body .tile h3,body .card p,
+body .branch h3,body .acc .q,body .tlc h3,body .tlc b{font-weight:700 !important;}
+body h1,body h2{line-height:.99 !important;}
+body #hero h1{line-height:.93 !important;}
+body .tile h3,body .card p,body .branch h3,body .acc .q,body .tlc h3{line-height:1.03 !important;}
+body .vhead p{margin:0 !important;line-height:.99 !important;}
+body .quote p{line-height:1.15 !important;}
+
+/* ---------- טקסט תמיד יורד שורה, לעולם לא נחתך ----------
+   התבנית מחילה nowrap על כפתורים, וזו הסיבה שתשובות השאלון
+   בלטו אל מחוץ לקונטיינר במקום לרדת שורה. */
+body p,body h1,body h2,body h3,body h4,body span,body a,body button,
+body li,body b,body strong,body cite,body summary,body label{
+  white-space:normal !important;overflow-wrap:break-word;word-break:normal;}
+body .qopt,body .btn,body .fsend,body .acc .q,body .acc .a p{
+  white-space:normal !important;overflow-wrap:break-word;}
+/* טווחי מספרים נשארים בשורה אחת כדי שלא יתהפכו */
+body span[dir=ltr]{white-space:nowrap !important;}
+
+/* ---------- סקשן 2: מסגרות בגובה אחיד וטקסט צמוד למעלה ---------- */
+body .grid2{align-items:stretch !important;}
+body .grid2 .tile{height:100% !important;justify-content:flex-start !important;}
+body .grid2 .tile h3{margin-top:14px !important;margin-bottom:0 !important;}
+
+/* ---------- סקשן המיקומים ---------- */
+body .locs .cards{gap:8px !important;}
+body .locs .branch{display:flex !important;align-items:center !important;
+  gap:14px !important;padding:14px 16px !important;min-height:104px !important;}
+body .locs .branch img{width:18px !important;flex:none !important;}
+body .locs .branch p{margin-top:8px !important;}
+
+/* ---------- בלי צביעה בלחיצה ----------
+   כל כפתור מחזיר את הצבע שלו בכל המצבים, כדי שהתבנית לא תצבע
+   אותו בכתום כשנוגעים בו. */
+body button,body a,body input,body select,body .btn{
+  -webkit-tap-highlight-color:transparent !important;}
+body button:focus,body button:active,body a:focus,body a:active{
+  outline:none !important;box-shadow:none !important;}
+body .btn:hover,body .btn:focus,body .btn:active{
+  background:var(--sand) !important;color:var(--ink) !important;}
+body .btn.ghost:hover,body .btn.ghost:focus,body .btn.ghost:active{
+  background:transparent !important;color:var(--sand) !important;}
+body .fsend:hover,body .fsend:focus,body .fsend:active{
+  background:var(--teal) !important;color:#fff !important;}
+body .qopt:hover,body .qopt:focus,body .qopt:active{
+  background:var(--ink) !important;color:#fff !important;}
+body .qopt.on,body .qopt.on:active{background:var(--sand) !important;color:var(--ink) !important;}
+body #wa:hover,body #wa:focus,body #wa:active{background:var(--sand) !important;}
+
+/* ---------- כפתור הסגירה של הביקורות: יעד מגע אמיתי ---------- */
+body #grev-toast .gr-x{top:4px !important;left:4px !important;
+  width:40px !important;height:40px !important;padding:0 !important;
+  display:flex !important;align-items:center !important;justify-content:center !important;
+  font-size:24px !important;border-radius:50% !important;color:#5d6f70 !important;}
+body #grev-toast .gr-x:active{background:rgba(16,28,29,.08) !important;}

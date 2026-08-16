@@ -226,13 +226,12 @@ p{font-size:var(--body);}
 /* ---------- השאלון ----------
    בדסקטופ הוא יושב על פס טורקיז עם הטקסטורה מעליו, ותשובותיו קופסאות שחורות
    עם זוהר צהוב. כאן אותו טיפול, כמו בסקשן "מתחילים מאפס". */
-/* גובה מסך מלא, לפי מסגרת המובייל 402x880.
-   השק תלוי מלמעלה ונחתך בקצה העליון, והתוכן יושב בשליש התחתון:
-   ריפוד עליון 293/402 מרוחב הסקשן, ותחתון 79/880 מגובהו. */
+/* גובה מסך מלא עם התוכן ממורכז. השק הוא רקע בלבד — הוא מרחף
+   מאחורי התוכן ולא שומר לעצמו מקום בפריסה. */
 #quiz{position:relative;overflow:hidden;background:var(--teal);margin-top:72px;
   min-height:100vh;min-height:100svh;
   display:flex;flex-direction:column;justify-content:center;
-  padding:54vw var(--pad) 9svh;}
+  padding:52px var(--pad);}
 #quiz::before{content:'';position:absolute;inset:0;pointer-events:none;
   background:url('assets/texture-m.jpg') center/cover;
   mix-blend-mode:multiply;opacity:.4;}
@@ -241,7 +240,7 @@ p{font-size:var(--body);}
    ל-relative ותופס שורה שלמה בפריסה במקום לרחף.
    המידות יחסיות לרוחב הסקשן, כך שהפרופורציה נשמרת בכל מסך:
    רוחב 194.9/402, ומרכז התיבה המסובבת ב-(116, 79). */
-#quiz .qbag{position:absolute;left:5%;top:16vw;width:26%;height:auto;
+#quiz .qbag{position:absolute;left:5%;top:22vw;width:34%;height:auto;
   transform:translate(-50%,-50%) rotate(-15deg);
   pointer-events:none;z-index:0;}
 #quiz>h2{flex:none;}

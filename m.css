@@ -92,7 +92,13 @@ p{font-size:var(--body);}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px 12px;margin-top:26px;}
 .tile{border:1px solid var(--teal);border-radius:var(--r);background:rgba(255,255,255,.1);
   padding:16px 8px;min-height:228px;
-  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;}
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  will-change:transform,opacity;}
+/* מצב הפתיחה — הכניסה עצמה נגזרת מהגלילה ב-m.js */
+.grid2.slid .tile{opacity:0;}
+@media (prefers-reduced-motion:reduce){
+  .grid2.slid .tile{opacity:1 !important;transform:none !important;}
+}
 .tile img{width:clamp(52px,16.5vw,70px);height:auto;flex:none;}
 .tile h3{margin-top:auto;margin-bottom:auto;font-size:var(--h3);font-weight:700;
   line-height:1.03;text-align:center;width:90%;}

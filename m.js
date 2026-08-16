@@ -439,3 +439,43 @@ const REVEAL_STEP = 110;   /* מילישניות בין שורה לשורה */
     io.observe(el);
   });
 })();
+
+/* ---------- כניסת הכרטיסיות בסקשן 2 ----------
+   הימנית נכנסת מימין והשמאלית משמאל. ההתקדמות נגזרת ממיקום הרשת במסך
+   ולא מרגע כניסה בודד, ולכן היא מתקדמת ונסוגה יחד עם האצבע. */
+const TILE_SHIFT = 46;     /* מרחק הכניסה בפיקסלים */
+const TILE_STAGGER = 0.13; /* ההסטה בציר הזמן בין כרטיסייה לכרטיסייה */
+const TILE_SPAN = 0.58;    /* כמה מציר הזמן לוקחת כניסה של כרטיסייה אחת */
+
+(function () {
+  const grid = document.querySelector('.grid2');
+  if (!grid || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const tiles = [...grid.querySelectorAll('.tile')];
+  grid.classList.add('slid');
+
+  const clamp = t => t < 0 ? 0 : t > 1 ? 1 : t;
+  const easeOut = t => 1 - Math.pow(1 - t, 3);
+  let queued = false;
+
+  function sync() {
+    queued = false;
+    const top = grid.getBoundingClientRect().top;
+    const raw = clamp((innerHeight * 0.92 - top) / (innerHeight * 0.75));
+    tiles.forEach((el, i) => {
+      const t = clamp((raw - i * TILE_STAGGER) / TILE_SPAN);
+      const e = easeOut(t);
+      const dir = i % 2 ? -1 : 1;   /* ב-RTL האלמנט הראשון הוא הימני */
+      el.style.opacity = t.toFixed(3);
+      el.style.transform = `translateX(${(dir * (1 - e) * TILE_SHIFT).toFixed(1)}px)`;
+    });
+  }
+
+  addEventListener('scroll', () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(sync);
+  }, { passive: true });
+  addEventListener('resize', sync);
+  addEventListener('load', sync);
+  sync();
+})();

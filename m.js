@@ -341,6 +341,12 @@ const TL_MARK = 0.75;
     line.style.height = (b.top - a.top) + 'px';
   }
 
+  /* צבע העיגול נע ברציפות מהכבוי לדלוק לפי כמה שהמילוי כיסה אותו,
+     ואיתו גם אטימות הטקסט — הכל יחידה אחת שנעה עם הגלילה */
+  const DIM = [0x44, 0x4b, 0x3f], SAND = [0xff, 0xf3, 0xb7], RAMP = 26;
+  const mix = k => 'rgb(' + DIM.map((c, j) =>
+    Math.round(c + (SAND[j] - c) * k)).join(',') + ')';
+
   function sync() {
     queued = false;
     const mark = innerHeight * TL_MARK;
@@ -348,7 +354,10 @@ const TL_MARK = 0.75;
     fill.style.height = Math.max(0, Math.min(r.height, mark - r.top)) + 'px';
     nodes.forEach((n, i) => {
       const b = n.getBoundingClientRect();
-      cards[i].classList.toggle('on', b.top + b.height / 2 <= mark);
+      const k = Math.max(0, Math.min(1,
+        (mark - (b.top + b.height / 2) + RAMP / 2) / RAMP));
+      n.style.background = mix(k);
+      cards[i].querySelector('.txt').style.opacity = (0.32 + 0.68 * k).toFixed(3);
     });
   }
 
@@ -399,7 +408,10 @@ const TL_MARK = 0.75;
 /* ---------- כניסת כותרות ----------
    כל כותרת נחתכת לשורות לפי ה-<br> שבה, וכל שורה עולה מאחורי מסכה
    משלה. התוכן מועבר פנימה כמות שהוא, כך שהצבעים והספאנים נשמרים. */
-const REVEAL_STEP = 110;   /* מילישניות בין שורה לשורה */
+const LINE_AT = 0.92;       /* היכן במסך הכותרת מתחילה לעלות */
+const LINE_OVER = 0.42;     /* על פני כמה מגובה המסך העלייה נמשכת */
+const LINE_STAGGER = 0.18;  /* ההסטה בציר הזמן בין שורה לשורה */
+const LINE_SPAN = 0.6;      /* על פני כמה מציר הזמן עולה שורה אחת */
 
 (function () {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -407,12 +419,6 @@ const REVEAL_STEP = 110;   /* מילישניות בין שורה לשורה */
   /* הירו מוחרג, כמו בדסקטופ — הוא נראה מיד עם פתיחת העמוד */
   const heads = [...document.querySelectorAll('section h2, footer h2')]
     .filter(el => !el.closest('#hero'));
-
-  const io = new IntersectionObserver(es => es.forEach(e => {
-    if (!e.isIntersecting) return;
-    e.target.classList.add('go');
-    io.unobserve(e.target);
-  }), { rootMargin: '0px 0px -12% 0px' });
 
   heads.forEach(el => {
     /* פיצול לשורות לפי <br>, כדי שהמדרגה בין השורות תישמר */
@@ -429,15 +435,41 @@ const REVEAL_STEP = 110;   /* מילישניות בין שורה לשורה */
         mask.className = 'rv-line';
         const inner = document.createElement('i');
         nodes.forEach(n => inner.appendChild(n));
-        inner.style.setProperty('--d', (i * REVEAL_STEP) + 'ms');
         mask.appendChild(inner);
         return mask;
       });
 
     el.replaceChildren(...built);
     el.classList.add('rv');
-    io.observe(el);
   });
+
+  /* אותה מדידה כמו בכרטיסים: ההתקדמות נגזרת ממיקום הכותרת במסך,
+     כך שהשורות עולות תוך כדי הגלילה ונסוגות אם גוללים אחורה */
+  const rows = heads.map(el => ({ el, lines: [...el.querySelectorAll('.rv-line>i')] }));
+  const clamp = t => t < 0 ? 0 : t > 1 ? 1 : t;
+  const easeOut = t => 1 - Math.pow(1 - t, 3);
+  let queued = false;
+
+  function sync() {
+    queued = false;
+    for (const { el, lines } of rows) {
+      const raw = clamp((innerHeight * LINE_AT - el.getBoundingClientRect().top)
+                        / (innerHeight * LINE_OVER));
+      lines.forEach((i, k) => {
+        const t = clamp((raw - k * LINE_STAGGER) / LINE_SPAN);
+        i.style.transform = `translateY(${((1 - easeOut(t)) * 115).toFixed(2)}%)`;
+      });
+    }
+  }
+
+  addEventListener('scroll', () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(sync);
+  }, { passive: true });
+  addEventListener('resize', sync);
+  addEventListener('load', sync);
+  sync();
 })();
 
 /* ---------- כניסת כרטיסים בגלילה ----------
@@ -450,13 +482,16 @@ const ENTER_AT = 0.92;    /* היכן במסך הכרטיס מתחיל להיכ�
 const ENTER_OVER = 0.42;  /* על פני כמה מגובה המסך הכניסה נמשכת */
 const CARD_SHIFT = 46;    /* מרחק הכניסה מהצד, בפיקסלים */
 const CARD_TILT = 4;      /* זווית ההטיה במעלות */
+const RISE_BY = 28;       /* כמה פיקסלים עולה פאנל המיקומים */
+const RISE_BLUR = 14;     /* עוצמת הטשטוש שממנו הוא מתחדד */
 
 (function () {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   const groups = [
-    { els: [...document.querySelectorAll('.grid2 .tile')], tilt: 0 },
-    { els: [...document.querySelectorAll('.zero .card')], tilt: CARD_TILT }
+    { els: [...document.querySelectorAll('.grid2 .tile')], mode: 'side', tilt: 0 },
+    { els: [...document.querySelectorAll('.zero .card')], mode: 'side', tilt: CARD_TILT },
+    { els: [...document.querySelectorAll('.locs')], mode: 'rise' }
   ].filter(g => g.els.length);
   if (!groups.length) return;
 
@@ -468,13 +503,21 @@ const CARD_TILT = 4;      /* זווית ההטיה במעלות */
 
   function sync() {
     queued = false;
-    for (const { els, tilt } of groups) {
+    for (const { els, mode, tilt } of groups) {
       els.forEach((el, i) => {
         const t = clamp((innerHeight * ENTER_AT - el.getBoundingClientRect().top)
                         / (innerHeight * ENTER_OVER));
         const e = easeOut(t);
-        const dir = i % 2 ? -1 : 1;   /* ב-RTL האלמנט הראשון הוא הימני */
         el.style.opacity = t.toFixed(3);
+
+        if (mode === 'rise') {
+          el.style.transform = `translateY(${((1 - e) * RISE_BY).toFixed(1)}px)`;
+          /* מסירים את המסנן בסוף — filter פעיל הוא עלות קבועה על כל ציור */
+          el.style.filter = t > 0.98 ? 'none' : `blur(${((1 - e) * RISE_BLUR).toFixed(2)}px)`;
+          return;
+        }
+
+        const dir = i % 2 ? -1 : 1;   /* ב-RTL האלמנט הראשון הוא הימני */
         el.style.transform =
           `translateX(${(dir * (1 - e) * CARD_SHIFT).toFixed(1)}px)` +
           (tilt ? ` rotate(${(dir * (1 - e) * tilt).toFixed(2)}deg)` : '');

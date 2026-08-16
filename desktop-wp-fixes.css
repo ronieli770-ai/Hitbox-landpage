@@ -1,71 +1,85 @@
 /* ============================================================
    תיקונים לקנבס הדסקטופ בתוך וורדפרס
-   הקנבס בנוי על מיקומים מוחלטים ועל איפוס מלא של המרווחים.
-   התבנית של האתר מחזירה מרווחים, רוחב לשדות וגופן משלה, וזה מה
-   שהוציא את התוכן מהקונטיינרים ופירק את הפוטר. כאן מוחזר האיפוס.
+   הקנבס בנוי על מיקומים מוחלטים ועל איפוס מלא. התבנית מחזירה
+   מרווחים, מראה משלה לשדות וגופן משלה.
+
+   כל כלל כאן מכוון לבורר שהתבנית באמת דורסת, ומחזיר את הערך
+   המדויק שהקנבס מגדיר. כללים גורפים שברו כאן יותר משתיקנו:
+   ריפוד אפס על הכל מחק את הריפוד של השדות, וכפיית גופן על הכל
+   שינתה את רוחב שורת הקרדיט והפילה את "ע״י" לשורה נוספת.
    ============================================================ */
 
-/* ---------- איפוס גורף בתוך הקנבס בלבד ---------- */
-body #canvas *,body #canvas *::before,body #canvas *::after{
-  margin:0 !important;padding:0 !important;
-  box-sizing:border-box !important;
-  font-family:'FbReissfeder',sans-serif !important;}
+/* ---------- מרווחים שהתבנית מוסיפה לטקסט ----------
+   רק על תגי הטקסט. בקנבס כל אלמנט ממוקם מוחלט, וכל מרווח מזיז
+   אותו ממקומו המחושב. */
+body #canvas p,body #canvas h1,body #canvas h2,body #canvas h3,
+body #canvas h4,body #canvas h5,body #canvas h6,
+body #canvas ul,body #canvas ol,body #canvas li,
+body #canvas figure,body #canvas blockquote{
+  margin:0 !important;padding:0 !important;}
 
-/* מה שהקנבס מגדיר לעצמו חוזר מיד אחרי האיפוס */
-body #canvas .qopt{padding:32px 37px !important;}
-body #canvas .field{padding:8px 16px !important;}
-body #canvas .obj{padding:30px !important;}
-body #canvas .wall{padding:24px !important;}
-body #canvas .lbl{padding:0 16px !important;}
+/* ---------- גופן ----------
+   רק על התגים שהתבנית קובעת להם גופן משלה. inherit לוקח את הגופן
+   של הקנבס, ומשאיר על כנו כל גופן שנקבע ישירות על אלמנט — כמו
+   שורת הקרדיט בפוטר. */
+body #canvas h1,body #canvas h2,body #canvas h3,body #canvas h4,
+body #canvas input,body #canvas button,body #canvas select,body #canvas textarea{
+  font-family:inherit !important;}
 
-/* ---------- טקסט יורד שורה ולא נחתך ----------
-   התבנית מחילה nowrap על כפתורים, וזה מה שהוציא את התוכן
-   מקונטיינרי השאלון. */
-body #canvas .qopt,body #canvas .obj .bd,body #canvas .obj .ttl,
-body #canvas .h35,body #canvas .t24,body #canvas .qr-sub{
-  white-space:normal !important;overflow-wrap:break-word;}
-/* טווחי מספרים נשארים בשורה אחת כדי שלא יתהפכו */
-body #canvas span[dir=ltr],body #canvas .hero-branches{white-space:nowrap !important;}
+/* ---------- שדות הטופס התחתון ----------
+   התבנית מחילה רוחב, גובה, גבול ומראה על כל input. הערכים כאן הם
+   בדיוק אלה שהקנבס מגדיר: 668 על 67. */
+body #canvas input.field{
+  width:668px !important;height:67px !important;padding:0 !important;
+  font-size:24px !important;line-height:normal !important;text-align:center !important;
+  background:#f0f0f0 !important;color:#101c1d !important;
+  border:none !important;border-radius:5px !important;
+  box-shadow:none !important;appearance:none !important;-webkit-appearance:none !important;
+  min-height:0 !important;max-width:none !important;}
+body #canvas input.field:focus{outline:none !important;box-shadow:none !important;}
+/* כפתור השליחה חולק את המחלקה אבל לא את הצבע, שנקבע עליו ישירות */
+body #canvas button.field{
+  width:668px !important;height:67px !important;padding:0 !important;
+  font-size:24px !important;border:0 !important;border-radius:5px !important;
+  box-shadow:none !important;min-height:0 !important;}
 
-/* ---------- שדות הטופס ----------
-   התבנית מחילה רוחב על כל input, והשדה נמתח לכל רוחב הקנבס.
-   הרוחב חוזר להיות זה שנקבע במיקום המוחלט. */
-body #canvas input.field,body #canvas .field,body #canvas button.field{
-  width:785px !important;max-width:785px !important;min-width:0 !important;
-  font-size:24px !important;line-height:1.57 !important;
-  border-radius:0 !important;background:#fff !important;
-  border:0 !important;box-shadow:none !important;appearance:none !important;}
-body #canvas .field.sel{width:785px !important;}
-body #canvas button.field{background:#3e6e72 !important;color:#fff !important;}
-body #canvas input.field:focus,body #canvas .field:focus{
-  outline:none !important;box-shadow:none !important;}
+/* ---------- טופס השאלון ---------- */
+body #canvas .qf{
+  width:430px !important;height:67px !important;padding:0 !important;
+  font-size:24px !important;line-height:normal !important;text-align:center !important;
+  background:#f0f0f0 !important;color:#101c1d !important;
+  border:0 !important;border-radius:5px !important;
+  box-shadow:none !important;appearance:none !important;-webkit-appearance:none !important;
+  min-height:0 !important;max-width:none !important;flex:none !important;}
+body #canvas .qr-submit{
+  width:430px !important;height:67px !important;padding:0 !important;
+  border:0 !important;border-radius:5px !important;min-height:0 !important;}
+body #canvas .qr-consent input{
+  width:24px !important;height:24px !important;padding:0 !important;
+  min-height:0 !important;flex:none !important;}
 
-/* ---------- הפוטר ----------
-   כל אלמנט בפוטר ממוקם מוחלט; מרווח שהתבנית מוסיפה מזיז אותו
-   ממקומו ומעוות את כל הגוש. */
-body #canvas .credit,body #canvas .credit img{margin:0 !important;padding:0 !important;}
-/* max-width בלבד. קביעת height כאן גוברת על .cover שמגדיר
-   height:100%, וכל התמונות חוזרות לגודלן הטבעי. */
+/* ---------- תשובות השאלון ----------
+   הטקסט חייב לרדת שורה בתוך הקופסה; התבנית מחילה nowrap על כפתורים. */
+body #canvas .qopt{
+  width:430px !important;height:239px !important;padding:32px 37px !important;
+  white-space:normal !important;overflow-wrap:break-word !important;
+  min-height:0 !important;}
+
+/* ---------- טווחי מספרים לא מתהפכים ---------- */
+body #canvas span[dir=ltr]{white-space:nowrap !important;}
+
+/* ---------- תמונות ----------
+   max-width בלבד. קביעת גובה או רוחב כאן גוברת על המידות שכתובות
+   ישירות על כל תמונה ומנפחת אותה לגודל הקנבס. */
 body #canvas img{max-width:none !important;}
-/* .cover מוגדר בקנבס עצמו ובלי !important, כדי שתמונה עם מידות
-   משלה תשמור עליהן. חזרה על הכלל עם !important דרסה אותן וניפחה
-   כל תמונה כזו לגודל הקנבס. */
 
 /* ---------- אין צביעה בלחיצה ---------- */
-body #canvas button,body #canvas a,body #canvas input,body #canvas .qopt{
+body #canvas button,body #canvas a,body #canvas input{
   -webkit-tap-highlight-color:transparent !important;}
-body #canvas button:focus,body #canvas a:focus{outline:none !important;box-shadow:none !important;}
-
-/* ---------- מנטרלים את הרכיבים הצפים של התבנית מעל הקנבס ---------- */
-body #canvas .qopt:hover{background:#16292a !important;}
+body #canvas button:focus,body #canvas a:focus{
+  outline:none !important;box-shadow:none !important;}
 
 /* ---------- הודעות שגיאה בטפסים ---------- */
 body #canvas .phone-err,body #canvas .form-err{
   margin-top:10px !important;font-size:20px !important;line-height:1.4 !important;
-  color:#ffb4a8 !important;text-align:right;}
-
-/* ---------- תשובות השאלון: הטקסט נשאר בתוך הקופסה ----------
-   הכפתור הוא flex, והטקסט שבתוכו לא נשבר בלי הכלל הזה. */
-body #canvas .qopt{white-space:normal !important;overflow-wrap:break-word !important;
-  word-break:normal !important;display:flex !important;align-items:center !important;
-  justify-content:center !important;text-align:center !important;}
+  color:#ffb4a8 !important;text-align:center;}

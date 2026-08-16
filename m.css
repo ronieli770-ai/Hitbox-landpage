@@ -66,7 +66,6 @@ p{font-size:var(--body);}
    ושומרת ניגודיות בכל פריים, גם כשהרקע בהיר.
    isolation על הבלוק יוצר שכבה משלו, כדי שהמיזוג יתייחס לווידאו
    שמאחוריו ולא לרקע של כל העמוד. */
-#hero .block{isolation:isolate;}
 #hero h1{line-height:.93;mix-blend-mode:difference;}
 #hero .lead{margin-top:clamp(20px,6vw,30px);line-height:1.32;font-size:var(--lead);}
 #hero .btn{margin-top:clamp(22px,7vw,34px);

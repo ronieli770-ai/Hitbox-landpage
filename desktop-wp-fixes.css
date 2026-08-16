@@ -44,7 +44,9 @@ body #canvas input.field:focus,body #canvas .field:focus{
    כל אלמנט בפוטר ממוקם מוחלט; מרווח שהתבנית מוסיפה מזיז אותו
    ממקומו ומעוות את כל הגוש. */
 body #canvas .credit,body #canvas .credit img{margin:0 !important;padding:0 !important;}
-body #canvas img{max-width:none !important;height:auto;}
+/* max-width בלבד. קביעת height כאן גוברת על .cover שמגדיר
+   height:100%, וכל התמונות חוזרות לגודלן הטבעי. */
+body #canvas img{max-width:none !important;}
 body #canvas img.cover{width:100% !important;height:100% !important;object-fit:cover;}
 
 /* ---------- אין צביעה בלחיצה ---------- */

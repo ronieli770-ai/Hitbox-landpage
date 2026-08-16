@@ -14,14 +14,15 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html{overflow-x:clip;}
 body{background:var(--ink);color:#fff;font-family:'Fb',sans-serif;direction:rtl;
-  line-height:1.5;overflow-x:clip;padding-bottom:60vh;}
+  line-height:1.5;overflow-x:clip;padding-bottom:70vh;}
 
 header{padding:40px var(--pad) 0;}
 header h1{font-size:clamp(26px,7.5vw,34px);font-weight:700;line-height:1.02;}
 header h1 span{color:var(--sand);}
 header p{margin-top:12px;font-size:15px;color:#a8c0c2;}
+header p b{color:var(--sand);font-weight:700;}
 
-section{padding:34vh var(--pad) 0;}
+section{padding:46vh var(--pad) 0;}
 .hd{display:flex;align-items:baseline;gap:10px;}
 .hd b{font-size:var(--h3);font-weight:700;}
 .hd i{font-style:normal;font-size:13px;color:var(--sand);border:1px solid var(--sand);
@@ -32,46 +33,18 @@ section{padding:34vh var(--pad) 0;}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px 12px;}
 .tile{border:1px solid var(--teal);border-radius:var(--r);background:rgba(255,255,255,.1);
   padding:16px 8px;min-height:228px;display:flex;flex-direction:column;
-  align-items:center;justify-content:flex-start;}
+  align-items:center;justify-content:flex-start;will-change:transform,opacity;}
 .tile img{width:clamp(52px,16.5vw,70px);height:auto;flex:none;}
 .tile h3{margin-top:auto;margin-bottom:auto;font-size:var(--h3);font-weight:700;
   line-height:1.03;text-align:center;width:90%;}
-
-/* ============ 1 · עלייה מטושטשת (זו של הדסקטופ) ============ */
-[data-fx="rise"] .tile{opacity:0;transform:translateY(52px);filter:blur(16px);}
-[data-fx="rise"].go .tile{opacity:1;transform:none;filter:none;
-  transition:opacity .7s ease var(--d),transform .95s cubic-bezier(.16,1,.3,1) var(--d),
-             filter .85s ease var(--d);}
-
-/* ============ 2 · קפיצה מהמרכז ============ */
-[data-fx="pop"] .tile{opacity:0;transform:scale(.72);}
-[data-fx="pop"].go .tile{opacity:1;transform:none;
-  transition:opacity .3s ease var(--d),transform .7s cubic-bezier(.34,1.56,.64,1) var(--d);}
-
-/* ============ 3 · קלף מתהפך ============ */
 [data-fx="flip"]{perspective:900px;}
-[data-fx="flip"] .tile{opacity:0;transform:rotateX(-72deg);transform-origin:center top;}
-[data-fx="flip"].go .tile{opacity:1;transform:none;
-  transition:opacity .4s ease var(--d),transform .85s cubic-bezier(.22,1,.36,1) var(--d);}
 
-/* ============ 4 · לסירוגין מהצדדים ============ */
-[data-fx="sides"] .tile{opacity:0;}
-[data-fx="sides"] .tile:nth-child(odd){transform:translateX(46px);}
-[data-fx="sides"] .tile:nth-child(even){transform:translateX(-46px);}
-[data-fx="sides"].go .tile{opacity:1;transform:none;
-  transition:opacity .5s ease var(--d),transform .8s cubic-bezier(.22,1,.36,1) var(--d);}
-
-/* ============ 5 · וילון נפתח ============ */
-[data-fx="wipe"] .tile{clip-path:inset(0 0 100% 0);}
-[data-fx="wipe"].go .tile{clip-path:inset(0 0 0 0);
-  transition:clip-path .8s cubic-bezier(.22,1,.36,1) var(--d);}
-
-/* ============ 6 · סקראב רציף ============ */
-/* בלי transition — כל ערך נקבע ישירות מהגלילה, ב-JS */
+/* מד ההתקדמות — מראה בכמה האנימציה נמצאת בכל רגע */
+.bar{margin-top:14px;height:3px;background:rgba(255,255,255,.12);border-radius:2px;overflow:hidden;}
+.bar i{display:block;height:100%;width:0;background:var(--sand);}
 
 @media (prefers-reduced-motion:reduce){
-  .tile{opacity:1 !important;transform:none !important;filter:none !important;
-    clip-path:none !important;}
+  .tile{opacity:1 !important;transform:none !important;filter:none !important;clip-path:none !important;}
 }
 </style>
 </head>
@@ -79,7 +52,7 @@ section{padding:34vh var(--pad) 0;}
 
 <header>
   <h1>כרטיסיות סקשן 2 — <span>שש אפשרויות גלילה</span></h1>
-  <p>גללי לאט. חמש הראשונות נורות פעם אחת כשהרשת נכנסת למסך; השישית קשורה לגלילה עצמה, כלומר אם תעצרי באמצע היא תעצור איתך.</p>
+  <p><b>כולן קשורות לגלילה עצמה.</b> אם תעצרי באמצע, האנימציה תעצור איתך; אם תגללי אחורה, היא תיסוג. הפס הצהוב מתחת לכל רשת מראה בכמה היא נמצאת.</p>
 </header>
 
 <div id="app"></div>
@@ -92,19 +65,66 @@ const TILES = [
   'מרגיש שאין לך יכולת אמיתית להגן על עצמך ועל המשפחה?'
 ];
 
+const clamp = t => t < 0 ? 0 : t > 1 ? 1 : t;
+const easeOut = t => 1 - Math.pow(1 - t, 3);
+const backOut = t => 1 + 2.4 * Math.pow(t - 1, 3) + 1.4 * Math.pow(t - 1, 2);
+
+/* כל אפשרות מקבלת התקדמות t בין 0 ל-1 ומחזירה את המצב של הכרטיסייה בנקודה הזו */
 const FX = [
-  { id: 'rise', n: 'עלייה מטושטשת', step: 90,
-    d: 'הכרטיסייה עולה 52 פיקסלים ומתחדדת מטשטוש. זו בדיוק ההנפשה שרצה בדסקטופ, כך שהעמודים יישמעו אותו דבר.' },
-  { id: 'pop', n: 'קפיצה מהמרכז', step: 80,
-    d: 'נכנסת קטנה וחורגת מעט מגודלה לפני שהיא מתיישבת. אנרגטית, מתאימה לשפה של האתר.' },
-  { id: 'flip', n: 'קלף מתהפך', step: 100,
-    d: 'מסתובבת סביב הקצה העליון כמו קלף שנופל למקומו. הכי דרמטית — ובארבע כרטיסיות זה יכול להיות הרבה.' },
-  { id: 'sides', n: 'לסירוגין מהצדדים', step: 70,
-    d: 'הימנית נכנסת מימין והשמאלית משמאל, שורה אחרי שורה. מדגישה שזו רשת של זוגות.' },
-  { id: 'wipe', n: 'וילון נפתח', step: 90,
-    d: 'הכרטיסייה נחשפת מלמעלה למטה בלי לזוז. הכי שקטה, והטקסט לא רועד בזמן הכניסה.' },
-  { id: 'scrub', n: 'סקראב רציף', step: 0,
-    d: 'הכניסה קשורה ישירות למיקום הגלילה: כל כרטיסייה נפתחת ככל שהיא עולה במסך, ונסגרת אם תגללי אחורה. זו היחידה שבאמת נפתחת "תוך כדי" ולא נורית פעם אחת.' }
+  { id: 'rise', n: 'עלייה מטושטשת',
+    d: 'עולה 52 פיקסלים ומתחדדת מטשטוש. זו ההנפשה שרצה בדסקטופ, כך שהעמודים יישמעו אותו דבר.',
+    at(el, t) {
+      const e = easeOut(t);
+      el.style.opacity = t.toFixed(3);
+      el.style.transform = `translateY(${((1 - e) * 52).toFixed(1)}px)`;
+      el.style.filter = t > .99 ? 'none' : `blur(${((1 - e) * 16).toFixed(2)}px)`;
+    } },
+
+  { id: 'pop', n: 'קפיצה מהמרכז',
+    d: 'נכנסת קטנה, חורגת מעט מגודלה ומתיישבת. אנרגטית, קרובה לשפה של האתר.',
+    at(el, t) {
+      el.style.opacity = clamp(t * 2).toFixed(3);
+      el.style.transform = `scale(${(0.72 + 0.28 * backOut(t)).toFixed(4)})`;
+      el.style.filter = 'none';
+    } },
+
+  { id: 'flip', n: 'קלף מתהפך',
+    d: 'מסתובבת סביב הקצה העליון כמו קלף שנופל למקומו. הכי דרמטית — ובארבע כרטיסיות זה הרבה תנועה.',
+    at(el, t) {
+      const e = easeOut(t);
+      el.style.opacity = clamp(t * 1.6).toFixed(3);
+      el.style.transformOrigin = 'center top';
+      el.style.transform = `rotateX(${(-72 * (1 - e)).toFixed(2)}deg)`;
+      el.style.filter = 'none';
+    } },
+
+  { id: 'sides', n: 'לסירוגין מהצדדים',
+    d: 'הימנית נכנסת מימין והשמאלית משמאל, שורה אחרי שורה. מדגישה שזו רשת של זוגות.',
+    at(el, t, i) {
+      const e = easeOut(t), dir = i % 2 ? -1 : 1;
+      el.style.opacity = t.toFixed(3);
+      el.style.transform = `translateX(${(dir * (1 - e) * 46).toFixed(1)}px)`;
+      el.style.filter = 'none';
+    } },
+
+  { id: 'wipe', n: 'וילון נפתח',
+    d: 'נחשפת מלמעלה למטה בלי לזוז בכלל. הכי שקטה, והטקסט לא רועד בזמן הכניסה.',
+    at(el, t) {
+      const e = easeOut(t);
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+      el.style.clipPath = `inset(0 0 ${((1 - e) * 100).toFixed(2)}% 0)`;
+    } },
+
+  { id: 'combo', n: 'עלייה עם התקרבות',
+    d: 'משלבת תזוזה כלפי מעלה עם התקרבות עדינה. תחושה של כרטיסייה שנכנסת לעומק התמונה.',
+    at(el, t) {
+      const e = easeOut(t);
+      el.style.opacity = clamp(t * 1.4).toFixed(3);
+      el.style.transform =
+        `translateY(${((1 - e) * 60).toFixed(1)}px) scale(${(0.88 + e * 0.12).toFixed(4)})`;
+      el.style.filter = 'none';
+    } }
 ];
 
 document.getElementById('app').innerHTML = FX.map((f, k) => `
@@ -112,47 +132,43 @@ document.getElementById('app').innerHTML = FX.map((f, k) => `
     <div class="hd"><i>${k + 1}</i><b>${f.n}</b></div>
     <p class="note">${f.d}</p>
     <div class="grid2" data-fx="${f.id}">
-      ${TILES.map((t, i) => `
-        <div class="tile" style="--d:${i * f.step}ms">
-          <img src="assets/card-icon.png" alt=""><h3>${t}</h3>
-        </div>`).join('')}
+      ${TILES.map(t => `<div class="tile"><img src="assets/card-icon.png" alt=""><h3>${t}</h3></div>`).join('')}
     </div>
+    <div class="bar"><i></i></div>
   </section>`).join('');
 
-/* חמש הראשונות: נורות פעם אחת כשהרשת נכנסת למסך */
-const once = new IntersectionObserver(es => es.forEach(e => {
-  if (!e.isIntersecting) return;
-  e.target.classList.add('go');
-  once.unobserve(e.target);
-}), { rootMargin: '0px 0px -14% 0px' });
-document.querySelectorAll('.grid2:not([data-fx="scrub"])').forEach(g => once.observe(g));
+/* ---------- מנוע אחד לכל האפשרויות ----------
+   ההתקדמות נגזרת ממיקום הרשת במסך ולא מרגע כניסה בודד, ולכן היא
+   מתקדמת ונסוגה יחד עם האצבע. כל כרטיסייה מוסטת בציר הזמן לפי מקומה,
+   כך שהן נכנסות אחת אחרי השנייה במקום יחד. */
+const STAGGER = 0.13;   /* ההסטה בין כרטיסייה לכרטיסייה */
+const SPAN = 0.58;      /* כמה מציר הזמן לוקחת כניסה של כרטיסייה אחת */
 
-/* השישית: כל ערך נגזר ממיקום הכרטיסייה במסך, בלי transition */
-(function () {
-  const tiles = [...document.querySelectorAll('[data-fx="scrub"] .tile')];
-  if (!tiles.length) return;
-  const clamp = t => t < 0 ? 0 : t > 1 ? 1 : t;
-  const ease = t => 1 - Math.pow(1 - t, 3);
-  let queued = false;
-  function sync() {
-    queued = false;
-    tiles.forEach(el => {
-      const r = el.getBoundingClientRect();
-      /* 0 כשראש הכרטיסייה בתחתית המסך, 1 כשהוא הגיע לשני שליש מלמעלה */
-      const t = ease(clamp((innerHeight - r.top) / (innerHeight * 0.42)));
-      el.style.opacity = t.toFixed(3);
-      el.style.transform = `translateY(${((1 - t) * 60).toFixed(1)}px) scale(${(0.88 + t * 0.12).toFixed(4)})`;
-      el.style.filter = t > .98 ? 'none' : `blur(${((1 - t) * 10).toFixed(2)}px)`;
-    });
+const grids = FX.map(f => {
+  const g = document.querySelector(`[data-fx="${f.id}"]`);
+  return { fx: f, grid: g, tiles: [...g.querySelectorAll('.tile')], bar: g.nextElementSibling.firstElementChild };
+});
+
+let queued = false;
+function sync() {
+  queued = false;
+  for (const { fx, grid, tiles, bar } of grids) {
+    const r = grid.getBoundingClientRect();
+    /* 0 כשראש הרשת בתחתית המסך, 1 כשהיא עלתה כמעט לראשו */
+    const raw = clamp((innerHeight * 0.92 - r.top) / (innerHeight * 0.75));
+    bar.style.width = (raw * 100).toFixed(1) + '%';
+    tiles.forEach((el, i) => fx.at(el, clamp((raw - i * STAGGER) / SPAN), i));
   }
-  addEventListener('scroll', () => {
-    if (queued) return;
-    queued = true;
-    requestAnimationFrame(sync);
-  }, { passive: true });
-  addEventListener('resize', sync);
-  sync();
-})();
+}
+
+addEventListener('scroll', () => {
+  if (queued) return;
+  queued = true;
+  requestAnimationFrame(sync);
+}, { passive: true });
+addEventListener('resize', sync);
+addEventListener('load', sync);
+sync();
 </script>
 </body>
 </html>

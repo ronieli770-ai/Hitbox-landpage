@@ -440,6 +440,102 @@ const REVEAL_STEP = 110;   /* מילישניות בין שורה לשורה */
   });
 })();
 
+/* ---------- כניסת כרטיסים בגלילה ----------
+   הכרטיס הימני נכנס מימין והשמאלי משמאל, וכרטיסי "מתחילים מאפס" מקבלים
+   בנוסף הטיה קלה שמתיישרת.
+
+   ההתקדמות נמדדת לכל כרטיס מהמיקום שלו עצמו ולא ממיקום הרשת: כשמדדנו
+   מהרשת, כרטיס שיושב מתחת לכותרת סיים את הכניסה עוד לפני שהגיע למסך. */
+const ENTER_AT = 0.92;    /* היכן במסך הכרטיס מתחיל להיכנס */
+const ENTER_OVER = 0.42;  /* על פני כמה מגובה המסך הכניסה נמשכת */
+const CARD_SHIFT = 46;    /* מרחק הכניסה מהצד, בפיקסלים */
+const CARD_TILT = 4;      /* זווית ההטיה במעלות */
+
+(function () {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const groups = [
+    { els: [...document.querySelectorAll('.grid2 .tile')], tilt: 0 },
+    { els: [...document.querySelectorAll('.zero .card')], tilt: CARD_TILT }
+  ].filter(g => g.els.length);
+  if (!groups.length) return;
+
+  groups.forEach(g => g.els.forEach(el => el.classList.add('slid')));
+
+  const clamp = t => t < 0 ? 0 : t > 1 ? 1 : t;
+  const easeOut = t => 1 - Math.pow(1 - t, 3);
+  let queued = false;
+
+  function sync() {
+    queued = false;
+    for (const { els, tilt } of groups) {
+      els.forEach((el, i) => {
+        const t = clamp((innerHeight * ENTER_AT - el.getBoundingClientRect().top)
+                        / (innerHeight * ENTER_OVER));
+        const e = easeOut(t);
+        const dir = i % 2 ? -1 : 1;   /* ב-RTL האלמנט הראשון הוא הימני */
+        el.style.opacity = t.toFixed(3);
+        el.style.transform =
+          `translateX(${(dir * (1 - e) * CARD_SHIFT).toFixed(1)}px)` +
+          (tilt ? ` rotate(${(dir * (1 - e) * tilt).toFixed(2)}deg)` : '');
+      });
+    }
+  }
+
+  addEventListener('scroll', () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(sync);
+  }, { passive: true });
+  addEventListener('resize', sync);
+  addEventListener('load', sync);
+  sync();
+})();
+
+/* ---------- כניסת כותרות ----------
+   כל כותרת נחתכת לשורות לפי ה-<br> שבה, וכל שורה עולה מאחורי מסכה
+   משלה. התוכן מועבר פנימה כמות שהוא, כך שהצבעים והספאנים נשמרים. */
+const REVEAL_STEP = 110;   /* מילישניות בין שורה לשורה */
+
+(function () {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  /* הירו מוחרג, כמו בדסקטופ — הוא נראה מיד עם פתיחת העמוד */
+  const heads = [...document.querySelectorAll('section h2, footer h2')]
+    .filter(el => !el.closest('#hero'));
+
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add('go');
+    io.unobserve(e.target);
+  }), { rootMargin: '0px 0px -12% 0px' });
+
+  heads.forEach(el => {
+    /* פיצול לשורות לפי <br>, כדי שהמדרגה בין השורות תישמר */
+    const lines = [[]];
+    [...el.childNodes].forEach(n => {
+      if (n.nodeName === 'BR') lines.push([]);
+      else lines[lines.length - 1].push(n);
+    });
+
+    const built = lines
+      .filter(nodes => nodes.length)
+      .map((nodes, i) => {
+        const mask = document.createElement('span');
+        mask.className = 'rv-line';
+        const inner = document.createElement('i');
+        nodes.forEach(n => inner.appendChild(n));
+        inner.style.setProperty('--d', (i * REVEAL_STEP) + 'ms');
+        mask.appendChild(inner);
+        return mask;
+      });
+
+    el.replaceChildren(...built);
+    el.classList.add('rv');
+    io.observe(el);
+  });
+})();
+
 /* ---------- כניסת הכרטיסיות בסקשן 2 ----------
    הימנית נכנסת מימין והשמאלית משמאל. ההתקדמות נגזרת ממיקום הרשת במסך
    ולא מרגע כניסה בודד, ולכן היא מתקדמת ונסוגה יחד עם האצבע. */

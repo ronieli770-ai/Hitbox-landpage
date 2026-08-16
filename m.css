@@ -94,10 +94,11 @@ p{font-size:var(--body);}
   padding:16px 8px;min-height:228px;
   display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
   will-change:transform,opacity;}
-/* מצב הפתיחה — הכניסה עצמה נגזרת מהגלילה ב-m.js */
-.grid2.slid .tile{opacity:0;}
+/* מצב הפתיחה — נוסף ב-JS בלבד, כך שבלי סקריפט הכרטיסים פשוט נראים.
+   הכניסה עצמה נגזרת מהגלילה ב-m.js */
+.slid{opacity:0;}
 @media (prefers-reduced-motion:reduce){
-  .grid2.slid .tile{opacity:1 !important;transform:none !important;}
+  .slid{opacity:1 !important;transform:none !important;}
 }
 .tile img{width:clamp(52px,16.5vw,70px);height:auto;flex:none;}
 .tile h3{margin-top:auto;margin-bottom:auto;font-size:var(--h3);font-weight:700;
@@ -128,7 +129,7 @@ p{font-size:var(--body);}
 .zero .cards{gap:30px;margin-top:28px;}
 .zero .card{border:0;background:var(--ink);padding:20px 29px;min-height:136px;
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 8px 4px var(--sand);}
+  box-shadow:0 8px 4px var(--sand);will-change:transform,opacity;}
 .zero .card p{margin-top:0;color:#fff;text-align:center;}
 
 /* ---------- ציר הזמן ----------

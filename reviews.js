@@ -51,7 +51,7 @@ const EXIT_TIME = 560;     // משך היציאה שמאלה לפני שהבאה
   const css = `
 #grev-toast{position:fixed;left:20px;bottom:20px;z-index:2500;width:390px;max-width:calc(100vw - 40px);
   background:#fff;color:#101c1d;border-radius:14px;padding:14px 16px;
-  box-shadow:0 12px 34px rgba(16,28,29,.35);font-family:'FbReissfeder',sans-serif;direction:rtl;
+  box-shadow:0 12px 34px rgba(16,28,29,.35);font-family:'Fb','FbReissfeder',sans-serif;direction:rtl;
   transform:translateX(-120%);opacity:0;transition:transform .55s cubic-bezier(.16,1,.3,1),opacity .4s ease;}
 #grev-toast.in{transform:translateX(0);opacity:1;}
 #grev-toast.out{transform:translateX(-120%);opacity:0;}
@@ -73,7 +73,10 @@ const EXIT_TIME = 560;     // משך היציאה שמאלה לפני שהבאה
   font-size:18px;line-height:1;color:#9aa8a9;padding:2px 4px;}
 #grev-toast .gr-x:hover{color:#101c1d;}
 #grev-toast a{color:inherit;text-decoration:none;display:block;}
-@media (max-width:600px){#grev-toast{left:12px;bottom:12px;width:calc(100vw - 24px);}}
+/* בטלפון החלונית נמתחת לרוחב, ולכן היא מורמת מעל כפתור הווצאפ הצף
+   כדי שלא תכסה אותו */
+@media (max-width:600px){#grev-toast{left:12px;right:12px;width:auto;
+  bottom:calc(84px + env(safe-area-inset-bottom));}}
 @media (prefers-reduced-motion:reduce){#grev-toast{transition:opacity .3s ease;transform:none;}}`;
 
   const style = document.createElement('style');

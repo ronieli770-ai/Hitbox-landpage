@@ -396,3 +396,47 @@ const TL_MARK = 0.75;
   addEventListener('resize', sync);
   sync();
 })();
+
+/* ---------- כניסת כותרות ----------
+   כל כותרת נחתכת לשורות לפי ה-<br> שבה, וכל שורה עולה מאחורי מסכה
+   משלה. התוכן מועבר פנימה כמות שהוא, כך שהצבעים והספאנים נשמרים. */
+const REVEAL_STEP = 110;   /* מילישניות בין שורה לשורה */
+
+(function () {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  /* הירו מוחרג, כמו בדסקטופ — הוא נראה מיד עם פתיחת העמוד */
+  const heads = [...document.querySelectorAll('section h2, footer h2')]
+    .filter(el => !el.closest('#hero'));
+
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add('go');
+    io.unobserve(e.target);
+  }), { rootMargin: '0px 0px -12% 0px' });
+
+  heads.forEach(el => {
+    /* פיצול לשורות לפי <br>, כדי שהמדרגה בין השורות תישמר */
+    const lines = [[]];
+    [...el.childNodes].forEach(n => {
+      if (n.nodeName === 'BR') lines.push([]);
+      else lines[lines.length - 1].push(n);
+    });
+
+    const built = lines
+      .filter(nodes => nodes.length)
+      .map((nodes, i) => {
+        const mask = document.createElement('span');
+        mask.className = 'rv-line';
+        const inner = document.createElement('i');
+        nodes.forEach(n => inner.appendChild(n));
+        inner.style.setProperty('--d', (i * REVEAL_STEP) + 'ms');
+        mask.appendChild(inner);
+        return mask;
+      });
+
+    el.replaceChildren(...built);
+    el.classList.add('rv');
+    io.observe(el);
+  });
+})();

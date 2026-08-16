@@ -19,7 +19,7 @@ const CLIPS = [
 const WALL = [
   { id: 'noa', delta: '-15', b: '93', a: '78' },
   { id: 'mic', delta: '-18', b: '106', a: '88' },
-  { id: 'mao', delta: '-10', b: '86', a: '76', single: true },
+  { id: 'mao', delta: '-10', b: '86', a: '76' },
   { id: 'eli', delta: '-20', b: '110', a: '90' },
   { id: 'lon', delta: '-34', b: '118', a: '84' },
   { id: 'gnt', delta: '-36', b: '124', a: '88' },

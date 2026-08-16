@@ -60,6 +60,7 @@ const SHOW_TIME = 7000;    // כמה זמן כל ביקורת נשארת
 #grev-toast .gr-vp{overflow:hidden;}
 #grev-toast .gr-track{display:flex;gap:10px;direction:ltr;
   transition:transform .62s cubic-bezier(.16,1,.3,1);}
+#grev-toast .gr-slide a{display:block;}
 #grev-toast .gr-slide{flex:0 0 100%;min-width:0;direction:rtl;}
 #grev-toast .gr-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
 #grev-toast .gr-g{width:20px;height:20px;flex:none;}
@@ -74,8 +75,7 @@ const SHOW_TIME = 7000;    // כמה זמן כל ביקורת נשארת
   display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
 #grev-toast .gr-who{margin-top:6px;font-size:13px;color:#5d6f70;}
 #grev-toast .gr-who b{color:#101c1d;font-weight:700;}
-#grev-toast .gr-x{position:absolute;top:8px;left:10px;border:0;background:none;cursor:pointer;
-  font-size:18px;line-height:1;color:#9aa8a9;padding:2px 4px;}
+#grev-toast .gr-x{position:absolute;top:4px;left:4px;z-index:5;border:0;background:none;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:24px;line-height:1;color:#5d6f70;padding:0;border-radius:50%;}
 #grev-toast .gr-x:hover{color:#101c1d;}
 #grev-toast a{color:inherit;text-decoration:none;display:block;}
 /* בטלפון החלונית נמתחת לרוחב, ולכן היא מורמת מעל כפתור הווצאפ הצף

@@ -118,10 +118,22 @@ const GRAVITY = 620, DRAG = 0.985, FADE_AFTER = 2.4;
   const spread = Math.max(1, Math.min(W, H) / 640);
   const count = Math.min(220, Math.round(90 + W * 0.12));
 
+  /* בטלפון המטח יוצא ממרכז הכותרת עצמה. הקנבס קבוע למסך, ולכן המלבן
+     של הכותרת הוא כבר בקואורדינטות המסך ואין צורך להוסיף גלילה. */
+  let ox = W / 2, oy = H * 0.42;
+  if (matchMedia('(max-width:820px)').matches) {
+    const title = document.querySelector('h1');
+    if (title) {
+      const r = title.getBoundingClientRect();
+      ox = r.left + r.width / 2;
+      oy = r.top + r.height / 2;
+    }
+  }
+
   const bits = Array.from({ length: count }, () => {
     const a = rnd(0, Math.PI * 2), v = rnd(180, 520) * spread, size = rnd(7, 13);
     return {
-      x: W / 2, y: H * 0.42,
+      x: ox, y: oy,
       vx: Math.cos(a) * v, vy: Math.sin(a) * v,
       w: size, h: size * rnd(0.35, 0.6),
       rot: rnd(0, Math.PI * 2), spin: rnd(-0.24, 0.24),

@@ -52,10 +52,28 @@
     .find(el => el.tagName === 'BUTTON' && el.textContent.includes('אימון ניסיון'));
   if (!btn) return;
 
+
+  /* הודעה קצרה מתחת לכפתור, במקום חלונית של הדפדפן */
+  function say(text) {
+    let note = document.querySelector('.form-err');
+    if (!note) {
+      note = document.createElement('p');
+      note.className = 'form-err';
+      note.setAttribute('role', 'alert');
+      btn.insertAdjacentElement('afterend', note);
+    }
+    note.textContent = text;
+  }
+
   btn.addEventListener('click', () => {
     const val = n => (document.querySelector(`[name="${n}"]`) || {}).value || '';
     if (!val('name').trim() || !val('phone').trim()) {
-      alert('צריך שם וטלפון כדי שנוכל לחזור אליך.');
+      say('צריך שם וטלפון כדי שנוכל לחזור אליך.');
+      return;
+    }
+    /* מקף או רווח שוברים את המספר בהמשך — עוצרים ומסבירים מה לתקן */
+    if (/[^\d+]/.test(val('phone').trim())) {
+      say('כמעט. מספר הטלפון צריך להיכתב בלי מקפים ובלי רווחים — תקן ונשלח.');
       return;
     }
     console.log('פרטי הליד:', {

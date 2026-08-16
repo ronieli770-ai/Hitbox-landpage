@@ -390,3 +390,8 @@ select.ff{appearance:none;
 #vmx{position:absolute;top:calc(14px + env(safe-area-inset-top));left:14px;
   width:44px;height:44px;border:0;border-radius:50%;background:var(--sand);
   color:var(--ink);font-size:24px;cursor:pointer;}
+
+/* ---------- הודעת שגיאה בטפסים ---------- */
+.phone-err{margin-top:6px;font-size:15px;line-height:1.4;color:#ffb4a8;}
+.phone-err[hidden]{display:none !important;}
+.field.bad,.ff.bad{outline:2px solid #ffb4a8;outline-offset:1px;}

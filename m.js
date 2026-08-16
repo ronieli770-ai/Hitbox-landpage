@@ -250,6 +250,29 @@ function closeVm() {
 document.getElementById('vmx').addEventListener('click', closeVm);
 vm.addEventListener('click', e => { if (e.target === vm) closeVm(); });
 
+/* ---------- בדיקת מספר טלפון ----------
+   מקף או רווח במספר שוברים את השליחה בהמשך, ולכן עוצרים כאן ומסבירים
+   בדיוק מה לתקן במקום להציג שגיאה כללית. */
+const PHONE_MSG = "כמעט. מספר הטלפון צריך להיכתב בלי מקפים ובלי רווחים — תקן ונשלח.";
+
+function phoneOK(form) {
+  const field = form.querySelector('[name=phone]');
+  if (!field) return true;
+  const bad = /[^\d+]/.test(field.value.trim());
+  let note = form.querySelector('.phone-err');
+  if (!note) {
+    note = document.createElement('p');
+    note.className = 'phone-err';
+    note.setAttribute('role', 'alert');
+    field.insertAdjacentElement('afterend', note);
+  }
+  note.textContent = bad ? PHONE_MSG : '';
+  note.hidden = !bad;
+  field.classList.toggle('bad', bad);
+  if (bad) { field.focus(); }
+  return !bad;
+}
+
 /* ---------- השאלון ---------- */
 (function () {
   const title = document.getElementById('q-title');
@@ -310,6 +333,7 @@ vm.addEventListener('click', e => { if (e.target === vm) closeVm(); });
 
   form.addEventListener('submit', e => {
     e.preventDefault();
+    if (!phoneOK(form)) return;
     if (!form.reportValidity()) return;
     console.log('פרטי הליד:', Object.fromEntries(new FormData(form).entries()));
     /* באתר היעד נקבע מבחוץ; בגרסת הקבצים נשאר הקובץ המקומי */
@@ -379,6 +403,7 @@ const TL_MARK = 0.75;
   if (!form) return;
   form.addEventListener('submit', e => {
     e.preventDefault();
+    if (!phoneOK(form)) return;
     if (!form.reportValidity()) return;
     const data = Object.fromEntries(new FormData(form).entries());
     console.log('פרטי הליד:', data);

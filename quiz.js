@@ -119,6 +119,19 @@ const QUESTIONS = [
 
   form.addEventListener('submit', e => {
     e.preventDefault();
+    const ph = form.querySelector('[name=phone]');
+    if (ph && /[^\d+]/.test(ph.value.trim())) {
+      let note = form.querySelector('.phone-err');
+      if (!note) {
+        note = document.createElement('p');
+        note.className = 'phone-err';
+        note.setAttribute('role', 'alert');
+        ph.insertAdjacentElement('afterend', note);
+      }
+      note.textContent = 'כמעט. מספר הטלפון צריך להיכתב בלי מקפים ובלי רווחים — תקן ונשלח.';
+      ph.focus();
+      return;
+    }
     if (!form.reportValidity()) return;
     const data = Object.fromEntries(new FormData(form).entries());
     console.log('פרטי הליד:', data);   // כאן יתחבר היעד בפועל

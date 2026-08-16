@@ -43,7 +43,6 @@ const REVIEWS = {
   ]
 };
 const SHOW_TIME = 7000;    // כמה זמן כל ביקורת נשארת
-const EXIT_TIME = 560;     // משך היציאה שמאלה לפני שהבאה נכנסת
 
 (function () {
   if (document.getElementById('grev-toast')) return;
@@ -54,8 +53,12 @@ const EXIT_TIME = 560;     // משך היציאה שמאלה לפני שהבאה
   box-shadow:0 12px 34px rgba(16,28,29,.35);font-family:'Fb','FbReissfeder',sans-serif;direction:rtl;
   transform:translateX(-120%);opacity:0;transition:transform .55s cubic-bezier(.16,1,.3,1),opacity .4s ease;}
 #grev-toast.in{transform:translateX(0);opacity:1;}
-#grev-toast.out{transform:translateX(-120%);opacity:0;}
-#grev-toast.noanim{transition:none !important;}
+/* מסלול הקרוסלה: כל הביקורות זו לצד זו במרווח קבוע, והמסלול מחליק
+   שלב אחד בכל פעם — כך כרטיס אחד דוחף את הבא ולא מתחלף במקום */
+#grev-toast .gr-vp{overflow:hidden;}
+#grev-toast .gr-track{display:flex;gap:10px;direction:ltr;
+  transition:transform .62s cubic-bezier(.16,1,.3,1);}
+#grev-toast .gr-slide{flex:0 0 100%;min-width:0;direction:rtl;}
 #grev-toast .gr-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
 #grev-toast .gr-g{width:20px;height:20px;flex:none;}
 #grev-toast .gr-stars{color:#fbbc05;font-size:17px;letter-spacing:1px;line-height:1;}
@@ -75,8 +78,13 @@ const EXIT_TIME = 560;     // משך היציאה שמאלה לפני שהבאה
 #grev-toast a{color:inherit;text-decoration:none;display:block;}
 /* בטלפון החלונית נמתחת לרוחב, ולכן היא מורמת מעל כפתור הווצאפ הצף
    כדי שלא תכסה אותו */
-@media (max-width:600px){#grev-toast{left:12px;right:12px;width:auto;
-  bottom:calc(84px + env(safe-area-inset-bottom));}}
+/* בטלפון: תחתית מיושרת לכפתור הווצאפ, 20 פיקסלים משמאלו,
+   והשוליים השמאליים על שולי התוכן של העמוד */
+@media (max-width:600px){
+  #grev-toast{left:var(--pad,20px);right:90px;width:auto;max-width:none;
+    bottom:calc(14px + env(safe-area-inset-bottom));padding:12px 14px;}
+  #grev-toast .gr-quote{-webkit-line-clamp:2;}
+}
 @media (prefers-reduced-motion:reduce){#grev-toast{transition:opacity .3s ease;transform:none;}}`;
 
   const style = document.createElement('style');
@@ -94,52 +102,62 @@ const EXIT_TIME = 560;     // משך היציאה שמאלה לפני שהבאה
 
   const stars = n => '★★★★★'.slice(0, n).padEnd(5, '☆');
 
-  function paint(r, url) {
+  const card = (r, url) =>
+    `<div class="gr-slide"><a href="${url}" target="_blank" rel="noopener">
+       <div class="gr-row">${G}<span class="gr-stars">${stars(r.rating)}</span>${OK}</div>
+       <div class="gr-body">
+         ${r.photo ? `<img class="gr-av" src="${r.photo}" alt="">`
+                   : `<span class="gr-av">${r.initial || (r.author || '?')[0]}</span>`}
+         <div class="gr-txt">
+           <p class="gr-quote">${r.text}</p>
+           <p class="gr-who"><b>${r.author}</b> – ${r.when}</p>
+         </div>
+       </div>
+     </a></div>`;
+
+  let track;
+
+  function build(url) {
+    /* הכרטיס הראשון מוכפל בסוף, כדי שהמעבר מהאחרון לראשון יימשך באותו
+       כיוון ולא יקפוץ אחורה על פני כל הרשימה */
     box.innerHTML =
       `<button class="gr-x" aria-label="סגירה">×</button>
-       <a href="${url}" target="_blank" rel="noopener">
-         <div class="gr-row">${G}<span class="gr-stars">${stars(r.rating)}</span>${OK}</div>
-         <div class="gr-body">
-           ${r.photo ? `<img class="gr-av" src="${r.photo}" alt="">`
-                     : `<span class="gr-av">${r.initial || (r.author || '?')[0]}</span>`}
-           <div class="gr-txt">
-             <p class="gr-quote">${r.text}</p>
-             <p class="gr-who"><b>${r.author}</b> – ${r.when}</p>
-           </div>
-         </div>
-       </a>`;
+       <div class="gr-vp"><div class="gr-track">
+         ${list.map(r => card(r, url)).join('')}${card(list[0], url)}
+       </div></div>`;
+    track = box.querySelector('.gr-track');
     box.querySelector('.gr-x').addEventListener('click', e => {
       e.preventDefault(); e.stopPropagation();
       stopped = true; clearTimeout(timer); box.classList.remove('in');
     });
   }
 
-  /* הביקורת הנוכחית נגררת שמאלה והבאה נכנסת אחריה מימין — תנועה אחת רציפה */
-  function slideIn(url) {
-    const r = list[i % list.length];
-    i++;
-    box.classList.add('noanim');
-    box.classList.remove('in', 'out');
-    box.style.transform = 'translateX(120%)';
-    paint(r, url);
-    requestAnimationFrame(() => {
-      box.classList.remove('noanim');
-      box.style.transform = '';
-      box.classList.add('in');
-    });
-    timer = setTimeout(() => slideOut(url), SHOW_TIME);
+  function goto(n, animate) {
+    track.style.transition = animate ? '' : 'none';
+    track.style.transform = `translateX(calc(${-n} * (100% + 10px)))`;
   }
 
-  function slideOut(url) {
+  function step() {
     if (stopped) return;
-    box.classList.remove('in');
-    box.classList.add('out');
-    timer = setTimeout(() => { if (!stopped) slideIn(url); }, EXIT_TIME);
+    i++;
+    goto(i, true);
+    /* הגענו לעותק הכפול — מחזירים בשקט להתחלה אחרי שהתנועה נגמרה */
+    if (i === list.length) {
+      setTimeout(() => {
+        if (stopped) return;
+        i = 0;
+        goto(0, false);
+      }, 640);
+    }
+    timer = setTimeout(step, SHOW_TIME);
   }
 
   function cycle(url) {
     if (stopped || !list.length) return;
-    slideIn(url);
+    build(url);
+    goto(0, false);
+    requestAnimationFrame(() => box.classList.add('in'));
+    timer = setTimeout(step, SHOW_TIME);
   }
 
   function start(data) {

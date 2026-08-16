@@ -133,8 +133,16 @@ document.getElementById('app').innerHTML = FX.map((f, k) => `
     </div>
   </section>`).join('');
 
-/* ---------- אותו מנוע של סקשן 2 ---------- */
-const STAGGER = 0.15, SPAN = 0.58;
+/* ---------- המנוע ----------
+   ההתקדמות נמדדת לכל כרטיס מהמיקום שלו עצמו ולא ממיקום הסקשן. כשמדדנו
+   מהסקשן, הכרטיסים — שיושבים כמאתיים פיקסלים מתחת לכותרת — סיימו את
+   הכניסה עוד לפני שהגיעו למסך, ולכן לא נראתה שום תנועה. */
+const ENTER_AT = 0.92;   /* היכן במסך הכרטיס מתחיל להיכנס */
+const ENTER_OVER = 0.42; /* על פני כמה מגובה המסך הכניסה נמשכת */
+
+function progress(el) {
+  return clamp((innerHeight * ENTER_AT - el.getBoundingClientRect().top) / (innerHeight * ENTER_OVER));
+}
 
 const blocks = FX.map(f => {
   const sec = document.querySelector(`[data-fx="${f.id}"]`);
@@ -145,10 +153,9 @@ const blocks = FX.map(f => {
 let queued = false;
 function sync() {
   queued = false;
-  for (const { fx, sec, cards, bar } of blocks) {
-    const raw = clamp((innerHeight * 0.92 - sec.getBoundingClientRect().top) / (innerHeight * 0.85));
-    bar.style.width = (raw * 100).toFixed(1) + '%';
-    cards.forEach((el, i) => fx.at(el, clamp((raw - i * STAGGER) / SPAN), i));
+  for (const { fx, cards, bar } of blocks) {
+    cards.forEach((el, i) => fx.at(el, progress(el), i));
+    bar.style.width = (progress(cards[0]) * 100).toFixed(1) + '%';
   }
 }
 addEventListener('scroll', () => {

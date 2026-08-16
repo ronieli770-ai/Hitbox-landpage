@@ -460,7 +460,7 @@ const TILE_SPAN = 0.58;    /* כמה מציר הזמן לוקחת כניסה ש�
   function sync() {
     queued = false;
     const top = grid.getBoundingClientRect().top;
-    const raw = clamp((innerHeight * 0.92 - top) / (innerHeight * 0.75));
+    const raw = clamp((innerHeight * 0.92 - top) / (innerHeight * 0.55));
     tiles.forEach((el, i) => {
       const t = clamp((raw - i * TILE_STAGGER) / TILE_SPAN);
       const e = easeOut(t);

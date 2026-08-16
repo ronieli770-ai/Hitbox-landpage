@@ -482,11 +482,13 @@ const ENTER_AT = 0.92;    /* היכן במסך הכרטיס מתחיל להיכ�
 const ENTER_OVER = 0.42;  /* על פני כמה מגובה המסך הכניסה נמשכת */
 const CARD_SHIFT = 46;    /* מרחק הכניסה מהצד, בפיקסלים */
 const CARD_TILT = 4;      /* זווית ההטיה במעלות */
-/* פאנל המיקומים על ציר ארוך משלו: מתחיל רבע מסך מתחת לקיפול ומסיים
-   כשראשו במרכז המסך — כלומר שלושה רבעי מסך של גלילה, כמעט פי שניים
-   מהכרטיסים, וזה מה שנותן לו להתפקס לאט */
-const RISE_AT = 1.25;     /* היכן במסך הפאנל מתחיל */
-const RISE_OVER = 0.75;   /* על פני כמה מגובה המסך הכניסה נמשכת */
+/* פאנל המיקומים על ציר ארוך משלו, ונמדד לפי מרכז הפאנל ולא לפי ראשו.
+   מדידה לפי הראש קיצרה את המהלך בפועל: הראש מגיע לאמצע המסך הרבה לפני
+   שהפאנל עצמו שם, ולכן הטשטוש נגמר כשהוא רק התחיל להיכנס.
+   כאן הוא מתחיל להיכנס בדיוק כשקצהו העליון חוצה את תחתית המסך,
+   ומגיע לחדות מלאה כשמרכזו במרכז המסך — 0.85 מגובה מסך של גלילה. */
+const RISE_AT = 1.35;     /* היכן במסך מרכז הפאנל מתחיל */
+const RISE_OVER = 0.85;   /* על פני כמה מגובה המסך הכניסה נמשכת */
 const RISE_BY = 56;       /* כמה פיקסלים עולה פאנל המיקומים */
 const RISE_BLUR = 16;     /* עוצמת הטשטוש שממנו הוא מתחדד */
 
@@ -511,7 +513,10 @@ const RISE_BLUR = 16;     /* עוצמת הטשטוש שממנו הוא מתחד�
     for (const { els, mode, tilt } of groups) {
       const rise = mode === 'rise';
       els.forEach((el, i) => {
-        const t = clamp((innerHeight * (rise ? RISE_AT : ENTER_AT) - el.getBoundingClientRect().top)
+        const r = el.getBoundingClientRect();
+        /* הפאנל נמדד ממרכזו, הכרטיסים מראשם */
+        const ref = rise ? r.top + r.height / 2 : r.top;
+        const t = clamp((innerHeight * (rise ? RISE_AT : ENTER_AT) - ref)
                         / (innerHeight * (rise ? RISE_OVER : ENTER_OVER)));
         const e = easeOut(t);
         el.style.opacity = t.toFixed(3);

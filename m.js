@@ -19,7 +19,7 @@ const CLIPS = [
 const WALL = [
   { id: 'noa', delta: '-15', b: '93', a: '78' },
   { id: 'mic', delta: '-18', b: '106', a: '88' },
-  { id: 'mao', delta: '-7', b: '86', a: '79', single: true },
+  { id: 'mao', delta: '-10', b: '86', a: '76', single: true },
   { id: 'eli', delta: '-20', b: '110', a: '90' },
   { id: 'lon', delta: '-34', b: '118', a: '84' },
   { id: 'gnt', delta: '-36', b: '124', a: '88' },
@@ -482,8 +482,13 @@ const ENTER_AT = 0.92;    /* היכן במסך הכרטיס מתחיל להיכ�
 const ENTER_OVER = 0.42;  /* על פני כמה מגובה המסך הכניסה נמשכת */
 const CARD_SHIFT = 46;    /* מרחק הכניסה מהצד, בפיקסלים */
 const CARD_TILT = 4;      /* זווית ההטיה במעלות */
-const RISE_BY = 28;       /* כמה פיקסלים עולה פאנל המיקומים */
-const RISE_BLUR = 14;     /* עוצמת הטשטוש שממנו הוא מתחדד */
+/* פאנל המיקומים על ציר ארוך משלו: מתחיל רבע מסך מתחת לקיפול ומסיים
+   כשראשו במרכז המסך — כלומר שלושה רבעי מסך של גלילה, כמעט פי שניים
+   מהכרטיסים, וזה מה שנותן לו להתפקס לאט */
+const RISE_AT = 1.25;     /* היכן במסך הפאנל מתחיל */
+const RISE_OVER = 0.75;   /* על פני כמה מגובה המסך הכניסה נמשכת */
+const RISE_BY = 56;       /* כמה פיקסלים עולה פאנל המיקומים */
+const RISE_BLUR = 16;     /* עוצמת הטשטוש שממנו הוא מתחדד */
 
 (function () {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -504,13 +509,14 @@ const RISE_BLUR = 14;     /* עוצמת הטשטוש שממנו הוא מתחד�
   function sync() {
     queued = false;
     for (const { els, mode, tilt } of groups) {
+      const rise = mode === 'rise';
       els.forEach((el, i) => {
-        const t = clamp((innerHeight * ENTER_AT - el.getBoundingClientRect().top)
-                        / (innerHeight * ENTER_OVER));
+        const t = clamp((innerHeight * (rise ? RISE_AT : ENTER_AT) - el.getBoundingClientRect().top)
+                        / (innerHeight * (rise ? RISE_OVER : ENTER_OVER)));
         const e = easeOut(t);
         el.style.opacity = t.toFixed(3);
 
-        if (mode === 'rise') {
+        if (rise) {
           el.style.transform = `translateY(${((1 - e) * RISE_BY).toFixed(1)}px)`;
           /* מסירים את המסנן בסוף — filter פעיל הוא עלות קבועה על כל ציור */
           el.style.filter = t > 0.98 ? 'none' : `blur(${((1 - e) * RISE_BLUR).toFixed(2)}px)`;

@@ -141,7 +141,8 @@ const QUESTIONS = [
     }
     if (!form.reportValidity()) return;
     const data = Object.fromEntries(new FormData(form).entries());
-    console.log('פרטי הליד:', data);   // כאן יתחבר היעד בפועל
+    sendLead(Object.assign({ source: 'שאלון — דסקטופ' }, answers,
+      Object.fromEntries(new FormData(form).entries())));   // כאן יתחבר היעד בפועל
     location.href = 'thanks.html?goal=' + encodeURIComponent(answers.goal || '');
   });
 

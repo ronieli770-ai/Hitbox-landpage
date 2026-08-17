@@ -76,10 +76,11 @@
       say('כמעט. מספר הטלפון צריך להיכתב בלי מקפים ובלי רווחים — תקן ונשלח.');
       return;
     }
-    console.log('פרטי הליד:', {
+    sendLead({
+      source: 'טופס תחתון — דסקטופ',
       name: val('name'), phone: val('phone'),
       branch: val('branch'), goal: val('goal')
-    });   // כאן יתחבר היעד בפועל
+    });
     location.href = 'thanks.html?goal=' + encodeURIComponent(val('goal'));
   });
 })();

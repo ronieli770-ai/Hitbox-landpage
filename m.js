@@ -410,7 +410,8 @@ function phoneOK(form) {
     e.preventDefault();
     if (!phoneOK(form)) return;
     if (!form.reportValidity()) return;
-    console.log('פרטי הליד:', Object.fromEntries(new FormData(form).entries()));
+    sendLead(Object.assign({ source: 'שאלון — מובייל' }, answers,
+      Object.fromEntries(new FormData(form).entries())));
     /* באתר היעד נקבע מבחוץ; בגרסת הקבצים נשאר הקובץ המקומי */
     location.href = (window.HITBOX_THANKS || 'thanks.html') +
       '?goal=' + encodeURIComponent(answers.goal || '');
@@ -481,7 +482,7 @@ const TL_MARK = 0.75;
     if (!phoneOK(form)) return;
     if (!form.reportValidity()) return;
     const data = Object.fromEntries(new FormData(form).entries());
-    console.log('פרטי הליד:', data);
+    sendLead(Object.assign({ source: 'טופס תחתון — מובייל' }, data));
     location.href = (window.HITBOX_THANKS || 'thanks.html') +
       '?goal=' + encodeURIComponent(data.goal || '');
   });

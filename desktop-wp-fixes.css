@@ -98,3 +98,9 @@ body #canvas .q-back{
 body #canvas .q-back[hidden]{display:none !important;}
 body #canvas .q-back:hover,body #canvas .q-back:focus{
   background:#fff3b7 !important;color:#101c1d !important;}
+
+/* ---------- כפתור השליחה בשאלון ----------
+   התבנית צובעת כפתורים בריחוף; כאן רק ההגדלה נשארת. */
+body #canvas .qr-submit:hover,body #canvas .qr-submit:focus{
+  background:#fff3b7 !important;color:#101c1d !important;
+  transform:scale(1.06) !important;}

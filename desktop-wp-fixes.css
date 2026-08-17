@@ -104,3 +104,11 @@ body #canvas .q-back:hover,body #canvas .q-back:focus{
 body #canvas .qr-submit:hover,body #canvas .qr-submit:focus{
   background:#fff3b7 !important;color:#101c1d !important;
   transform:scale(1.06) !important;}
+
+/* ---------- סקשן ההתנגדויות ----------
+   הכותרת והטקסט הם תגי <p>, ולכן איפוס המרווחים למעלה מחק גם את
+   הרווח שהעיצוב מגדיר בין האייקון לתוכן. מוחזרים כאן במפורש,
+   כולל הערכים של מצב הריחוף. */
+body #canvas .obj .ttl{margin-top:34px !important;}
+body #canvas .obj:hover .ttl{margin-top:26px !important;}
+body #canvas .obj:hover .bd{margin-top:16px !important;}

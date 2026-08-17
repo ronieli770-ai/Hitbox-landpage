@@ -54,6 +54,81 @@ const PLAY = '<span class="play"><svg viewBox="0 0 64 64" fill="none">' +
   '<circle cx="32" cy="32" r="31" fill="#fff3b7"/>' +
   '<path d="M26 21l19 11-19 11z" fill="#101c1d"/></svg></span>';
 
+/* ---------- שיקוף הווידאו בהירו ----------
+   Safari מציב וידאו בשכבת חומרה נפרדת, וטקסט לא מתמזג מול שכבה כזו —
+   הוא פשוט מצויר מעליה. זו הסיבה שמיזוג הכותרת עבד על תמונת התצוגה
+   ונעלם ברגע שהניגון התחיל.
+
+   הפתרון: משקפים את הווידאו לתוך <canvas>, שהוא אלמנט מצויר רגיל,
+   והכותרת מתמזגת מולו. אין צורך בשישים פריימים בשנייה — הסצנה איטית,
+   וחמישה־עשר נראים זהה בעשירית מהעבודה. */
+const MIRROR_FPS = 15;
+
+(function () {
+  const hero = document.getElementById('hero');
+  if (!hero) return;
+  const video = hero.querySelector('video');
+  const canvas = hero.querySelector('.heromir');
+  if (!video || !canvas || !canvas.getContext) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const ctx = canvas.getContext('2d', { alpha: false });
+  const STEP = 1000 / MIRROR_FPS;
+  let last = 0, running = false, sized = false, visible = true;
+
+  /* גודל הציור נמוך מגודל התצוגה בכוונה: המיזוג לא זקוק לרזולוציה
+     מלאה, וזה חוסך חלק ניכר מהעבודה בכל פריים. */
+  function size() {
+    const r = hero.getBoundingClientRect();
+    if (!r.width || !r.height) return false;
+    canvas.width = Math.round(r.width);
+    canvas.height = Math.round(r.height);
+    return true;
+  }
+
+  /* משכפל את התנהגות object-fit:cover, שאין לה מקבילה ב-drawImage */
+  function draw() {
+    const vw = video.videoWidth, vh = video.videoHeight;
+    if (!vw || !vh) return false;
+    const cw = canvas.width, ch = canvas.height;
+    const scale = Math.max(cw / vw, ch / vh);
+    const dw = vw * scale, dh = vh * scale;
+    ctx.drawImage(video, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+    return true;
+  }
+
+  function frame(now) {
+    if (!running) return;
+    if (now - last >= STEP) {
+      last = now;
+      if (!sized) { sized = size(); }
+      if (sized && draw()) { hero.classList.add('mirrored'); }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function start() {
+    if (running || !visible) return;
+    running = true;
+    last = 0;
+    requestAnimationFrame(frame);
+  }
+  function stop() { running = false; }
+
+  video.addEventListener('loadeddata', start);
+  video.addEventListener('play', start);
+  video.addEventListener('pause', stop);
+  if (video.readyState >= 2) start();
+
+  /* מחוץ למסך אין טעם לצייר */
+  new IntersectionObserver(es => es.forEach(e => {
+    visible = e.isIntersecting;
+    if (visible) { start(); } else { stop(); }
+  }), { threshold: 0 }).observe(hero);
+
+  addEventListener('resize', () => { sized = false; }, { passive: true });
+})();
+
 /* ---------- גריד ההמלצות ---------- */
 const vgrid = document.getElementById('vgrid');
 vgrid.innerHTML =

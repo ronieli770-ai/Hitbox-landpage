@@ -50,7 +50,11 @@ p{font-size:var(--body);}
 
 /* ---------- הירו ----------
    לוגו ממורכז למעלה, וגוש התוכן מעט מעל מרכז המסך — כמו במסגרת בפיגמה. */
+/* translateZ מאחד את ההירו לשכבת ציור אחת. Safari מציב וידאו
+   בשכבת חומרה נפרדת, וטקסט לא מתמזג מול שכבה כזו — הוא פשוט
+   מצויר מעליה. האיחוד מחזיר את הווידאו לרקע שהמיזוג מחושב מולו. */
 #hero{position:relative;min-height:100vh;min-height:100svh;overflow:hidden;
+  transform:translateZ(0);
   display:flex;flex-direction:column;align-items:center;
   padding:18px var(--pad) calc(9vh + env(safe-area-inset-bottom));}
 #hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;}

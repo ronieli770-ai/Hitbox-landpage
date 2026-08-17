@@ -85,16 +85,16 @@ body #canvas .phone-err,body #canvas .form-err{
   color:#ffb4a8 !important;text-align:center;}
 
 /* ---------- כפתור החזרה בשאלון ----------
-   שקוף עם מסגרת וטקסט צהובים, ממוקם בקצה הימני של אזור השאלון.
-   התבנית צובעת כל כפתור בצבע שלה ומוסיפה לו ריפוד, וזה מה שהפך
-   אותו לוורוד והזיז אותו ממקומו. */
+   מראה בלבד. את המיקום קובעים הקנבס וסקריפט השאלון, ואילוץ שלו
+   כאן היה נלחם בהם. התבנית צובעת כל כפתור בצבע שלה ומוסיפה ריפוד,
+   וזה מה שהפך אותו לוורוד. */
 body #canvas .q-back{
-  position:absolute !important;right:0 !important;top:450px !important;
   height:67px !important;width:auto !important;padding:0 40px !important;
   border:2px solid #fff3b7 !important;border-radius:5px !important;
   background:transparent !important;color:#fff3b7 !important;
   font-size:24px !important;font-weight:700 !important;
   min-height:0 !important;box-shadow:none !important;
   display:inline-flex !important;align-items:center !important;justify-content:center !important;}
+body #canvas .q-back[hidden]{display:none !important;}
 body #canvas .q-back:hover,body #canvas .q-back:focus{
   background:#fff3b7 !important;color:#101c1d !important;}

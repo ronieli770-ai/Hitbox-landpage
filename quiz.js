@@ -96,7 +96,14 @@ const QUESTIONS = [
     }
 
     back.hidden = wasHidden;
-    if (!wasDone) quiz.classList.remove('done');
+    if (!wasDone) {
+      quiz.classList.remove('done');
+      /* המיקום המחושב שייך למסך התוצאה. בזמן השאלות מנקים אותו
+         כדי שהכפתור יחזור למקומו לפי העיצוב — בקצה הימני. */
+      back.style.left = '';
+      back.style.right = '';
+      back.style.top = '';
+    }
     quiz.style.visibility = '';
   }
 

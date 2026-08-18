@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400&display=swap');
 /* ============================================================
    תיקונים לקנבס הדסקטופ בתוך וורדפרס
    הקנבס בנוי על מיקומים מוחלטים ועל איפוס מלא. התבנית מחזירה
@@ -112,3 +113,11 @@ body #canvas .qr-submit:hover,body #canvas .qr-submit:focus{
 body #canvas .obj .ttl{margin-top:34px !important;}
 body #canvas .obj:hover .ttl{margin-top:26px !important;}
 body #canvas .obj:hover .bd{margin-top:16px !important;}
+
+/* ---------- הקלדה בשדות ----------
+   רישיון הפונט של FbReissfeder לא מתיר שטקסט שהמשתמש מקליד
+   ייכתב בו. כל שדה שמקלידים בו עובר ל-IBM Plex Sans Hebrew
+   במשקל רגיל. כפתורים ותפריטי בחירה נשארים בפונט של העיצוב,
+   כי הטקסט בהם הוא שלנו ולא הקלדה. */
+body #canvas input.field,body #canvas .qf,body #canvas textarea{
+  font-family:'IBM Plex Sans Hebrew',sans-serif !important;font-weight:400 !important;}

@@ -122,6 +122,12 @@ body{overflow-x:hidden;}
 .qf{width:430px;height:67px;border-radius:5px;background:#f0f0f0;border:0;
   font-family:inherit;font-size:24px;color:#101c1d;text-align:center;direction:rtl;}
 .qf::placeholder{color:#101c1d;opacity:1;}
+/* ---------- הקלדה בשדות ----------
+   רישיון הפונט של FbReissfeder לא מתיר שטקסט שהמשתמש מקליד
+   ייכתב בו. כל שדה שמקלידים בו עובר ל-IBM Plex Sans Hebrew
+   במשקל רגיל. כפתורים ותפריטי בחירה נשארים בפונט של העיצוב,
+   כי הטקסט בהם הוא שלנו ולא הקלדה. */
+input.field,.qf,textarea{font-family:'IBM Plex Sans Hebrew',sans-serif;font-weight:400;}
 .qf:invalid:not(:placeholder-shown){box-shadow:0 0 0 2px #d93025;}
 .qr-consent{display:flex;align-items:center;gap:12px;margin-top:26px;cursor:pointer;
   font-size:16px;line-height:1.57;color:#fff;}

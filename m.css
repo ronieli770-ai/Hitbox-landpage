@@ -1,6 +1,8 @@
 /* ============================================================
    עיצוב עמוד המובייל — נגזר ממסגרות הפיגמה ברוחב 400
    ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400&display=swap');
+
 @font-face{font-family:'Fb';src:url('פונט/FbReissfeder-Regular.otf') format('opentype');font-weight:400;font-display:swap;}
 @font-face{font-family:'Fb';src:url('פונט/FbReissfeder-Bold.otf') format('opentype');font-weight:700;font-display:swap;}
 
@@ -403,3 +405,11 @@ select.ff{appearance:none;
 .phone-err{margin-top:6px;font-size:15px;line-height:1.4;color:#ffb4a8;}
 .phone-err[hidden]{display:none !important;}
 .field.bad,.ff.bad{outline:2px solid #ffb4a8;outline-offset:1px;}
+
+/* ---------- הקלדה בשדות ----------
+   רישיון הפונט של FbReissfeder לא מתיר שטקסט שהמשתמש מקליד
+   ייכתב בו. כל שדה שמקלידים בו עובר ל-IBM Plex Sans Hebrew
+   במשקל רגיל. כפתורים ותפריטי בחירה נשארים בפונט של העיצוב,
+   כי הטקסט בהם הוא שלנו ולא הקלדה. */
+input:not([type=checkbox]):not([type=radio]):not([type=submit]),textarea{
+  font-family:'IBM Plex Sans Hebrew',sans-serif;font-weight:400;}

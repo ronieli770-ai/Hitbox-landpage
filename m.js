@@ -653,3 +653,28 @@ const RISE_BLUR = 16;     /* עוצמת הטשטוש שממנו הוא מתחד�
   addEventListener('load', sync);
   sync();
 })();
+
+/* ---------- מגירת תוסף הנגישות ----------
+   בעמוד הזה כלל הפתיחה של התוסף לא גובר, גם לא מול !important בגיליון
+   שלנו, והמגירה נשארת סגורה — כך שכפתור הסגירה שבתוכה מחוץ למסך ואין
+   דרך לצאת. קובעים את ההזזה ישירות על האלמנט, כי סגנון על האלמנט גובר
+   על כל גיליון סגנונות. translateY(100%) הוא תמיד גובה המגירה עצמה. */
+(function () {
+  function wire(drawer) {
+    const apply = () => {
+      const open = document.body.classList.contains('show-enable-toolbar');
+      drawer.style.setProperty('transform', open ? 'translateY(0)' : 'translateY(100%)', 'important');
+    };
+    apply();
+    new MutationObserver(apply).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  }
+
+  /* התוסף נטען אחרינו, ולכן ממתינים להופעת האלמנט במקום להניח שהוא כאן */
+  const found = document.getElementById('enable-toolbar-content');
+  if (found) { wire(found); return; }
+  const watch = new MutationObserver(() => {
+    const d = document.getElementById('enable-toolbar-content');
+    if (d) { watch.disconnect(); wire(d); }
+  });
+  watch.observe(document.documentElement, { childList: true, subtree: true });
+})();

@@ -118,3 +118,14 @@ body input:not([type=checkbox]):not([type=radio]),body textarea{
    העמוד גם כשאין בה שום טקסט. מסתירים רק כשהיא ריקה, כך
    שהודעה אמיתית עדיין תוצג ולא נפגעת הנגישות. */
 #enable-toast:empty{display:none !important;}
+
+/* ---------- מגירת תוסף הנגישות ----------
+   התוסף פותח וסוגר אותה במחלקה show-enable-toolbar על body, אבל כלל
+   הפתיחה שלו לא גובר על מה שמוגדר בעמוד הזה, והמגירה נתקעה במצב
+   ביניים: מבצבצת מלמטה, וכפתור הסגירה שלה מחוץ למסך. שני המצבים
+   נקבעים כאן במפורש. translateY(100%) הוא תמיד בדיוק גובה המגירה
+   עצמה, ולכן היא יורדת מהמסך בכל גובה מסך. */
+body:not(.show-enable-toolbar) #enable-toolbar-content{
+  transform:translateY(100%) !important;}
+body.show-enable-toolbar #enable-toolbar-content{
+  transform:none !important;}

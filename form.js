@@ -66,7 +66,16 @@
   }
 
   btn.addEventListener('click', () => {
-    const val = n => (document.querySelector(`[name="${n}"]`) || {}).value || '';
+    /* מחפשים רק בתוך שדות הטופס הזה. הקנבס שטוח ואין כאן תג <form>,
+       ולחיפוש חופשי לפי name יש התנגשות: גם לטופס השאלון יש שדה
+       בשם phone, והוא מופיע קודם בעמוד — כך שהחיפוש החזיר את השדה
+       הריק שלו והשליחה נעצרה בהודעה "צריך שם וטלפון". */
+    const val = n => {
+      const el = document.querySelector(
+        `input.field[name="${n}"], .sel[data-name="${n}"] input[name="${n}"]`
+      );
+      return el ? el.value : '';
+    };
     if (!val('name').trim() || !val('phone').trim()) {
       say('צריך שם וטלפון כדי שנוכל לחזור אליך.');
       return;

@@ -31,8 +31,13 @@ input[type=checkbox]{text-align:initial;}
 /* clip חוסם את הגלישה בלי ליצור תיבת גלילה משלו, בניגוד ל-hidden
    שבטלפון עדיין מאפשר לגרור את העמוד הצידה. hidden נשאר לדפדפנים ישנים. */
 html{scroll-behavior:smooth;overflow-x:hidden;overflow-x:clip;}
+/* החיתוך יושב על html בלבד. overflow על השורש עובר לחלון עצמו ולכן
+   עוצר גרירה הצידה בלי לפגוע באיש; אותו כלל על body הפך אותו למכל
+   חיתוך, וכל אלמנט position:fixed שהוא הורה לו נשבר — כך המגירה של
+   תוסף הנגישות נחתה בתחתית המסמך במקום להיצמד למסך, וכפתור הסגירה
+   שלה יצא מהישג יד. */
 body{background:var(--ink);color:#fff;font-family:'Fb',sans-serif;direction:rtl;
-  overflow-x:hidden;overflow-x:clip;line-height:1.5;}
+  line-height:1.5;}
 img,video{display:block;max-width:100%;}
 section{padding:52px var(--pad);}
 h1,h2{font-weight:700;line-height:.99;}

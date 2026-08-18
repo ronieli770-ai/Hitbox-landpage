@@ -88,6 +88,14 @@ const SHOW_TIME = 7000;    // כמה זמן כל ביקורת נשארת
   #grev-toast{left:var(--pad,20px);right:90px;width:auto;max-width:none;
     bottom:calc(14px + env(safe-area-inset-bottom));padding:12px 14px;}
   #grev-toast .gr-quote{-webkit-line-clamp:2;}
+  /* בטלפון החלונית הופכת למכל גלילה אמיתי, כדי שהחלקה באצבע
+     תעבוד מעצמה עם תנופה ועצירה על כרטיס. הכיוון כאן ltr בכוונה:
+     scrollLeft בכיוון rtl מתנהג שונה בין דפדפנים. */
+  #grev-toast .gr-vp{direction:ltr;overflow-x:auto;scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;overscroll-behavior-x:contain;}
+  #grev-toast .gr-vp::-webkit-scrollbar{display:none;}
+  #grev-toast .gr-track{transition:none;transform:none !important;}
+  #grev-toast .gr-slide{scroll-snap-align:start;}
 }
 @media (prefers-reduced-motion:reduce){#grev-toast{transition:opacity .3s ease;transform:none;}}`;
 
@@ -119,7 +127,8 @@ const SHOW_TIME = 7000;    // כמה זמן כל ביקורת נשארת
        </div>
      </a></div>`;
 
-  let track;
+  let track, vp, paused = false;
+  const swipe = () => matchMedia('(max-width:600px)').matches;
 
   function build(url) {
     /* הכרטיס הראשון מוכפל בסוף, כדי שהמעבר מהאחרון לראשון יימשך באותו
@@ -130,6 +139,20 @@ const SHOW_TIME = 7000;    // כמה זמן כל ביקורת נשארת
          ${list.map(r => card(r, url)).join('')}${card(list[0], url)}
        </div></div>`;
     track = box.querySelector('.gr-track');
+    vp = box.querySelector('.gr-vp');
+
+    /* ברגע שהמבקרת מחליקה בעצמה היא מנהלת את הקצב, וההחלפה
+       האוטומטית נעצרת כדי שלא תילחם בה. העותק הכפול של הכרטיס
+       הראשון נמחק אז — הוא נועד רק לרצף האוטומטי. */
+    const takeOver = () => {
+      if (paused) return;
+      paused = true;
+      clearTimeout(timer);
+      if (track.children.length > list.length) { track.lastElementChild.remove(); }
+    };
+    vp.addEventListener('touchstart', takeOver, { passive: true });
+    vp.addEventListener('pointerdown', takeOver, { passive: true });
+
     box.querySelector('.gr-x').addEventListener('click', e => {
       e.preventDefault(); e.stopPropagation();
       stopped = true; clearTimeout(timer); box.classList.remove('in');
@@ -137,18 +160,22 @@ const SHOW_TIME = 7000;    // כמה זמן כל ביקורת נשארת
   }
 
   function goto(n, animate) {
+    if (swipe()) {
+      vp.scrollTo({ left: n * (vp.clientWidth + 10), behavior: animate ? 'smooth' : 'auto' });
+      return;
+    }
     track.style.transition = animate ? '' : 'none';
     track.style.transform = `translateX(calc(${-n} * (100% + 10px)))`;
   }
 
   function step() {
-    if (stopped) return;
+    if (stopped || paused) return;
     i++;
     goto(i, true);
     /* הגענו לעותק הכפול — מחזירים בשקט להתחלה אחרי שהתנועה נגמרה */
     if (i === list.length) {
       setTimeout(() => {
-        if (stopped) return;
+        if (stopped || paused) return;
         i = 0;
         goto(0, false);
       }, 640);

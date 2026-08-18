@@ -112,3 +112,9 @@ body #hero h1{mix-blend-mode:difference !important;}
    כי הטקסט בהם הוא שלנו ולא הקלדה. */
 body input:not([type=checkbox]):not([type=radio]),body textarea{
   font-family:'IBM Plex Sans Hebrew',sans-serif !important;font-weight:400 !important;}
+
+/* ---------- תוסף הנגישות של האתר ----------
+   הודעת המצב שלו היא פס בגובה 22 בצבע תכלת, והיא נשלפת לראש
+   העמוד גם כשאין בה שום טקסט. מסתירים רק כשהיא ריקה, כך
+   שהודעה אמיתית עדיין תוצג ולא נפגעת הנגישות. */
+#enable-toast:empty{display:none !important;}
